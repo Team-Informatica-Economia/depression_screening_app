@@ -16,7 +16,7 @@ class getjson extends StatelessWidget{
          return Scaffold(
            body: Center(
              child: Text(
-               "Caricamento"
+               "Caricamento..."
              ),
            ),
          );
