@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                         fontSize: 25.0)),
                 SizedBox(width: 10.0),
-                Text('Screning',
+                Text('Screening',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -46,23 +46,35 @@ class _HomePageState extends State<HomePage> {
             height: MediaQuery
                 .of(context)
                 .size
-                .height-45,
+                .height-165,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
             ),
             child: ListView(
-              primary: false,
               padding: EdgeInsets.only(left: 25.0, right: 20.0),
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.only(top: 45.0),
-                    child: Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height - 300.0,
-                    )),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    context.read<AuthenticationService>().signOut();
+                  },
+                  child: Text("Sign out"),
+                ),
+                RaisedButton(
+                  onPressed: () {Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context){
+                        return getjson();
+                      },
+                    ),
+                  );
+                  },
+                  child: Text("vai al quiz"),
+                )
               ],
             ),
           )
