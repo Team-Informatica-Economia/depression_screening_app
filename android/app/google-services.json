@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "669276788275",
+    "firebase_url": "https://depression-screening-ba8e2.firebaseio.com",
+    "project_id": "depression-screening-ba8e2",
+    "storage_bucket": "depression-screening-ba8e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669276788275:android:c1bcc6226754c8e356b546",
+        "android_client_info": {
+          "package_name": "com.example.depression_screening_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669276788275-pl08ikcfikmgnu7ap3m7hnfncrrkmt3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHuilGYCflgCa3W-cgIbqB7chceEKmITs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669276788275-pl08ikcfikmgnu7ap3m7hnfncrrkmt3v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "669276788275-8tp8ctn29lc29tp4hla175uac9g19pl1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.depressionScreeningApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

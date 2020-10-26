@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>669276788275-8tp8ctn29lc29tp4hla175uac9g19pl1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.669276788275-8tp8ctn29lc29tp4hla175uac9g19pl1</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDL9b6qZkA8oEk4mli-cExM7h3uQilVYj8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>669276788275</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.depressionScreeningApp</string>
+	<key>PROJECT_ID</key>
+	<string>depression-screening-ba8e2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>depression-screening-ba8e2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:669276788275:ios:bb3ab1dfebfef7ba56b546</string>
+	<key>DATABASE_URL</key>
+	<string>https://depression-screening-ba8e2.firebaseio.com</string>
+</dict>
+</plist>
