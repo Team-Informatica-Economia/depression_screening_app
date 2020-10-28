@@ -1,6 +1,9 @@
+import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depression_screening_app/services/authentication.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'Screens/Quiz/quiz.dart';
@@ -14,6 +17,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+    if(firebaseUser == null){
+      return LoginScreen();
+    }
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: KPrimaryColor,
@@ -72,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                 .size
                 .height-165,
             decoration: BoxDecoration(
-              color: KPrimaryLightColor,
+              color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
             ),
             child: ListView(
@@ -81,133 +88,62 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                     padding: EdgeInsets.only(top: 45.0),
                 ),
-                Container(
-                  height: 90,
-                  width: size.width*0.8,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 1.0,
-                            color: Colors.black,
-                            spreadRadius: 0.5
-                        )
-                      ]
-                  ),
-                  padding: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text("Questionario conoscitivo",
-                                style: TextStyle(
-                                    fontFamily: 'Montserr',
-                                    fontSize: 20
-                                ),
-                              ),
-                            ],
+                SizedBox(height: 55.0),
+                InkWell(
+                  child: Container(
+                    height: 135,
+                    width: double.infinity,
+                    child: Stack(
+                      alignment: Alignment.bottomLeft,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width*0.4,
+                            top: 40,
+                            right: 30,
                           ),
-                          SizedBox(height: 9.0),
-                          Row(
-                            children: <Widget>[
-                              Text("Si prega di compliare il questionario",
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 15.0,
-                                    color: Colors.grey
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Colors.blue,
-                            size: 45.0,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 15.0),
-                Container(
-                  height: 90,
-                  width: size.width*0.8,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 1.0,
-                            color: Colors.black,
-                            spreadRadius: 0.5
-                        )
-                      ]
-                  ),
-                  padding: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text("Quiz",
-                                style: TextStyle(
-                                    fontFamily: 'Montserr',
-                                    fontSize: 20
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 9.0),
-                          Row(
-                            children: <Widget>[
-                              Text("Si prega di compliare il questionario",
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 15.0,
-                                    color: Colors.grey
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_rounded,
-                              color: Colors.blue,
-                              size: 45.0,
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF60BE93),
+                                Color(0xFF1B8D59),
+                              ],
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context){
-                                    return getjson();
-                                  },
-                                ),
-                              );
-                            },
-                          )
-                        ],
-                      ),
-                    ],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: "Completa il quiz",
+                                      style: Theme.of(context).textTheme.title.copyWith(color: Colors.white)
+                                  ),
+                                ]
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: SvgPicture.asset("assets/icons/nurse.svg"),
+                        ),
+
+                      ],
+                    ),
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context){
+                          return getjson();
+                        },
+                      ),
+                    );
+                  },
                 ),
+
               ],
             ),
           ),

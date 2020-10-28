@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:depression_screening_app/Screens/Quiz/resultpage.dart';
+import 'package:depression_screening_app/Screens/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
+import 'package:depression_screening_app/components/rounded_button_quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -61,8 +63,13 @@ class _quizpageState extends State<quizpage>{
 
   void checkanswer(int i){
     punteggio += i;
-    nextQuestion();
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => quizpageopen()),
+   );
 
+    nextQuestion();
+    
   }
 
   @override
@@ -77,42 +84,64 @@ class _quizpageState extends State<quizpage>{
             Expanded(
               flex: 3,
               child: Container(
-                color: Colors.red,
-                alignment: Alignment.center,
-                child: Text(
-                  mydata[0][iDomanda.toString()],
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+                alignment: Alignment.bottomCenter,
+                width: double.infinity,
+                child: Stack(
+                  alignment: Alignment.bottomLeft,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      height: 180,
+                      width: MediaQuery.of(context).size.width*0.98,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFF60BE93),
+                            Color(0xFF1B8D59),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: RichText(
+                        text: TextSpan(
+                            children: [
+                              TextSpan(
+                                  text: mydata[0][iDomanda.toString()]+":",
+                                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white)
+                              ),
+                            ]
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             Expanded(
-              flex: 9,
+              flex: 7,
               child: Container(
-                color: Colors.green,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    RoundedButton(
+                    RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["a"],
                       press: (){
                         checkanswer(0);
                       },
                     ),
-                    RoundedButton(
+                    RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["b"],
                       press: (){
                         checkanswer(1);
                       },
                     ),
-                    RoundedButton(
+                    RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["c"],
                       press: (){
                         checkanswer(2);
                       },
                     ),
-                    RoundedButton(
+                    RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["d"],
                       press: (){
                         checkanswer(3);
