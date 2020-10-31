@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
+import 'package:depression_screening_app/Screens/Profile/compilazioneDatiPersonali.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:depression_screening_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -76,6 +77,8 @@ class _HomePageState extends State<HomePage> {
                 .of(context)
                 .size
                 .height-165,
+
+
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
@@ -86,10 +89,12 @@ class _HomePageState extends State<HomePage> {
                 /*Padding(
                    padding: EdgeInsets.only(top: 45.0),
                ),*/
+
                 SizedBox(height: 55.0),
                 InkWell(
                   child: Container(
                     //height: 135,
+
                     width: double.infinity,
                     child: Stack(
                       alignment: Alignment.bottomLeft,
@@ -101,6 +106,7 @@ class _HomePageState extends State<HomePage> {
                             right: 30,
                           ),
                           height: 120,
+
                           width: double.infinity,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -121,6 +127,8 @@ class _HomePageState extends State<HomePage> {
                                 ]
                             ),
                           ),
+
+
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -129,13 +137,15 @@ class _HomePageState extends State<HomePage> {
 
                       ],
                     ),
+
                   ),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context){
-                          return getjson();
+                          return DatiPersonali();
+                          //return getjson();
                         },
                       ),
                     );
@@ -144,6 +154,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+
         ],
       ),
       bottomNavigationBar: bottomBar(),

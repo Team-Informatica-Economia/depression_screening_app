@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+//import 'dart:html';
 import 'package:depression_screening_app/Screens/Quiz/resultpage.dart';
 import 'package:depression_screening_app/Screens/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
@@ -44,19 +45,26 @@ class _quizpageState extends State<quizpage>{
 
   int punteggio = 0;
   int iDomanda = 1;
+  bool microfono=false;
+
   var mydata;
   _quizpageState(this.mydata);
 
   void nextQuestion() {
     setState(() {
-      if (iDomanda <3) {
+      if (iDomanda < 3) {
         iDomanda++;
         print(iDomanda);
-      }else{
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => resultpage(),
-        ));
+      } else {
+
+          microfono=true;
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => quizpageopen(microfono: microfono)));
+
       }
+
+
+
     });
 
   }
@@ -65,7 +73,7 @@ class _quizpageState extends State<quizpage>{
     punteggio += i;
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => quizpageopen()),
+        MaterialPageRoute(builder: (context) => quizpageopen(microfono: microfono,)),
    );
 
     nextQuestion();
