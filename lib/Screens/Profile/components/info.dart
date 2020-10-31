@@ -6,7 +6,7 @@ import '../../../size_config.dart';
 
 
 class Info extends StatelessWidget {
-  const Info({
+    const Info({
     Key key,
     this.name,
     this.email,
@@ -16,6 +16,8 @@ class Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig sc = new SizeConfig();
+    sc.init(context);
     double defaultSize = SizeConfig.defaultSize;
     return SizedBox(
       height: defaultSize * 24, // 240

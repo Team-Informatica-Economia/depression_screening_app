@@ -1,4 +1,7 @@
+import 'package:depression_screening_app/home.dart';
 import 'package:flutter/material.dart';
+import 'package:depression_screening_app/Screens/Profile/profileScreen.dart';
+
 class bottomBar extends StatelessWidget {
   const bottomBar({
     Key key,
@@ -37,11 +40,26 @@ class bottomBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                _buildNavItem(Icons.notifications),
+                new GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                  },
+                  child: _buildNavItem(Icons.notifications),
+                ),
                 SizedBox(width: 1,),
-                _buildNavItem(Icons.home),
+                new GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                  },
+                  child: _buildNavItem(Icons.home),
+                ),
                 SizedBox(width: 1,),
-                _buildNavItem(Icons.account_circle),
+                new GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                  },
+                  child: _buildNavItem(Icons.account_circle),
+                )
               ],
             ),
           ),

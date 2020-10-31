@@ -6,16 +6,14 @@ class quizpageopen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RoundedButtonQuiz(
-            text: "Schermata dove inserire la risposta aperta....",
-            press: (){
+      body: Center(
+        child:
+          FloatingActionButton(
+            child: Icon(Icons.mic),
+            onPressed: (){
               Navigator.pop(context);
             },
-          )
-        ],
+          ),
       ),
     );
   }
