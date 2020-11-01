@@ -56,7 +56,7 @@ class _quizpageopen extends State<quizpageopen> {
               child: Stack(
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
-                  Title_question(testo: "Cosa significa per te: " + risposta),
+                  Title_question(testo: "Cosa significa per te: \n"+"\""+risposta+"\"?"),
                 ],
               ),
             ),
@@ -88,9 +88,10 @@ class _quizpageopen extends State<quizpageopen> {
           Expanded(
             flex: 1,
             child: RaisedButton(
-              color: Colors.green,
+              color: Color( 0xffb8cae7),
+
               elevation: 4,
-              child: Text("Preferisco non rispondere", style: Theme.of(context).textTheme.title.copyWith(color: Colors.white),),
+              child: Text("Preferisco non rispondere", style: Theme.of(context).textTheme.title.copyWith(color: Colors.black),),
               onPressed: _isMicrophoneActive ? null : _cambiaPage,
             ),
           ),

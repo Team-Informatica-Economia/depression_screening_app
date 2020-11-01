@@ -90,7 +90,9 @@ class _HomePageState extends State<HomePage> {
                    padding: EdgeInsets.only(top: 45.0),
                ),*/
 
+
                 SizedBox(height: 55.0),
+
                 InkWell(
                   child: Container(
                     //height: 135,
@@ -104,6 +106,7 @@ class _HomePageState extends State<HomePage> {
                             left: MediaQuery.of(context).size.width*0.4,
                             top: 40,
                             right: 30,
+
                           ),
                           height: 120,
 
@@ -111,8 +114,8 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Color(0xFF60BE93),
-                                Color(0xFF1B8D59),
+                                Color(0xffb79adc),
+                                Color(0xFF673AB7),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),

@@ -14,8 +14,9 @@ class Body extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          "Mario ti da il benvenuto ",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          "Una parola d’incoraggiamento durante un momento di difficoltà, vale più di un’ora di lodi dopo il successo.",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21, fontStyle: FontStyle.italic),
+          textAlign: TextAlign.center,
       ),
       SizedBox(height: size.height * 0.05),
       SvgPicture.asset(

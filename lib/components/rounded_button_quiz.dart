@@ -20,7 +20,7 @@ class RoundedButtonQuiz extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       width: size.width*0.92,
-      height: 85,
+      height: 70,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(30),
         child: FlatButton(

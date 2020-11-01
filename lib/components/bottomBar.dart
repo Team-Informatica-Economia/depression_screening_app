@@ -85,7 +85,7 @@ class bottomBar extends StatelessWidget {
 _buildNavItem(IconData icon){
   return CircleAvatar(
     radius: 30,
-    backgroundColor: Colors.amber,
+    backgroundColor: Color(0xffb79adc),
     child: CircleAvatar(
       radius: 25,
       backgroundColor: Colors.transparent,

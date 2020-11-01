@@ -12,13 +12,14 @@ class Title_question extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
+      padding: EdgeInsets.all(30),
       height: 180,
       width: MediaQuery.of(context).size.width*0.98,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xFF60BE93),
-            Color(0xFF1B8D59),
+            Color(0xffb79adc),
+            Color(0xFF673AB7),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
