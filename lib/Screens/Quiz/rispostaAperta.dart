@@ -1,5 +1,6 @@
 import 'package:depression_screening_app/Screens/Quiz/quiz.dart';
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';
+import 'package:depression_screening_app/components/title_question.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_recorder/audio_recorder.dart';
 import 'package:depression_screening_app/Screens/Quiz/resultpage.dart';
@@ -8,16 +9,17 @@ import 'package:depression_screening_app/components/rounded_button.dart';
 
 class quizpageopen extends StatefulWidget {
   final bool microfono;
-  quizpageopen({Key key, this.microfono}): super(key: key);
+  final String risposta;
+  quizpageopen({Key key, this.microfono, this.risposta}): super(key: key);
 
   @override
-  _quizpageopen createState() => _quizpageopen(microfono);
+  _quizpageopen createState() => _quizpageopen(microfono, risposta);
 }
 
 class _quizpageopen extends State<quizpageopen> {
   Recording _recording = new Recording();
-  var microfono;
-  _quizpageopen(this.microfono);
+  var microfono, risposta;
+  _quizpageopen(this.microfono, this.risposta);
   bool _isMicrophoneActive = false;
 
   void _disabilitaNextDomanda() {
@@ -45,29 +47,55 @@ class _quizpageopen extends State<quizpageopen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget> [
-          Text("Per registrare premi l'icona e quando hai terminato premila di nuovo",),
-          Center(
-            child: FloatingActionButton(
-              child: Icon(Icons.mic),
-              onPressed: (){
-                Recording _recording = new Recording();
-                print("Registro");
-                _disabilitaNextDomanda();
-                print("ciao" + _isMicrophoneActive.toString());
-                /*if(microfono){
+          Expanded(
+            flex: 3,
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: <Widget>[
+                  Title_question(testo: "Cosa significa per te: " + risposta),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 6,
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: FloatingActionButton(
+                child: _isMicrophoneActive ? Icon(Icons.stop, size: 110,) : Icon(Icons.mic, size: 110,),
+                backgroundColor: _isMicrophoneActive ? Colors.red : Colors.purple,
+                elevation: 20,
+                onPressed: (){
+                  Recording _recording = new Recording();
+                  print("Registro");
+                  _disabilitaNextDomanda();
+                  print("ciao" + _isMicrophoneActive.toString());
+                  /*if(microfono){
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => resultpage()));
                 } else {
                   Navigator.pop(context);
                 }*/
-              },
+                },
+              ),
             ),
           ),
-          RaisedButton(
-            child: Text("Preferisco non rispondere"),
-            onPressed: _isMicrophoneActive ? null : _cambiaPage,
+          Expanded(
+            flex: 1,
+            child: RaisedButton(
+              color: Colors.green,
+              elevation: 4,
+              child: Text("Preferisco non rispondere", style: Theme.of(context).textTheme.title.copyWith(color: Colors.white),),
+              onPressed: _isMicrophoneActive ? null : _cambiaPage,
+            ),
+          ),
+          SizedBox(
+            height: 10,
           )
         ]
       )

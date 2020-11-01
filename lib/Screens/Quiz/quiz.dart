@@ -5,6 +5,7 @@ import 'package:depression_screening_app/Screens/Quiz/resultpage.dart';
 import 'package:depression_screening_app/Screens/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';
+import 'package:depression_screening_app/components/title_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -50,16 +51,15 @@ class _quizpageState extends State<quizpage>{
   var mydata;
   _quizpageState(this.mydata);
 
-  void nextQuestion() {
+  void nextQuestion(String let) {
     setState(() {
       if (iDomanda < 3) {
         iDomanda++;
         print(iDomanda);
       } else {
-
           microfono=true;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => quizpageopen(microfono: microfono)));
+              builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][iDomanda.toString()][let],)));
 
       }
 
@@ -69,14 +69,16 @@ class _quizpageState extends State<quizpage>{
 
   }
 
-  void checkanswer(int i){
+  void checkanswer(int i, String let){
     punteggio += i;
+    print(iDomanda);
+    String yDomanda = iDomanda.toString();
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => quizpageopen(microfono: microfono,)),
+        MaterialPageRoute(builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][yDomanda][let])),
    );
 
-    nextQuestion();
+    nextQuestion(let);
     
   }
 
@@ -97,30 +99,7 @@ class _quizpageState extends State<quizpage>{
                 child: Stack(
                   alignment: Alignment.bottomLeft,
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      height: 180,
-                      width: MediaQuery.of(context).size.width*0.98,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFF60BE93),
-                            Color(0xFF1B8D59),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: RichText(
-                        text: TextSpan(
-                            children: [
-                              TextSpan(
-                                  text: mydata[0][iDomanda.toString()]+":",
-                                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white)
-                              ),
-                            ]
-                        ),
-                      ),
-                    ),
+                    Title_question(testo: mydata[0][iDomanda.toString()]+":"),
                   ],
                 ),
               ),
@@ -134,25 +113,25 @@ class _quizpageState extends State<quizpage>{
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["a"],
                       press: (){
-                        checkanswer(0);
+                        checkanswer(0, "a");
                       },
                     ),
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["b"],
                       press: (){
-                        checkanswer(1);
+                        checkanswer(1, "b");
                       },
                     ),
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["c"],
                       press: (){
-                        checkanswer(2);
+                        checkanswer(2, "c");
                       },
                     ),
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["d"],
                       press: (){
-                        checkanswer(3);
+                        checkanswer(3, "d");
                       },
                     ),
                   ],
@@ -165,4 +144,5 @@ class _quizpageState extends State<quizpage>{
     );
   }
 }
+
 
