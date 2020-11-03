@@ -27,6 +27,43 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
   DateTime _selectedDate=DateTime.now();
   final RegistraUtente utente = RegistraUtente();
 
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("Acconsenti e inizia il quiz"),
+      onPressed: () {
+
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context){
+                    return getjson();
+                  }
+              )
+          );
+
+
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Autorizzazione al trattamento dei dati personali"),
+      content: Text("Dire che per fare sto test useremo i suoi dati personali, anagafici, voce e viso, esclusivamento per scopi "
+          "sanitari(??) e per permettere ciò deve acconsentie."),
+      actions: [
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +159,10 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
                                       value: Sesso.F,
                                     ),
 
-
+                                    DropdownMenuItem(
+                                      child: Text("Preferisco\nnon specificarlo"),
+                                      value: Sesso.PreferiscoNonRispondere,
+                                    ),
 
                                   ]
                               ),
@@ -171,21 +211,114 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
                           ]
                       ),
 
+
                       Row(
                           children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(right: 16),
-                              child: Text("Data di nascita"),
-                            ),
+                            Text("Regione"),
                             Spacer(),
-                            Text(utente.nascita == null
-                                ? "--/--/----"
-                                : widget._df.format(utente.nascita)),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width/2,
+                              child: DropdownButtonFormField<Regione>(
+                                  value: utente.regione,
+                                  onChanged: (value){
+                                    utente.regione=value;
+                                  },
 
-                            IconButton(
-                              icon: Icon(Icons.date_range),
-                              onPressed: () => getData(context),
-                            )
+                                  onSaved: (value)=>utente.regione=value,
+
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("Regione1"),
+                                      value: Regione.regione1,
+                                    ),
+
+                                    DropdownMenuItem(
+                                      child: Text("Regione2"),
+                                      value: Regione.regione2,
+                                    ),
+
+
+
+                                  ]
+                              ),
+
+
+                            ),
+
+
+                          ]
+                      ),
+
+                      Row(
+                          children: <Widget>[
+                            Text("Provincia"),
+                            Spacer(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width/2,
+                              child: DropdownButtonFormField<Provincia>(
+                                  value: utente.provincia,
+                                  onChanged: (value){
+                                    utente.provincia=value;
+                                  },
+
+                                  onSaved: (value)=>utente.provincia=value,
+
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("Provincia1"),
+                                      value: Provincia.provincia1,
+                                    ),
+
+                                    DropdownMenuItem(
+                                      child: Text("Provincia2"),
+                                      value: Provincia.provincia2,
+                                    ),
+
+
+
+                                  ]
+                              ),
+
+
+                            ),
+
+
+                          ]
+                      ),
+
+
+                      Row(
+                          children: <Widget>[
+                            Text("Fascia di età"),
+                            Spacer(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width/2,
+                              child: DropdownButtonFormField<FasciaEta>(
+                                  value: utente.eta,
+                                  onChanged: (value){
+                                    utente.eta=value;
+                                  },
+
+                                  onSaved: (value)=>utente.eta=value,
+
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("(18-20)"),
+                                      value: FasciaEta.diciottoVenti,
+                                    ),
+
+                                    DropdownMenuItem(
+                                      child: Text("(21-30)"),
+                                      value: FasciaEta.ventunoTrenta,
+                                    ),
+
+
+
+                                  ]
+                              ),
+
+
+                            ),
 
 
                           ]
@@ -197,10 +330,12 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
 
 
 
+
                       RoundedButton(
                           text: "Inizia il quiz",
                           press: (){
-                            if(_formKey.currentState.validate()){
+                            showAlertDialog(context);
+                         /*   if(_formKey.currentState.validate()){
                           print("Nesun errore");
                           _formKey.currentState.save();
 
@@ -212,7 +347,7 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
                                   }
                               )
                           );
-                        }
+                        } */
 
 
                           }
@@ -227,19 +362,7 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
     );
   }
 
-  getData(BuildContext context) async{
-    var fDate=await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2030),
-    );
 
-    if(fDate!=null) setState(() {
-      utente.nascita=fDate;
-    });
-
-  }
 }
 
 
@@ -250,11 +373,23 @@ enum StatoCivile{
 }
 
 enum Sesso{
-  M, F
+  M, F, PreferiscoNonRispondere
 }
 
 enum Scuola{
   Primaria, Medie
+}
+
+enum Regione{
+  regione1, regione2
+}
+
+enum Provincia{
+  provincia1, provincia2
+}
+
+enum FasciaEta{
+  diciottoVenti, ventunoTrenta, trentunoQuaranta, quarantunoCinquanta, cinquantuno60, settantaEOltre
 }
 
 class Utente{
@@ -263,7 +398,9 @@ class Utente{
   StatoCivile statoCivile =StatoCivile.celibe;
   Sesso sesso=Sesso.M;
   Scuola scuola= Scuola.Primaria;
-  DateTime nascita;
+  Regione regione=Regione.regione1;
+  Provincia provincia=Provincia.provincia1;
+  FasciaEta eta=FasciaEta.diciottoVenti;
 
 }
 
