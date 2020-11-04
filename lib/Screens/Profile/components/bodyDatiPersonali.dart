@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';
+import 'package:depression_screening_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,6 +29,7 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
   final RegistraUtente utente = RegistraUtente();
 
   showAlertDialog(BuildContext context) {
+
     // set up the button
     Widget okButton = FlatButton(
       child: Text("Acconsenti e inizia il quiz"),
@@ -67,6 +69,8 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
 
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
     return Background(
         child: Form(
             key: _formKey,
@@ -76,6 +80,7 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
                     children: <Widget>[
                       TextFormField(
                         decoration: InputDecoration(labelText: "Nome"),
+                        initialValue: readUser(firebaseUser.uid).toString(),
                         onSaved: (value) => utente.nome=value,
                         validator: (value){
                           if(value.isEmpty)

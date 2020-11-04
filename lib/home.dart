@@ -1,14 +1,18 @@
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/Screens/Profile/compilazioneDatiPersonali.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
+import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/constants.dart';
+import 'package:depression_screening_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:depression_screening_app/services/authentication.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'Screens/Quiz/quiz.dart';
+import 'services/Users.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -154,10 +158,16 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
+                RoundedButton(
+                  text: "prova DB",
+                  press: () {
+                    Users u = new Users("pippo", "pluto", firebaseUser.email);
+                    writeNewUser(firebaseUser.uid, u);
+                  },
+                ),
               ],
             ),
           ),
-
         ],
       ),
       bottomNavigationBar: bottomBar(),
