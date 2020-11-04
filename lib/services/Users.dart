@@ -13,5 +13,9 @@ class Users {
       'email': this.email
     };
   }
+
+  String toString() {
+    return "Nome: " + this.nome + ", Cognome: " + this.cognome + ", Email: " + this.email;
+  }
 }
 

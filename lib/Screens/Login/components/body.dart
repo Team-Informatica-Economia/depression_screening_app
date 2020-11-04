@@ -1,3 +1,5 @@
+import 'package:depression_screening_app/services/Users.dart';
+import 'package:depression_screening_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,14 +11,14 @@ import 'package:depression_screening_app/home.dart';
 import 'package:depression_screening_app/services/authentication.dart';
 import 'package:provider/provider.dart';
 
-class Body extends StatelessWidget{
+class Body extends StatelessWidget {
 
   const Body({
     Key key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if(firebaseUser != null){
       return HomePage();

@@ -80,7 +80,7 @@ class _BodyDatiPersonali extends State<BodyDatiPersonali>{
                     children: <Widget>[
                       TextFormField(
                         decoration: InputDecoration(labelText: "Nome"),
-                        initialValue: readUser(firebaseUser.uid).toString(),
+                        initialValue: "c",
                         onSaved: (value) => utente.nome=value,
                         validator: (value){
                           if(value.isEmpty)
