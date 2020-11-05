@@ -18,4 +18,3 @@ class Users {
     return "Nome: " + this.nome + ", Cognome: " + this.cognome + ", Email: " + this.email;
   }
 }
-
