@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget displayInformation(context,snapshot){
+Widget displayInformation(BuildContext context,snapshot){
   Users utenteLoggato = snapshot.data;
   return Column(
     children: <Widget>[
@@ -124,20 +124,20 @@ Widget displayInformation(context,snapshot){
 
 
             SizedBox(height: 55.0),
-            Text("Bentornato ${utenteLoggato.nome}"),
+
             RoundedButton(
-              text: "Completa questionario",
-              press: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context){
-                      return QuestionarioPage();
-                    },
-                  ),
-                );
-              },
-            ),
+                text: "Completa questionario",
+                press: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context){
+                        return QuestionarioPage();
+                        },
+                    ),
+                  );
+                  },
+              ),
             InkWell(
               child: Container(
                 //height: 135,

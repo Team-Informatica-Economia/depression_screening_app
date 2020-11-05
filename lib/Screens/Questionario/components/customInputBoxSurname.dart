@@ -4,18 +4,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../questionarioPage.dart';
 
-class MyCustomInputBoxSurname extends StatefulWidget {
+class MyCustomInputBox extends StatefulWidget {
   final String label;
   final String inputHint;
+  final TextEditingController controller;
 
-  MyCustomInputBoxSurname( {this.label, this.inputHint,});
+
+  MyCustomInputBox( {this.label, this.inputHint,
+    @required this.controller});
   @override
-  _MyCustomInputBoxSurnameState createState() => _MyCustomInputBoxSurnameState();
+  _MyCustomInputBoxState createState() => _MyCustomInputBoxState();
 }
 
-class _MyCustomInputBoxSurnameState extends State<MyCustomInputBoxSurname> {
+class _MyCustomInputBoxState extends State<MyCustomInputBox> {
   bool isSubmitted = false;
-  TextEditingController textEditingController = TextEditingController();
+
   final checkBoxIcon = 'assets/icons/checkbox.svg';
 
   @override
@@ -53,7 +56,7 @@ class _MyCustomInputBoxSurnameState extends State<MyCustomInputBoxSurname> {
         Padding(
           padding: const EdgeInsets.fromLTRB(40, 0, 40, 15),
           child: TextFormField(
-            controller: textEditingController,
+            controller: widget.controller,
             onChanged: (value) {
               setState(() {
                 if(isValid(value))
@@ -64,9 +67,6 @@ class _MyCustomInputBoxSurnameState extends State<MyCustomInputBoxSurname> {
 
               );
             },
-
-
-
             style: TextStyle(
                 fontSize: 19,
                 color: Color(0xff0962ff),
@@ -108,8 +108,6 @@ class _MyCustomInputBoxSurnameState extends State<MyCustomInputBoxSurname> {
                 child: SvgPicture.asset(checkBoxIcon),
               ),
             ),
-
-
 
           ),
         ),

@@ -5,8 +5,10 @@ import 'package:depression_screening_app/services/Users.dart';
 var databaseReference = FirebaseDatabase.instance.reference();
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-Future<void> writeNewUser(String userId, Users users) {
-  databaseReference.child("users").child(userId).push().set(users.toJson());
+Future<void> writeNewUser(Users users) {
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  databaseReference.child("users").child(uid).push().set(users.toJson());
 }
 
 Future<Users> readUser() async{
