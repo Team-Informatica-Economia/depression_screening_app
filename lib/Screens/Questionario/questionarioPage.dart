@@ -1,8 +1,18 @@
-import 'package:depression_screening_app/Screens/Questionario/components/customInputBox.dart';
+import 'package:depression_screening_app/Screens/Questionario/components/customInputBoxName.dart';
+import 'package:depression_screening_app/Screens/Questionario/components/customInputBoxSurname.dart';
+import 'package:depression_screening_app/home.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class QuestionarioPage extends StatefulWidget{
+  QuestionarioPage({Key key}): super(key: key);
 
-class QuestionarioPage extends StatelessWidget {
+  @override
+  _QuestionarioPageState createState() => _QuestionarioPageState();
+
+}
+
+class _QuestionarioPageState extends State<QuestionarioPage> {
   @override
   Widget build(BuildContext context) {
     var scrWidth = MediaQuery.of(context).size.width;
@@ -19,7 +29,7 @@ class QuestionarioPage extends StatelessWidget {
                     height: 15,
                   ),
                   //
-                  MyCustomInputBox(
+                  MyCustomInputBoxName(
                     label: 'Nome',
                     inputHint: 'Mario',
                   ),
@@ -28,43 +38,47 @@ class QuestionarioPage extends StatelessWidget {
                     height: 15,
                   ),
                   //
-                  MyCustomInputBox(
+                  MyCustomInputBoxSurname(
                     label: 'Cognome',
                     inputHint: 'Rossi',
                   ),
                   //
                   SizedBox(
-                    height: 15,
-                  ),
-                  //
-                  MyCustomInputBox(
-                    label: 'Password',
-                    inputHint: '8+ Characters,1 Capital letter',
-                  ),
-                  //
-                  SizedBox(
                     height: 30,
                   ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    width: scrWidth * 0.85,
-                    height: 75,
-                    decoration: BoxDecoration(
-                      color: Color(0xff0962ff),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Completa questionario',
-                        style: TextStyle(
-                          fontFamily: 'ProductSans',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white70,
-                        ),
+
+                new GestureDetector(
+                      onTap: (){
+
+                      },
+
+                      /*Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context){
+                                print("Dati compilati");
+                                return HomePage();
+                              }
+                          )
+                      ); */
+
+
+                  child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      width: scrWidth * 0.85,
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Color(0xff0962ff),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ),
-                  ),
+
+                      child: Neu_button(
+                        char: "Completa il questionario",
+                      )
+                  )
+
+                ),
+
                 ],
               ),
              /* ClipPath(
@@ -89,6 +103,8 @@ class QuestionarioPage extends StatelessWidget {
         ),
       );
   }
+
+
 }
 
 class Neu_button extends StatelessWidget {
@@ -97,33 +113,40 @@ class Neu_button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 58,
-      height: 58,
+
+      width: 100,
+      height: 300,
       decoration: BoxDecoration(
-        color: Color(0xffffffff),
+
+        //color: Color(0xffffffff),
         borderRadius: BorderRadius.circular(13),
         boxShadow: [
           BoxShadow(
-            offset: Offset(12, 11),
+            offset: Offset(30, 30),
             blurRadius: 26,
-            color: Color(0xffaaaaaa).withOpacity(0.1),
+            color: Color(0xff1e90ff).withOpacity(0.1),
           )
         ],
       ),
       //
       child: Center(
+
         child: Text(
           char,
           style: TextStyle(
             fontFamily: 'ProductSans',
-            fontSize: 29,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Color(0xff0962FF),
+            color: Color(0xffffffFF),
           ),
         ),
+
       ),
+
     );
+
   }
+
 }
 /*
 class OuterClippedPart extends CustomClipper<Path> {

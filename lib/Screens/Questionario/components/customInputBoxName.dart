@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class MyCustomInputBox extends StatefulWidget {
-  String label;
-  String inputHint;
+import '../questionarioPage.dart';
 
-  MyCustomInputBox({this.label, this.inputHint});
+class MyCustomInputBoxName extends StatefulWidget {
+  final String label;
+  final String inputHint;
+
+  MyCustomInputBoxName( {this.label, this.inputHint,});
   @override
-  _MyCustomInputBoxState createState() => _MyCustomInputBoxState();
+  _MyCustomInputBoxNameState createState() => _MyCustomInputBoxNameState();
 }
 
-class _MyCustomInputBoxState extends State<MyCustomInputBox> {
+class _MyCustomInputBoxNameState extends State<MyCustomInputBoxName> {
   bool isSubmitted = false;
+  TextEditingController textEditingController = TextEditingController();
   final checkBoxIcon = 'assets/icons/checkbox.svg';
 
   @override
   Widget build(BuildContext context) {
+
+    bool isValid(String value) {
+      final regex = RegExp("^[A-Za-z' ]{3,}\$");
+      final matches = regex.allMatches(value);
+      for (Match match in matches) {
+        if (match.start == 0 && match.end == value.length) {
+          return true;
+        }
+      }
+      return false;
+
+    }
+
     return Column(
       children: [
         Align(
@@ -36,11 +53,20 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
         Padding(
           padding: const EdgeInsets.fromLTRB(40, 0, 40, 15),
           child: TextFormField(
+            controller: textEditingController,
             onChanged: (value) {
               setState(() {
-                isSubmitted = true;
-              });
+                if(isValid(value))
+                  isSubmitted = true;
+                else
+                  isSubmitted=false;
+              }
+
+              );
             },
+
+
+
             style: TextStyle(
                 fontSize: 19,
                 color: Color(0xff0962ff),
@@ -82,6 +108,9 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
                 child: SvgPicture.asset(checkBoxIcon),
               ),
             ),
+
+
+
           ),
         ),
         //
