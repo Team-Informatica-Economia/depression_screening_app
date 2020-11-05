@@ -1,5 +1,6 @@
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/Screens/Profile/compilazioneDatiPersonali.dart';
+import 'package:depression_screening_app/Screens/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/constants.dart';
@@ -97,7 +98,19 @@ class _HomePageState extends State<HomePage> {
 
 
                 SizedBox(height: 55.0),
-
+                RoundedButton(
+                  text: "Completa questionario",
+                  press: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context){
+                          return QuestionarioPage();
+                        },
+                      ),
+                    );
+                  },
+                ),
                 InkWell(
                   child: Container(
                     //height: 135,

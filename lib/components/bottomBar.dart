@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/Screens/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/home.dart';
 import 'package:flutter/material.dart';
 import 'package:depression_screening_app/Screens/Profile/profileScreen.dart';
@@ -42,7 +43,7 @@ class bottomBar extends StatelessWidget {
               children: <Widget>[
                 new GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionarioPage(),));
                   },
                   child: _buildNavItem(Icons.notifications),
                 ),
