@@ -23,10 +23,22 @@ class QuestionarioPage extends StatefulWidget{
 class _QuestionarioPageState extends State<QuestionarioPage> {
   Validazione validazione=new Validazione();
   Utente utente=new Utente();
+  String dataReg;
+  var jsonResult;
   final String data =
       '[{"ID": 1, "Code": "01", "Description": "REGION I (ILOCOS REGION)", "PSGCCode": "010000000"}, {"ID": 2, "Code": "02", "Description": "REGION II (CAGAYAN VALLEY)", "PSGCCode": "020000000"}]';
   List<Region> _region = [];
   String selectedRegion;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+  }
+  _getUser() async {
+    dataReg = await DefaultAssetBundle.of(context).loadString("assets/regioni-province.json");
+    jsonResult = json.decode(dataReg);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +280,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                     text: "Completa quiz",
 
                     press: (){
-                      print(_region[0].id);
+                      print(jsonResult["regioni"][0]["nome"]);
                       if(validazione.isValid(nome.text) && validazione.isValid(cognome.text))
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
 
