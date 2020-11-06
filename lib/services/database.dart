@@ -8,6 +8,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 Future<void> writeNewUser(Users users) {
   final User user = auth.currentUser;
   final uid = user.uid;
+  print("Utente loggato ${uid} Utente aggiunto ");
   databaseReference.child("users").child(uid).push().set(users.toJson());
 }
 

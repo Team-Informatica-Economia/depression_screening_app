@@ -1,5 +1,5 @@
-import 'package:depression_screening_app/Screens/Questionario/components/customInputBoxName.dart';
-import 'package:depression_screening_app/Screens/Questionario/components/customInputBoxSurname.dart';
+
+import 'package:depression_screening_app/components/customInputBox.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/home.dart';
 import 'package:depression_screening_app/services/Users.dart';
@@ -65,7 +65,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                     text: "Completa quiz",
                     press: (){
                       Users u = new Users(nome.text.trim(), cognome.text.trim(), email.text.trim());
-                      writeNewUser(u);
+
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
 
                     },

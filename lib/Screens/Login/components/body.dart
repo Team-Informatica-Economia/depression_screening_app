@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPsicologo/homePsicologo.dart';
 import 'package:depression_screening_app/services/Users.dart';
 import 'package:depression_screening_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,8 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if(firebaseUser != null){
+      if(firebaseUser.email == "test@dep.it")
+        return HomePagePsicologo();
       return HomePage();
     }
     Size size = MediaQuery.of(context).size;
