@@ -1,0 +1,153 @@
+[
+  {
+    "1": "Tristezza",
+    "2": "Pessimismo",
+    "3": "Fallimento",
+    "4": "Perdita di piacere",
+    "5": "Senso di colpa",
+    "6": "Sentimento di punizione",
+    "7": "Autostima",
+    "8": "Autocritica",
+    "9": "Suicidio",
+    "10": "Pianto",
+    "11": "Agitazione",
+    "12": "Perdita di interessi",
+    "13": "Indecisione",
+    "14": "Senso di inutilità",
+    "15": "Perdita di energia",
+    "16": "Sonno",
+    "17": "Irritabilità",
+    "18": "Appetito",
+    "19": "Concentrazione",
+    "20": "Fatica",
+    "21": "Sesso"
+  },
+  {
+    "1": {
+      "a": "Non mi sento triste.",
+      "b": "Mi sento triste per la maggior parte del tempo.",
+      "c": "Mi sento sempre triste.",
+      "d": "Mi sento così triste o infelice da non poterlo  sopportare."
+    },
+    "2": {
+      "a": "Non sono scoraggiato riguardo al mio futuro.",
+      "b": "Mi sento più scoraggiato riguardo al mio. futuro rispetto al solito.",
+      "c": "Non mi aspetto nulla di buono per me.",
+      "d": " Sento che il mio futuro è senza speranza e che  continuerà a peggiorare."
+    },
+    "3": {
+      "a": "Non mi sento un fallito.",
+      "b": "Ho fallito più di quanto avrei dovuto.",
+      "c": "Se ripenso alla mia vita riesco a vedere solo una  serie di fallimenti.",
+      "d": "Ho la sensazione di essere un fallimento totale  come persona."
+    },
+    "4": {
+      "a": "Traggo lo stesso piacere di sempre dalle cose  che faccio",
+      "b": "Non traggo più piacere dalle cose come un.  tempo",
+      "c": "Traggo molto poco piacere dalle cose che di  solito mi divertivano",
+      "d": "Non riesco a trarre alcun piacere dalle cose che  una volta mi piacevano."
+    },
+    "5": {
+      "a": "Non mi sento particolarmente in colpa.",
+      "b": "Mi sento in colpa per molte cose che ho fatto o  che avrei dovuto fare.",
+      "c": "Mi sento molto spesso in colpa.",
+      "d": "Mi sento sempre in colpa."
+    },
+    "6": {
+      "a": "Non mi sento come se stessi subendo una  punizione",
+      "b": "Sento che potrei essere punito.",
+      "c": "Mi aspetto di essere punito.",
+      "d": "Mi sento come se stessi subendo una punizione."
+    },
+    "7": {
+      "a": "Considero me stesso come ho sempre fatto.",
+      "b": "Credo meno in me stesso.",
+      "c": "Sono deluso di me stesso.",
+      "d": "Mi detesto."
+    },
+    "8": {
+      "a": "Non mi critico né mi biasimo più del solito.",
+      "b": "Mi critico più spesso del solito.",
+      "c": "Mi critico per tutte le mie colpe.",
+      "d": "Mi biasimo per ogni cosa brutta che mi accade."
+    },
+    "9": {
+      "a": "Non ho alcun pensiero suicida",
+      "b": "Ho pensieri suicidi ma non li realizzerei.",
+      "c": "Sento che starei meglio se morissi.",
+      "d": "Se mi si presentasse l’occasione, non esiterei ad  uccidermi."
+    },
+    "10": {
+      "a": "Non piango più del solito.",
+      "b": "Piango più del solito",
+      "c": "Piango per ogni minima cosa.",
+      "d": "Ho spesso voglia di piangere ma non ci riesco."
+    },
+    "11": {
+      "a": "Non mi sento più agitato o teso del solito.",
+      "b": "Mi sento più agitato o teso del solito.",
+      "c": "Sono così nervoso o agitato al punto che mi  è difficile rimanere fermo.",
+      "d": "Sono così nervoso o agitato che devo continuare  a muovermi o fare qualcosa."
+    },
+    "12": {
+      "a": "Non ho perso interesse verso le altre persone o  verso le attività.",
+      "b": "Sono meno interessato agli altri o alle cose  rispetto a prima.",
+      "c": "Ho perso la maggior parte dell’interesse verso le  altre persone o cose.",
+      "d": "Mi risulta difficile interessarmi a qualsiasi cosa. \n"
+    },
+    "13": {
+      "a": "Prendo decisioni come sempre.",
+      "b": "Trovo più difficoltà del solito nel prendere  decisioni.",
+      "c": "Ho molte più difficoltà nel prendere decisioni rispetto al solito.",
+      "d": " Non riesco a prendere nessuna decisione."
+    },
+    "14": {
+      "a": "Non mi sento inutile",
+      "b": "Non mi sento valido e utile come un tempo",
+      "c": "Mi sento più inutile delle altre persone.",
+      "d": "Mi sento completamente inutile su qualsiasi  cosa."
+    },
+    "15": {
+      "a": "Ho la stessa energia di sempre",
+      "b": "Ho meno energia del solito.",
+      "c": "Non ho energia sufficiente per fare la maggior  parte delle cose.",
+      "d": "Ho così poca energia che non riesco a fare nulla."
+    },
+    "16": {
+      "a": "Non mi sento come se stessi subendo una  punizione",
+      "b": "Sento che potrei essere punito.",
+      "c": "Mi aspetto di essere punito.",
+      "d": "Mi sento come se stessi subendo una punizione."
+    },
+    "17": {
+      "a": "Non sono più irritabile del solito",
+      "b": "Sono più irritabile del solito",
+      "c": "Sono molto più irritabile del solito.",
+      "d": "Sono sempre irritabile."
+    },
+    "18": {
+      "a": "Non mi critico né mi biasimo più del solito.",
+      "b": "Mi critico più spesso del solito.",
+      "c": "Mi critico per tutte le mie colpe.",
+      "d": "Mi biasimo per ogni cosa brutta che mi accade."
+    },
+    "19": {
+      "a": "Riesco a concentrarmi come sempre.",
+      "b": "Non riesco a concentrarmi come al solito.",
+      "c": "Trovo difficile concentrarmi per molto tempo",
+      "d": "Non riesco a concentrarmi su nulla."
+    },
+    "20": {
+      "a": "Non sono più stanco o affaticato del solito.",
+      "b": "Mi stanco e mi affatico più facilmente del solito.",
+      "c": "Sono così stanco e affaticato che non riesco a  fare molte delle cose che facevo prima.",
+      "d": "Sono talmente stanco e affaticato che non riesco più a fare nessuna delle cos e che facevo prima."
+    },
+    "21": {
+      "a": "Non ho notato alcun cambiamento recente nel  mio interesse verso il sesso.",
+      "b": "Sono meno interessato al sesso rispetto a prima.",
+      "c": "Ora sono molto meno interessante al sesso.",
+      "d": "Ho completamente perso l’interesse verso il  sesso."
+    }
+  }
+]

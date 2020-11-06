@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/Screens/Questionario/validazione.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,21 +21,12 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
   bool isSubmitted = false;
 
   final checkBoxIcon = 'assets/icons/checkbox.svg';
+  final xIcon='assets/icons/red-x.svg';
 
   @override
   Widget build(BuildContext context) {
+  Validazione validazione=new Validazione();
 
-    bool isValid(String value) {
-      final regex = RegExp("^[A-Za-z' ]{3,}\$");
-      final matches = regex.allMatches(value);
-      for (Match match in matches) {
-        if (match.start == 0 && match.end == value.length) {
-          return true;
-        }
-      }
-      return false;
-
-    }
 
     return Column(
       children: [
@@ -59,7 +51,7 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
             controller: widget.controller,
             onChanged: (value) {
               setState(() {
-                if(isValid(value))
+                if(validazione.isValid(value))
                   isSubmitted = true;
                 else
                   isSubmitted=false;
@@ -104,9 +96,17 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
                 ),
               )
                   : Visibility(
-                visible: false,
-                child: SvgPicture.asset(checkBoxIcon),
+                visible: true,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: SvgPicture.asset(
+                    xIcon,
+                    height: 0.2,
+                  ),
+                ),
               ),
+
+
             ),
 
           ),
