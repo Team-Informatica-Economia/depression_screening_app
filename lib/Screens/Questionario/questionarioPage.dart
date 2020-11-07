@@ -1,4 +1,3 @@
-
 import 'package:depression_screening_app/Screens/Questionario/validazione.dart';
 import 'package:depression_screening_app/components/customInputBox.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
@@ -19,16 +18,14 @@ class QuestionarioPage extends StatefulWidget{
 }
 
 
-
 class _QuestionarioPageState extends State<QuestionarioPage> {
   Validazione validazione=new Validazione();
   Utente utente=new Utente();
   String dataReg;
   var jsonResult;
-  final String data =
-      '[{"ID": 1, "Code": "01", "Description": "REGION I (ILOCOS REGION)", "PSGCCode": "010000000"}, {"ID": 2, "Code": "02", "Description": "REGION II (CAGAYAN VALLEY)", "PSGCCode": "020000000"}]';
-  List<Region> _region = [];
   String selectedRegion;
+  List<String> regioni=new List<String>();
+  List<String> province=new List<String>();
 
   @override
   void initState() {
@@ -40,13 +37,11 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
     jsonResult = json.decode(dataReg);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    final json = JsonDecoder().convert(data);
-    _region = (json).map<Region>((item) => Region.fromJson(item)).toList();
-    int id;
-    id = _region[0].id;
-
+    regioni=listaRegioni();
     TextEditingController nome = TextEditingController();
     TextEditingController cognome = TextEditingController();
     TextEditingController email = TextEditingController();
@@ -206,16 +201,26 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                         ),),
 
                         onChanged: (value){
-                          utente.regione=value;
-                        },
+                          //utente.regione=value;
+                          //province=listaProvince(regioni, value);
 
-                     /* items: _mappa.map((Mappa map) {
+                          setState(() {
+                            utente.provincia = "Seleziona provincia";
+                            utente.regione = value;
+                            province = listaProvince(regioni, utente.regione);
+                          });
+
+                          },
+
+
+                        items: regioni.map((String value) {
                         return new DropdownMenuItem<String>(
-                          value: map.regione,
-                          child: new Text(map.regione,
-                              style: new TextStyle(color: Colors.black)),
+                          value: value,
+                          child: new Text(value),
                         );
-                      }).toList(),*/
+                      }).toList(),
+
+
                     ),
                   ),
 
@@ -236,8 +241,19 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                       ),),
 
                       onChanged: (value){
-                        utente.provincia=value;
+
+                        setState(() {
+                          utente.provincia=value;
+                        });
+
                       },
+
+                      items: province.map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
 
@@ -280,7 +296,6 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                     text: "Completa quiz",
 
                     press: (){
-                      print(jsonResult["regioni"][0]["nome"]);
                       if(validazione.isValid(nome.text) && validazione.isValid(cognome.text))
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
 
@@ -295,6 +310,28 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
       );
   }
 
+     List<String> listaRegioni() {
+     jsonResult = json.decode(dataReg);
+     List<String> list= new List();
+
+     for (int i=0; i<20 ; i++){
+        list.add(jsonResult["regioni"][i]["nome"]);
+      }
+     print(list);
+      return list;
+    }
+
+    List<String> listaProvince(List<String> regioni, String regione){
+    jsonResult = json.decode(dataReg);
+    int indice=regioni.indexOf(regione);
+    List listaProv=jsonResult["regioni"][indice]["capoluoghi"];
+    List<String> lista=new List();
+
+    for (int i=0; i<(listaProv.length) ; i++){
+      lista.add(jsonResult["regioni"][indice]["capoluoghi"][i]);
+    }
+    return lista;
+  }
 }
 
 enum StatoCivile{
@@ -309,13 +346,7 @@ enum Scuola{
   Primaria, Medie
 }
 
-enum Regione{
-  regione1, regione2
-}
 
-enum Provincia{
-  provincia1, provincia2
-}
 
 enum FasciaEta{
   diciottoVenti, ventunoTrenta, trentunoQuaranta, quarantunoCinquanta, cinquantuno60, settantaEOltre
@@ -327,8 +358,8 @@ class Utente{
   StatoCivile statoCivile =StatoCivile.celibe;
   Sesso sesso=Sesso.M;
   Scuola scuola= Scuola.Primaria;
-  Regione regione=Regione.regione1;
-  Provincia provincia=Provincia.provincia1;
+  String regione="Abruzzo";
+  String provincia="Cheti";
   FasciaEta eta=FasciaEta.diciottoVenti;
 
 }
@@ -344,4 +375,6 @@ class Region {
     return new Region(id: json["ID"]);
   }
 }
+
+
 
