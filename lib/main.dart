@@ -8,6 +8,7 @@ import 'package:depression_screening_app/constants.dart';
 import 'package:depression_screening_app/services/authentication.dart';
 import 'package:provider/provider.dart';
 
+
 Future <void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           Provider<AuthenticationService>(
-           create: (_) => AuthenticationService(FirebaseAuth.instance),
+           create: (_) => AuthenticationService(FirebaseAuth.instance) ,
           ),
           StreamProvider(
             create: (context) => context.read<AuthenticationService>().authStateChanges,

@@ -27,9 +27,8 @@ class _HomePagePsicologoState extends State<HomePagePsicologo> {
   Widget build(BuildContext context){
     final firebaseUser = context.watch<User>();
     if(firebaseUser == null){
-      return LoginScreen();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
     }
-    print("Uid home ${firebaseUser.uid}");
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBody: true,
@@ -50,7 +49,7 @@ class _HomePagePsicologoState extends State<HomePagePsicologo> {
 }
 
 Widget displayInformation(BuildContext context,snapshot){
-  //Users utenteLoggato = snapshot.data;
+
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[

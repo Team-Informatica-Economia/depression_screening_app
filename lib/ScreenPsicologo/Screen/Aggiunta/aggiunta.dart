@@ -85,7 +85,7 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
                     context.read<AuthenticationService>().sigUp(
                       email: emailController.text.trim(),
                       password: passwordController.text.trim(),
-                      u: u,
+                      user: u,
                     );
                     /*
                     writeNewUser(u);*/
