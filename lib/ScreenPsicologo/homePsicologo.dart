@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/ScreenPsicologo/Screen/Aggiunta/aggiunta.dart';
+import 'package:depression_screening_app/ScreenPsicologo/Screen/Aggiunta/mostraPazienti.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,6 +71,7 @@ Widget displayInformation(BuildContext context,snapshot){
       RoundedButton(
         text: "Visualizza lista pazienti",
         press: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => MostraPazienti(),));
         },
       ),
     ],
