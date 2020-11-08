@@ -1,8 +1,19 @@
+import 'dart:math';
+
 import 'package:depression_screening_app/ScreenPaziente/Quiz/resultpage.dart';
 import 'package:depression_screening_app/components/title_question.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_recorder/audio_recorder.dart';
+import 'dart:io' as io;
 
+import 'package:file/file.dart';
+import 'package:file/local.dart';
+import 'package:flutter/services.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record_mp3/record_mp3.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 
 
 class quizpageopen extends StatefulWidget {
@@ -14,20 +25,21 @@ class quizpageopen extends StatefulWidget {
   _quizpageopen createState() => _quizpageopen(microfono, risposta);
 }
 
-class _quizpageopen extends State<quizpageopen> {
-  Recording _recording = new Recording();
+class _quizpageopen extends State<quizpageopen>{
   var microfono, risposta;
   _quizpageopen(this.microfono, this.risposta);
   bool _isMicrophoneActive = false;
 
-  void _disabilitaNextDomanda() {
-    setState(() {
-      if(_isMicrophoneActive == false)
+  void _disabilitaNextDomanda(){
+    setState(()  {
+      if(_isMicrophoneActive == false) {
         _isMicrophoneActive = true;
+      }
       else
         _cambiaPage();
     });
   }
+
 
   void _cambiaPage(){
     setState(() {
@@ -69,10 +81,11 @@ class _quizpageopen extends State<quizpageopen> {
                 backgroundColor: _isMicrophoneActive ? Colors.red : Colors.purple,
                 elevation: 20,
                 onPressed: (){
-                  Recording _recording = new Recording();
-                  print("Registro");
+
                   _disabilitaNextDomanda();
                   print("ciao" + _isMicrophoneActive.toString());
+
+
                   /*if(microfono){
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => resultpage()));
@@ -82,6 +95,7 @@ class _quizpageopen extends State<quizpageopen> {
                 },
               ),
             ),
+
           ),
           Expanded(
             flex: 1,
@@ -99,5 +113,12 @@ class _quizpageopen extends State<quizpageopen> {
         ]
       )
     );
+
   }
+
+
 }
+
+
+
+
