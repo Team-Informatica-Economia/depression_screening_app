@@ -1,10 +1,12 @@
-import 'package:depression_screening_app/Screens/Questionario/questionarioPage.dart';
-import 'package:depression_screening_app/home.dart';
+import 'package:depression_screening_app/ScreenPaziente/Profile/profileScreen.dart';
+import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
+import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
+import 'package:depression_screening_app/ScreenPsicologo/homePsicologo.dart';
 import 'package:flutter/material.dart';
-import 'package:depression_screening_app/Screens/Profile/profileScreen.dart';
 
-class bottomBar extends StatelessWidget {
-  const bottomBar({
+
+class bottomBarPaziente extends StatelessWidget {
+  const bottomBarPaziente({
     Key key,
   }) : super(key: key);
 
@@ -58,6 +60,86 @@ class bottomBar extends StatelessWidget {
                 new GestureDetector(
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                  },
+                  child: _buildNavItem(Icons.account_circle),
+                )
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text("Notifiche",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
+                SizedBox(width: 1,),
+                Text("Home",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
+                SizedBox(width: 2,),
+                Text("Profilo",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+class bottomBarPsicologo extends StatelessWidget {
+  const bottomBarPsicologo({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          Positioned(
+              bottom: 0,
+              child:ClipPath(
+                clipper: NavBarClipper(),
+                child: Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.deepPurpleAccent,
+                            Colors.deepPurple,
+                          ]
+                      )
+                  ),
+                ),
+              )
+          ),
+          Positioned(
+            bottom: 45,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                new GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomePagePsicologo()));
+                  },
+                  child: _buildNavItem(Icons.notifications),
+                ),
+                SizedBox(width: 1,),
+                new GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomePagePsicologo()));
+                  },
+                  child: _buildNavItem(Icons.home),
+                ),
+                SizedBox(width: 1,),
+                new GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomePagePsicologo()));
                   },
                   child: _buildNavItem(Icons.account_circle),
                 )

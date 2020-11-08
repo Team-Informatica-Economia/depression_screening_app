@@ -1,4 +1,5 @@
-import 'package:depression_screening_app/Screens/Profile/components/info.dart';
+
+import 'package:depression_screening_app/ScreenPaziente/Profile/components/info.dart';
 import 'package:flutter/material.dart';
 
 

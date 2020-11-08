@@ -1,7 +1,8 @@
-import 'package:depression_screening_app/Screens/Questionario/validazione.dart';
+
+import 'package:depression_screening_app/ScreenPaziente/Questionario/validazione.dart';
 import 'package:depression_screening_app/components/customInputBox.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
-import 'package:depression_screening_app/home.dart';
+import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
 import 'package:depression_screening_app/services/Users.dart';
 import 'package:depression_screening_app/services/database.dart';
 import 'package:flutter/cupertino.dart';

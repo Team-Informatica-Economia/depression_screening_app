@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-//import 'dart:html';
-import 'package:depression_screening_app/Screens/Quiz/resultpage.dart';
-import 'package:depression_screening_app/Screens/Quiz/rispostaAperta.dart';
-import 'package:depression_screening_app/components/rounded_button.dart';
+import 'package:depression_screening_app/ScreenPaziente/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';
 import 'package:depression_screening_app/components/title_question.dart';
 import 'package:flutter/material.dart';

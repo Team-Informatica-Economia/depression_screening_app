@@ -1,5 +1,5 @@
 import 'package:depression_screening_app/components/rounded_button.dart';
-import 'package:depression_screening_app/home.dart';
+import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
 import 'package:flutter/material.dart';
 
 class resultpage extends StatelessWidget {

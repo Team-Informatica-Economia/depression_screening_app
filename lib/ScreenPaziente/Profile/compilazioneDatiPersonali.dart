@@ -1,5 +1,5 @@
-import 'package:depression_screening_app/Screens/Profile/components/bodyDatiPersonali.dart';
-import 'package:depression_screening_app/Screens/Quiz/quiz.dart';
+
+import 'package:depression_screening_app/ScreenPaziente/Profile/components/bodyDatiPersonali.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

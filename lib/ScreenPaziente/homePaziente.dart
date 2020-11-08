@@ -1,6 +1,7 @@
+import 'package:depression_screening_app/ScreenPaziente/Profile/compilazioneDatiPersonali.dart';
+import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
-import 'package:depression_screening_app/Screens/Profile/compilazioneDatiPersonali.dart';
-import 'package:depression_screening_app/Screens/Questionario/questionarioPage.dart';
+
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/constants.dart';
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      bottomNavigationBar: bottomBar(),
+      bottomNavigationBar: bottomBarPaziente(),
     );
   }
 }

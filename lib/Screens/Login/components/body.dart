@@ -8,7 +8,7 @@ import 'package:depression_screening_app/Screens/Login/components/background.dar
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/components/rounded_input_field.dart';
 import 'package:depression_screening_app/components/rounded_password_field.dart';
-import 'package:depression_screening_app/home.dart';
+import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
 import 'package:depression_screening_app/services/authentication.dart';
 import 'package:provider/provider.dart';
 

@@ -1,4 +1,5 @@
-import 'package:depression_screening_app/Screens/Profile/components/body.dart';
+
+import 'package:depression_screening_app/ScreenPaziente/Profile/components/body.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:flutter/material.dart';
 class ProfileScreen extends StatelessWidget{
@@ -6,7 +7,7 @@ class ProfileScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       body:Body(),
-      bottomNavigationBar: bottomBar(),
+      bottomNavigationBar: bottomBarPaziente(),
     );
   }
 
