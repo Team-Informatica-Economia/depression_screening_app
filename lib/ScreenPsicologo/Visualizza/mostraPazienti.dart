@@ -14,8 +14,10 @@ class MostraPazienti extends StatefulWidget{
 
 class MostraPazientiState extends State<MostraPazienti> {
   TextEditingController _searchBarController = TextEditingController();
+  var flag = 1;
   Future userFuture;
   List<Users> pazienti;
+  List<Users> pazientiView;
 
   @override
   void initState() {
@@ -29,9 +31,25 @@ class MostraPazientiState extends State<MostraPazienti> {
     _searchBarController.dispose();
     super.dispose();
   }
+
   _onSearchChanged(){
-    print(_searchBarController.text);
-    print(pazienti);
+    searchResult();
+  }
+  searchResult(){
+    List<Users> users = [];
+    if(_searchBarController.text != ""){
+      users = pazienti.where((note) {
+        var nome = note.nome.toLowerCase();
+        var cognome = note.cognome.toLowerCase();
+        String str = nome + " "+ cognome;
+        return str.contains(_searchBarController.text.toLowerCase());
+      }).toList();
+    }else{
+      users = pazienti;
+    }
+    setState(() {
+      pazientiView = users;
+    });
   }
   _getPazienti() async {
     return await readListPazienti();
@@ -106,6 +124,11 @@ class MostraPazientiState extends State<MostraPazienti> {
                     future: userFuture,
                     builder: (context,snapshot){
                       if(snapshot.connectionState == ConnectionState.done){
+                        pazienti = snapshot.data;
+                        if(flag == 1){
+                          pazientiView = pazienti;
+                          flag = 2;
+                        }
                         return displayInformation(context, snapshot);
                       }else{
                         return CircularProgressIndicator();
@@ -172,21 +195,17 @@ class MostraPazientiState extends State<MostraPazienti> {
         ));
   }
   Widget displayInformation(context,snapshot) {
-
-    pazienti = snapshot.data;
-
-
     return Padding(
         padding: EdgeInsets.only(top: 15.0),
         child: Container(
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: pazienti.length,
+                itemCount: pazientiView.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     child: Column(
                       children: <Widget>[
-                        _buildUserItem("assets/images/pic.png", pazienti[index].nome, pazienti[index].cognome, pazienti[index].email),
+                        _buildUserItem("assets/images/pic.png", pazientiView[index].nome, pazientiView[index].cognome, pazientiView[index].email),
                         SizedBox(height: 15.0),
                       ],
                     ),
