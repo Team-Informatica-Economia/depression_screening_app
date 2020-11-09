@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class Title_question extends StatelessWidget {
   final String testo;
   const Title_question({
@@ -13,13 +15,13 @@ class Title_question extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.all(30),
-      height: 180,
+      height: 190,
       width: MediaQuery.of(context).size.width*0.98,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xffb79adc),
-            Color(0xFF673AB7),
+            KColorButtonDark,
+            KColorButtonLight,
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -29,7 +31,7 @@ class Title_question extends StatelessWidget {
             children: [
               TextSpan(
                   text: testo,
-                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white)
+                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white, fontSize: 27),
               ),
             ]
         ),

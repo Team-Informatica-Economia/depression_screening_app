@@ -141,8 +141,8 @@ Widget displayInformation(BuildContext context,snapshot){
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Color(0xffb79adc),
-                            Color(0xFF673AB7),
+                            KColorButtonLight,
+                            KColorButtonDark,
                           ],
                         ),
                         borderRadius: BorderRadius.circular(20),
@@ -195,8 +195,8 @@ Widget displayInformation(BuildContext context,snapshot){
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Color(0xffb79adc),
-                            Color(0xFF673AB7),
+                            KColorButtonLight,
+                            KColorButtonDark,
                           ],
                         ),
                         borderRadius: BorderRadius.circular(20),

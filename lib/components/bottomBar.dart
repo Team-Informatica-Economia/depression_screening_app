@@ -2,6 +2,7 @@ import 'package:depression_screening_app/ScreenPaziente/Profile/profileScreen.da
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
 import 'package:depression_screening_app/ScreenPsicologo/homePsicologo.dart';
+import 'package:depression_screening_app/constants.dart';
 import 'package:flutter/material.dart';
 
 
@@ -29,8 +30,8 @@ class bottomBarPaziente extends StatelessWidget {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.deepPurpleAccent,
-                            Colors.deepPurple,
+                            KColorButtonDark,
+                            KColorButtonLight,
                           ]
                       )
                   ),
@@ -109,8 +110,8 @@ class bottomBarPsicologo extends StatelessWidget {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.deepPurpleAccent,
-                            Colors.deepPurple,
+                            KColorButtonDark,
+                            KColorButtonLight,
                           ]
                       )
                   ),
@@ -168,13 +169,13 @@ class bottomBarPsicologo extends StatelessWidget {
 _buildNavItem(IconData icon){
   return CircleAvatar(
     radius: 30,
-    backgroundColor: Color(0xffb79adc),
+    backgroundColor: KColorIcon,
     child: CircleAvatar(
       radius: 25,
       backgroundColor: Colors.transparent,
       child: Icon(
         icon,
-        color: Colors.black,
+        color: Colors.white,
       ),
     ),
   );

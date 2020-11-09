@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:depression_screening_app/ScreenPaziente/Quiz/resultpage.dart';
 import 'package:depression_screening_app/components/title_question.dart';
+import 'package:depression_screening_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_recorder/audio_recorder.dart';
 import 'dart:io' as io;
@@ -13,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record_mp3/record_mp3.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 
 
 class quizpageopen extends StatefulWidget {
@@ -78,7 +78,7 @@ class _quizpageopen extends State<quizpageopen>{
               height: 200,
               child: FloatingActionButton(
                 child: _isMicrophoneActive ? Icon(Icons.stop, size: 110,) : Icon(Icons.mic, size: 110,),
-                backgroundColor: _isMicrophoneActive ? Colors.red : Colors.purple,
+                backgroundColor: _isMicrophoneActive ? Colors.red : KColorIcon,
                 elevation: 20,
                 onPressed: (){
 
