@@ -10,12 +10,34 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-
+class getjsonQuestionario extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context).loadString("assets/regioni-province.json"),
+      builder: (context,snapshot){
+        var mydata = json.decode(snapshot.data.toString());
+        if(mydata == null){
+          return Scaffold(
+            body: Center(
+              child: Text(
+                  "Caricamento..."
+              ),
+            ),
+          );
+        }else{
+          return QuestionarioPage( mydata : mydata);
+        }
+      },
+    );
+  }
+}
 class QuestionarioPage extends StatefulWidget{
-  QuestionarioPage({Key key}): super(key: key);
+  var mydata;
+  QuestionarioPage({Key key,this.mydata}): super(key: key);
 
   @override
-  _QuestionarioPageState createState() => _QuestionarioPageState();
+  _QuestionarioPageState createState() => _QuestionarioPageState(mydata);
 }
 
 
@@ -23,23 +45,18 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   Validazione validazione=new Validazione();
   Utente utente=new Utente();
   String dataReg;
-  var jsonResult;
+  var myData;
   String selectedRegion;
+  String selectedProvincia;
   List<String> regioni=new List<String>();
   List<String> province=new List<String>();
+
+  _QuestionarioPageState(this.myData);
 
   @override
   void initState() {
     super.initState();
-    _getUser();
   }
-  _getUser() async {
-    dataReg = await DefaultAssetBundle.of(context).loadString("assets/regioni-province.json");
-    jsonResult = json.decode(dataReg);
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     regioni=listaRegioni();
@@ -59,24 +76,6 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                   SizedBox(
                     height: 15,
                   ),
-                  //
-                  MyCustomInputBox(
-                    label: 'Nome (Almeno 3 caratteri)',
-                    inputHint: 'Mario',
-                    controller: nome,
-                  ),
-                  //
-                  SizedBox(
-                    height: 15,
-                  ),
-                  //
-                  MyCustomInputBox(
-                    label: 'Cognome (Almeno 3 caratteri)',
-                    inputHint: 'Rossi',
-                    controller: cognome,
-                  ),
-                  //
-
                   SizedBox(
                     height: 100,
                     width: 250,
@@ -202,20 +201,17 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                         ),),
 
                         onChanged: (value){
-                          //utente.regione=value;
-                          //province=listaProvince(regioni, value);
-
                           setState(() {
-                            utente.provincia = "Seleziona provincia";
+                            utente.provincia = " ";
                             utente.regione = value;
                             province = listaProvince(regioni, utente.regione);
+                            selectedProvincia = province[0];
                           });
-
                           },
 
 
                         items: regioni.map((String value) {
-                        return new DropdownMenuItem<String>(
+                        return  DropdownMenuItem<String>(
                           value: value,
                           child: new Text(value),
                         );
@@ -241,20 +237,20 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                         color: Color(0xff8f9db5),
                       ),),
 
-                      onChanged: (value){
-
-                        setState(() {
-                          utente.provincia=value;
-                        });
-
-                      },
-
                       items: province.map((String value) {
                         return new DropdownMenuItem<String>(
                           value: value,
                           child: new Text(value),
                         );
                       }).toList(),
+
+                      onChanged: (value){
+                        setState(() {
+                          selectedProvincia = value;
+                          utente.provincia = value;
+                        });
+                      },
+                      value: selectedProvincia,
                     ),
                   ),
 
@@ -312,24 +308,22 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   }
 
      List<String> listaRegioni() {
-     jsonResult = json.decode(dataReg);
      List<String> list= new List();
 
      for (int i=0; i<20 ; i++){
-        list.add(jsonResult["regioni"][i]["nome"]);
+        list.add(myData["regioni"][i]["nome"]);
       }
-     print(list);
       return list;
     }
 
     List<String> listaProvince(List<String> regioni, String regione){
-    jsonResult = json.decode(dataReg);
+
     int indice=regioni.indexOf(regione);
-    List listaProv=jsonResult["regioni"][indice]["capoluoghi"];
+    List listaProv=myData["regioni"][indice]["capoluoghi"];
     List<String> lista=new List();
 
     for (int i=0; i<(listaProv.length) ; i++){
-      lista.add(jsonResult["regioni"][indice]["capoluoghi"][i]);
+      lista.add(myData["regioni"][indice]["capoluoghi"][i]);
     }
     return lista;
   }
@@ -363,18 +357,6 @@ class Utente{
   String provincia="Cheti";
   FasciaEta eta=FasciaEta.diciottoVenti;
 
-}
-
-class Region {
-  //final String regione;
-  //final String provincia;
-
-  int id; //prova
-
-  Region({this.id});
-  factory Region.fromJson(Map<String, dynamic> json) {
-    return new Region(id: json["ID"]);
-  }
 }
 
 

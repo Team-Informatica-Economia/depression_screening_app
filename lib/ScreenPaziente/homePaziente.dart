@@ -133,7 +133,7 @@ Widget displayInformation(BuildContext context,snapshot){
                     context,
                     MaterialPageRoute(
                       builder: (context){
-                        return QuestionarioPage();
+                        return getjsonQuestionario();
                         },
                     ),
                   );
