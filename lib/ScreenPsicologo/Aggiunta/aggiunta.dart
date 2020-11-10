@@ -33,6 +33,10 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
     var scrWidth = MediaQuery.of(context).size.width;
     var scrHeight = MediaQuery.of(context).size.height;
 
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
+    final uid = user.uid;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
@@ -81,7 +85,7 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
                 RoundedButton(
                   text: "Aggiungi paziente",
                   press: (){
-                    Users u = new Users(nomeController.text.trim(), cognomeController.text.trim(), emailController.text.trim());
+                    Users u = new Users(nomeController.text.trim(), cognomeController.text.trim(), emailController.text.trim(), uid);
                     context.read<AuthenticationService>().sigUp(
                       email: emailController.text.trim(),
                       password: passwordController.text.trim(),

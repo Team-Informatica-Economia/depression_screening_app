@@ -23,7 +23,6 @@ class ProvaLetturaState extends State<ProvaLettura>{
   }
   _getUser() async {
     return await readUser();
-
   }
   @override
   Widget build(BuildContext context) {
@@ -34,8 +33,8 @@ class ProvaLetturaState extends State<ProvaLettura>{
           future: userFuture,
           builder: (context,snapshot){
             if(snapshot.connectionState == ConnectionState.done){
-
-              return displayInformation(context, snapshot);
+              //return displayInformation(context, snapshot);
+              return Text("ciao");
             }else{
               return CircularProgressIndicator();
             }
@@ -48,6 +47,7 @@ class ProvaLetturaState extends State<ProvaLettura>{
 }
 Widget displayInformation(context,snapshot){
   Users utenteLoggato = snapshot.data;
+
   return Column(
 
     children: <Widget>[
@@ -60,7 +60,7 @@ Widget displayInformation(context,snapshot){
           ),
         ),
       ),
-      Padding(
+       Padding(
         padding: EdgeInsets.all(8.0),
         child: Text(
           "Cognome:  ${utenteLoggato.cognome}",

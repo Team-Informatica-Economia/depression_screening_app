@@ -126,19 +126,19 @@ Widget displayInformation(BuildContext context,snapshot){
 
             SizedBox(height: 55.0),
 
-            RoundedButton(
-                text: "Completa questionario",
-                press: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context){
-                        return getjsonQuestionario();
-                        },
-                    ),
-                  );
-                  },
-              ),
+            // RoundedButton(
+            //     text: "Completa questionario",
+            //     press: (){
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context){
+            //             return getjsonQuestionario();
+            //             },
+            //         ),
+            //       );
+            //       },
+            //   ),
             InkWell(
               child: Container(
                 //height: 135,
@@ -193,8 +193,7 @@ Widget displayInformation(BuildContext context,snapshot){
                   context,
                   MaterialPageRoute(
                     builder: (context){
-                      return DatiPersonali();
-                      //return getjson();
+                      return getjsonQuestionario();
                     },
                   ),
                 );

@@ -50,13 +50,22 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   String selectedProvincia;
   List<String> regioni=new List<String>();
   List<String> province=new List<String>();
+  Future userFuture;
+  String nomeUtente;
+  String cognomeUtente;
 
   _QuestionarioPageState(this.myData);
 
   @override
   void initState() {
     super.initState();
+    userFuture = _getUser();
   }
+  _getUser() async {
+    return await readUser();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     regioni=listaRegioni();
@@ -65,6 +74,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
     TextEditingController email = TextEditingController();
     var scrWidth = MediaQuery.of(context).size.width;
     var scrHeight = MediaQuery.of(context).size.height;
+    Users utenteLoggato;
 
     return Scaffold(
         body: SingleChildScrollView(
@@ -73,6 +83,18 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
+                  FutureBuilder(
+                    future: userFuture,
+                    builder: (context,snapshot){
+                      if(snapshot.connectionState == ConnectionState.done){
+                        return displayInformation(context, snapshot);
+                      }else{
+                        return CircularProgressIndicator();
+                      }
+                    },
+                  ),
+
                   SizedBox(
                     height: 15,
                   ),
@@ -293,9 +315,18 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                     text: "Completa quiz",
 
                     press: (){
-                      if(validazione.isValid(nome.text) && validazione.isValid(cognome.text))
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                      if(validazione.isValid(nome.text) && validazione.isValid(cognome.text)) {
+                        Users newUser = new Users.overloadedConstructor(utenteLoggato.nome, utenteLoggato.cognome, utenteLoggato.email, utente.statoCivile.toString(),
+                            utente.sesso.toString(), utente.scuola.toString(), utente.regione, utente.provincia, utente.eta.toString(),
+                        utenteLoggato.uidPadre);
+                        print("Prima"+newUser.toJsonCompleto().toString());
+                        updateUser(newUser);
+                        print("Dopo"+newUser.toJsonCompleto().toString());
 
+
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => HomePage(),));
+                      }
                     },
                   )
 
@@ -359,5 +390,43 @@ class Utente{
 
 }
 
+Widget displayInformation(context,snapshot){
+  Users utenteLoggato = snapshot.data;
 
+  return Column(
+    children: <Widget>[
+
+        Padding(
+          padding: EdgeInsets.only(top: 30.0),
+
+          child: Text("Compila dati personali", style: TextStyle(
+            fontFamily: 'Product Sans',
+            fontSize: 35,
+            color: Color(0xff8f9db5),
+          ),),),
+
+
+        Padding(
+          padding: EdgeInsets.all(8.0),
+
+          child: Text("${utenteLoggato.nome}", style: TextStyle(
+            fontFamily: 'Product Sans',
+            fontSize: 20,
+            color: Color(0xff8f9db5),
+          ),),),
+
+        Padding(
+          padding: EdgeInsets.all(8.0),
+
+          child: Text("${utenteLoggato.cognome}", style: TextStyle(
+            fontFamily: 'Product Sans',
+            fontSize: 20,
+            color: Color(0xff8f9db5),
+          ),),),
+
+    ],
+
+  );
+
+}
 
