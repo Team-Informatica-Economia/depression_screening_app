@@ -9,14 +9,14 @@ Future<void> writeNewUser(Users users, String uidRegister) {
   final User user = auth.currentUser;
   final uid = user.uid;
   print("Utente loggato ${uid} Utente aggiunto ");
-  databaseReference.child("users").child(uid).child("listaPazienti").child(uidRegister).push().set(users.toJson());
+  databaseReference.child("users").child(uid).child("listaPazienti").child(uidRegister).set(users.toJson());
 }
 
 Future<void> updateUser(Users users) {
   final User user = auth.currentUser;
   final uid = user.uid;
   print("Utente loggato ${uid} Utente aggiornato ");
-  databaseReference.child("users").child(users.uidPadre).child("listaPazienti").child(uid).update(users.toJson());
+  databaseReference.child("users").child(users.uidPadre).child("listaPazienti").child(uid).update(users.toJsonCompleto());
 }
 
 Future<Users> readUser() async{
@@ -30,25 +30,20 @@ Future<Users> readUser() async{
   Map<dynamic, dynamic> values = dataSnapshot.value;
 
   if (dataSnapshot.value != null) {
-    values.forEach((key, value) {
-      print("primo for");
-      value.forEach((key, valueFin) {
-        print("secondo for");
-        print(valueFin);
-        valueFin.forEach((key, valueSec){
-          print("terzo for");
-          if(key==uid) {
-            valueSec.forEach((key, valueTer){
-              print("quarto for");
-              list.add(valueTer);
-              print(list);
-            });
-          }
-        });
+    values.forEach((key, value) {//psicologi
+      value.forEach((key, valueFin) {//attributi
+        if(key=="listaPazienti"){
+          valueFin.forEach((key, valueSec){
+            if(key==uid) {
+                list.add(valueSec);
+            }
+          });
+        }
       });
     });
   }
 
+  print(list.toString());
 
   return new Users(list[0]['nome'], list[0]['cognome'], list[0]['email'], list[0]["uidPadre"]);
   }
@@ -65,9 +60,7 @@ Future<List<Users>> readListPazienti() async{
 
   if (dataSnapshot.value != null) {
     values.forEach((key, value) {
-      value.forEach((key, valueFin) {
-        list.add(valueFin);
-      });
+      list.add(value);
     });
   }
   List<Users> listaPazienti = new List();

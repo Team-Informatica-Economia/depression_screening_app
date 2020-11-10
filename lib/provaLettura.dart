@@ -33,8 +33,7 @@ class ProvaLetturaState extends State<ProvaLettura>{
           future: userFuture,
           builder: (context,snapshot){
             if(snapshot.connectionState == ConnectionState.done){
-              //return displayInformation(context, snapshot);
-              return Text("ciao");
+              return displayInformation(context, snapshot);
             }else{
               return CircularProgressIndicator();
             }

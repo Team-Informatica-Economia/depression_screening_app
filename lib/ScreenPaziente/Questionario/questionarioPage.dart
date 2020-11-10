@@ -43,7 +43,6 @@ class QuestionarioPage extends StatefulWidget{
 
 class _QuestionarioPageState extends State<QuestionarioPage> {
   Validazione validazione=new Validazione();
-  Utente utente=new Utente();
   String dataReg;
   var myData;
   String selectedRegion;
@@ -53,6 +52,10 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   Future userFuture;
   String nomeUtente;
   String cognomeUtente;
+  List<String> statoCivile = ["nubile","celibe"];
+  List<String> sesso = ["M","F","Preferisco non specificarlo"];
+  List<String> gradoIstruzione = ["Primaria","Superiore"];
+  List<String> eta = ["18-20","21-30"];
 
   _QuestionarioPageState(this.myData);
 
@@ -69,9 +72,6 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   @override
   Widget build(BuildContext context) {
     regioni=listaRegioni();
-    TextEditingController nome = TextEditingController();
-    TextEditingController cognome = TextEditingController();
-    TextEditingController email = TextEditingController();
     var scrWidth = MediaQuery.of(context).size.width;
     var scrHeight = MediaQuery.of(context).size.height;
     Users utenteLoggato;
@@ -87,6 +87,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                   FutureBuilder(
                     future: userFuture,
                     builder: (context,snapshot){
+                      utenteLoggato = snapshot.data;
                       if(snapshot.connectionState == ConnectionState.done){
                         return displayInformation(context, snapshot);
                       }else{
@@ -115,21 +116,15 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                         ),),
 
                         onChanged: (value){
-                          utente.statoCivile=value;
+                          utenteLoggato.statoCivile = value;
                         },
 
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("Celibe"),
-                            value: StatoCivile.celibe,
-                          ),
-
-                          DropdownMenuItem(
-                            child: Text("Nubile"),
-                            value: StatoCivile.nubile,
-                          ),
-
-                        ]
+                      items: statoCivile.map((String value) {
+                        return  DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
 
@@ -150,25 +145,15 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                       ),),
 
                      onChanged: (value){
-                       utente.sesso=value;
+                       utenteLoggato.sesso=value;
                      },
 
-                       items: [
-                   DropdownMenuItem(
-                   child: Text("M"),
-                    value: Sesso.M,
-                  ),
-
-                    DropdownMenuItem(
-                      child: Text("F"),
-                      value: Sesso.F,
-                    ),
-
-                    DropdownMenuItem(
-                      child: Text("Preferisco\nnon specificarlo"),
-                      value: Sesso.PreferiscoNonRispondere,
-                    ),
-                    ]
+                     items: sesso.map((String value) {
+                       return  DropdownMenuItem<String>(
+                         value: value,
+                         child: new Text(value),
+                       );
+                     }).toList(),
                     ),
                   ),
 
@@ -189,20 +174,15 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                         ),),
 
                         onChanged: (value){
-                          utente.scuola=value;
+                          utenteLoggato.scuola=value;
                         },
 
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("Primaria"),
-                            value: Scuola.Primaria,
-                          ),
-
-                          DropdownMenuItem(
-                            child: Text("Medie"),
-                            value: Scuola.Medie,
-                          ),
-                        ]
+                      items: gradoIstruzione.map((String value) {
+                        return  DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
 
@@ -224,9 +204,9 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
 
                         onChanged: (value){
                           setState(() {
-                            utente.provincia = " ";
-                            utente.regione = value;
-                            province = listaProvince(regioni, utente.regione);
+                            utenteLoggato.provincia = " ";
+                            utenteLoggato.regione = value;
+                            province = listaProvince(regioni, utenteLoggato.regione);
                             selectedProvincia = province[0];
                           });
                           },
@@ -269,7 +249,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                       onChanged: (value){
                         setState(() {
                           selectedProvincia = value;
-                          utente.provincia = value;
+                          utenteLoggato.provincia = value;
                         });
                       },
                       value: selectedProvincia,
@@ -293,20 +273,15 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                         ),),
 
                         onChanged: (value){
-                          utente.eta=value;
+                          utenteLoggato.eta=value;
                         },
 
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("(18-20)"),
-                            value: FasciaEta.diciottoVenti,
-                          ),
-
-                          DropdownMenuItem(
-                            child: Text("(21-30)"),
-                            value: FasciaEta.ventunoTrenta,
-                          ),
-                        ]
+                      items: eta.map((String value) {
+                        return  DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
 
@@ -315,19 +290,15 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                     text: "Completa quiz",
 
                     press: (){
-                      if(validazione.isValid(nome.text) && validazione.isValid(cognome.text)) {
-                        Users newUser = new Users.overloadedConstructor(utenteLoggato.nome, utenteLoggato.cognome, utenteLoggato.email, utente.statoCivile.toString(),
-                            utente.sesso.toString(), utente.scuola.toString(), utente.regione, utente.provincia, utente.eta.toString(),
-                        utenteLoggato.uidPadre);
-                        print("Prima"+newUser.toJsonCompleto().toString());
+                        Users newUser = new Users.overloadedConstructor(utenteLoggato.nome, utenteLoggato.cognome, utenteLoggato.email, utenteLoggato.statoCivile.toString(),
+                            utenteLoggato.sesso.toString(), utenteLoggato.scuola.toString(), utenteLoggato.regione, utenteLoggato.provincia, utenteLoggato.eta.toString(),
+                            utenteLoggato.uidPadre);
                         updateUser(newUser);
-                        print("Dopo"+newUser.toJsonCompleto().toString());
-
 
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => HomePage(),));
                       }
-                    },
+                    ,
                   )
 
                 ],
@@ -358,36 +329,6 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
     }
     return lista;
   }
-}
-
-enum StatoCivile{
-  celibe, nubile
-}
-
-enum Sesso{
-  M, F, PreferiscoNonRispondere
-}
-
-enum Scuola{
-  Primaria, Medie
-}
-
-
-
-enum FasciaEta{
-  diciottoVenti, ventunoTrenta, trentunoQuaranta, quarantunoCinquanta, cinquantuno60, settantaEOltre
-}
-
-class Utente{
-  String nome;
-  String cognome;
-  StatoCivile statoCivile =StatoCivile.celibe;
-  Sesso sesso=Sesso.M;
-  Scuola scuola= Scuola.Primaria;
-  String regione="Abruzzo";
-  String provincia="Cheti";
-  FasciaEta eta=FasciaEta.diciottoVenti;
-
 }
 
 Widget displayInformation(context,snapshot){
