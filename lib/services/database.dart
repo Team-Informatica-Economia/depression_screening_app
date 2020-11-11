@@ -45,7 +45,10 @@ Future<Users> readUser() async{
 
   print(list.toString());
 
-  return new Users(list[0]['nome'], list[0]['cognome'], list[0]['email'], list[0]["uidPadre"]);
+  /*if(list[0]["statoCivile"] == null)
+    return new Users(list[0]['nome'], list[0]['cognome'], list[0]['email'], list[0]["uidPadre"]);
+  else*/
+    return new Users.overloadedConstructor(list[0]['nome'], list[0]['cognome'], list[0]['email'], list[0]["statoCivile"], list[0]["sesso"], list[0]["scuola"], list[0]["regione"], list[0]["provincia"], list[0]["eta"], list[0]["uidPadre"]);
   }
 
 
