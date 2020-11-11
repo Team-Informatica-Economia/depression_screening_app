@@ -141,7 +141,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
 
   Widget displayInformation(context, snapshot) {
     Users utenteLoggato = snapshot.data;
-    if(utenteLoggato.statoCivile == null)
+    if((utenteLoggato.statoCivile == null) || (utenteLoggato.sesso == null) || (utenteLoggato.scuola == null) || (utenteLoggato.regione == null) || (utenteLoggato.provincia == null) || (utenteLoggato.eta == null))
       firstCompilation = true;
     else
       firstCompilation = false;
