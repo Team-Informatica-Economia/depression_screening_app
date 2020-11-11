@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:depression_screening_app/ScreenPaziente/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';

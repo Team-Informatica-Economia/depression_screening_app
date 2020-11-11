@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
@@ -19,3 +20,4 @@ class SizeConfig {
         : screenWidth * 0.024;
   }
 }
+

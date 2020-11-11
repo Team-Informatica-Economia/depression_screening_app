@@ -7,14 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:audio_recorder/audio_recorder.dart';
 import 'dart:io' as io;
 
-import 'package:file/file.dart';
-import 'package:file/local.dart';
-import 'package:flutter/services.dart';
-
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:record_mp3/record_mp3.dart';
-
 
 class quizpageopen extends StatefulWidget {
   final bool microfono;

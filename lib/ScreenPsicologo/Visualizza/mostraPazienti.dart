@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPsicologo/Visualizza/detailPaziente.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:depression_screening_app/components/searchBar.dart';
 import 'package:depression_screening_app/constants.dart';
@@ -74,12 +75,11 @@ class MostraPazientiState extends State<MostraPazienti> {
     return Scaffold(
       backgroundColor: KPrimaryColor,
       extendBody: true,
-      body: ListView(
+      body: Column(
         children: <Widget>[
 
-          SizedBox(height: 25.0),
           Padding(
-            padding: EdgeInsets.only(left: 40.0),
+            padding: EdgeInsets.only(top: 55.0, left: 40.0),
             child: Row(
               children: <Widget>[
                 Text('Lista',
@@ -99,7 +99,7 @@ class MostraPazientiState extends State<MostraPazienti> {
           ),
           SizedBox(height: 40.0),
           Container(
-            height: MediaQuery.of(context).size.height - 185.0,
+            height: MediaQuery.of(context).size.height - 155.0,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
@@ -144,14 +144,14 @@ class MostraPazientiState extends State<MostraPazienti> {
       bottomNavigationBar: bottomBarPsicologo(),
     );
   }
-  Widget _buildUserItem(String imgPath, String nome, String cognome, String email) {
+  Widget _buildUserItem(String imgPath, Users user) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
-              /*Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailsPage(heroTag: imgPath, foodName: foodName, foodPrice: price)
-              ));*/
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailPazienti(user: user)
+              ));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -170,7 +170,7 @@ class MostraPazientiState extends State<MostraPazienti> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children:[
                                 Text(
-                                    nome+" "+cognome,
+                                    user.nome+" "+user.cognome,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 17.0,
@@ -178,7 +178,7 @@ class MostraPazientiState extends State<MostraPazienti> {
                                     )
                                 ),
                                 Text(
-                                    email,
+                                    user.email,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 15.0,
@@ -205,7 +205,7 @@ class MostraPazientiState extends State<MostraPazienti> {
                   return Container(
                     child: Column(
                       children: <Widget>[
-                        _buildUserItem("assets/images/pic.png", pazientiView[index].nome, pazientiView[index].cognome, pazientiView[index].email),
+                        _buildUserItem("assets/images/pic.png", pazientiView[index]),
                         SizedBox(height: 15.0),
                       ],
                     ),
