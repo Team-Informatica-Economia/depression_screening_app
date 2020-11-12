@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPaziente/Questionario/infoPrivacy.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/validazione.dart';
 import 'package:depression_screening_app/Screens/Login/components/background.dart';
 import 'package:depression_screening_app/components/customInputBox.dart';
@@ -89,8 +90,6 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Background(
-                child:
                 Align(
                   alignment: Alignment.center,
                   child: Column(
@@ -111,7 +110,6 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                     ],
                   ),
                 )
-            ),
           ],
         ),
       ),
@@ -366,7 +364,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
             updateUser(newUser);
 
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => InfoPrivacy(),
             ));
           },
         )
