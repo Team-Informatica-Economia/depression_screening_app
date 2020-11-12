@@ -76,4 +76,3 @@ Future<List<Users>> readListPazienti() async{
 
   return listaPazienti;
 }
-

@@ -46,21 +46,21 @@ class bottomBarPaziente extends StatelessWidget {
               children: <Widget>[
                 new GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionarioPage(),));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => QuestionarioPage(),));
                   },
                   child: _buildNavItem(Icons.notifications),
                 ),
                 SizedBox(width: 1,),
                 new GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage(),));
                   },
                   child: _buildNavItem(Icons.home),
                 ),
                 SizedBox(width: 1,),
                 new GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfileScreen(),));
                   },
                   child: _buildNavItem(Icons.account_circle),
                 )

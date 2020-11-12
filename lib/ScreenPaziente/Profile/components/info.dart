@@ -1,5 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
+import '../../../constants.dart';
+import '../../../constants.dart';
+import '../../../constants.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
@@ -11,8 +16,14 @@ class Info extends StatelessWidget {
     this.name,
     this.email,
     this.image,
+    this.eta,
+    this.regione,
+    this.provincia,
+    this.scuola,
+    this.sesso,
+    this.statoCivile,
   }) : super(key: key);
-  final String name, email, image;
+  final String name, email, image, eta, regione, provincia, scuola, sesso, statoCivile;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +31,7 @@ class Info extends StatelessWidget {
     sc.init(context);
     double defaultSize = SizeConfig.defaultSize;
     return SizedBox(
-      height: defaultSize * 24, // 240
+      height: defaultSize * 35, // 240
       child: Stack(
         children: <Widget>[
           ClipPath(
@@ -36,8 +47,8 @@ class Info extends StatelessWidget {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(bottom: defaultSize), //10
-                  height: defaultSize * 14, //140
-                  width: defaultSize * 14,
+                  height: defaultSize * 15, //140
+                  width: defaultSize * 15,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -64,7 +75,127 @@ class Info extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     color: Color(0xFF8492A2),
                   ),
-                )
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Fascia di età: ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+
+                    Text(
+                      eta,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8492A2),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Regione: ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+
+                    Text(
+                      regione,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8492A2),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Provincia: ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+
+                    Text(
+                      provincia,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8492A2),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Scuola: ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+
+                    Text(
+                      scuola,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8492A2),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Sesso: ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+
+                    Text(
+                      sesso,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8492A2),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Stato civile: ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+
+                    Text(
+                      statoCivile,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8492A2),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           )
