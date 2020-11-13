@@ -1,14 +1,10 @@
 import 'package:depression_screening_app/ScreenPsicologo/homePsicologo.dart';
 import 'package:depression_screening_app/components/text_fiels_container.dart';
-import 'package:depression_screening_app/services/Users.dart';
-import 'package:depression_screening_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:depression_screening_app/Screens/Login/components/background.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
-import 'package:depression_screening_app/components/rounded_input_field.dart';
-import 'package:depression_screening_app/components/rounded_password_field.dart';
 import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
 import 'package:depression_screening_app/services/authentication.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +18,8 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   bool _obscureText = true;
+  String _password;
+  String _email;
 
   // Toggles the password show status
   void _toggle() {
@@ -39,10 +37,7 @@ class _BodyState extends State<Body> {
       return HomePage();
     }
     Size size = MediaQuery.of(context).size;
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController= TextEditingController();
-    String _password;
-    String _email;
+
     return Background(
       child: SingleChildScrollView(
         child: Column(
@@ -61,7 +56,9 @@ class _BodyState extends State<Body> {
               TextFieldContainer(
                 child: TextField(
                   onChanged: (val){
-                    _email=val;
+                    setState(() {
+                      _email=val;
+                    });
                   },
                   decoration: InputDecoration(
                       icon: Icon(
@@ -77,7 +74,9 @@ class _BodyState extends State<Body> {
               child: TextFormField(
                 obscureText: _obscureText,
                 onChanged: (val){
-                    _password=val;
+                    setState(() {
+                      _password=val;
+                    });
                 },
                 decoration: InputDecoration(
                     hintText: "Password",
@@ -98,8 +97,6 @@ class _BodyState extends State<Body> {
             RoundedButton(
               text: "LOGIN",
               press: (){
-                print(_email);
-                print(_password);
                 context.read<AuthenticationService>().sigIn(
                   email: _email,
                   password: _password
