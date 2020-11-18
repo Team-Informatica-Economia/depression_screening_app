@@ -348,24 +348,28 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           ),
         ),
         RoundedButton(
-          text: "Completa quiz",
+          text: "Avanti",
           press: () {
-            Users newUser = new Users.overloadedConstructor(
-                utenteLoggato.nome,
-                utenteLoggato.cognome,
-                utenteLoggato.email,
-                utenteLoggato.statoCivile.toString(),
-                utenteLoggato.sesso.toString(),
-                utenteLoggato.scuola.toString(),
-                utenteLoggato.regione,
-                utenteLoggato.provincia,
-                utenteLoggato.eta.toString(),
-                utenteLoggato.uidPadre);
-            updateUser(newUser);
+            if((utenteLoggato.statoCivile!=null) && (utenteLoggato.sesso!=null) && (utenteLoggato.scuola!=null) && (utenteLoggato.regione!=null) && (utenteLoggato.provincia!=null) && (utenteLoggato.eta!=null)) {
+              Users newUser = new Users.overloadedConstructor(
+                  utenteLoggato.nome,
+                  utenteLoggato.cognome,
+                  utenteLoggato.email,
+                  utenteLoggato.statoCivile.toString(),
+                  utenteLoggato.sesso.toString(),
+                  utenteLoggato.scuola.toString(),
+                  utenteLoggato.regione,
+                  utenteLoggato.provincia,
+                  utenteLoggato.eta.toString(),
+                  utenteLoggato.uidPadre);
+              updateUser(newUser);
 
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => InfoPrivacy(),
-            ));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => InfoPrivacy(),
+              ));
+            } else {
+              print("Non sono stati compilati tutti i campi");
+            }
           },
         )
       ],

@@ -31,13 +31,13 @@ class Info extends StatelessWidget {
     sc.init(context);
     double defaultSize = SizeConfig.defaultSize;
     return SizedBox(
-      height: defaultSize * 35, // 240
+      height: defaultSize * 45, // 240
       child: Stack(
         children: <Widget>[
           ClipPath(
             clipper: CustomShape(),
             child: Container(
-              height: defaultSize * 15, //150
+              height: defaultSize * 20, //150
               color: KPrimaryColor,
             ),
           ),
@@ -47,8 +47,8 @@ class Info extends StatelessWidget {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(bottom: defaultSize), //10
-                  height: defaultSize * 15, //140
-                  width: defaultSize * 15,
+                  height: defaultSize * 18, //140
+                  width: defaultSize * 18,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -64,7 +64,7 @@ class Info extends StatelessWidget {
                 Text(
                   name,
                   style: TextStyle(
-                    fontSize: defaultSize * 2.2, // 22
+                    fontSize: defaultSize * 2.9, // 22
                     color: Colors.black,
                   ),
                 ),
@@ -72,6 +72,7 @@ class Info extends StatelessWidget {
                 Text(
                   email,
                   style: TextStyle(
+                    fontSize: defaultSize * 2.1,
                     fontWeight: FontWeight.w400,
                     color: Color(0xFF8492A2),
                   ),
@@ -82,6 +83,7 @@ class Info extends StatelessWidget {
                   children: [
                     Text("Fascia di età: ",
                       style: TextStyle(
+                          fontSize: defaultSize * 1.8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold
                       ),
@@ -90,6 +92,7 @@ class Info extends StatelessWidget {
                     Text(
                       eta,
                       style: TextStyle(
+                        fontSize: defaultSize * 1.8,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF8492A2),
                       ),
@@ -102,6 +105,7 @@ class Info extends StatelessWidget {
                   children: [
                     Text("Regione: ",
                       style: TextStyle(
+                          fontSize: defaultSize * 1.8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold
                       ),
@@ -110,6 +114,7 @@ class Info extends StatelessWidget {
                     Text(
                       regione,
                       style: TextStyle(
+                        fontSize: defaultSize * 1.8,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF8492A2),
                       ),
@@ -122,6 +127,7 @@ class Info extends StatelessWidget {
                   children: [
                     Text("Provincia: ",
                       style: TextStyle(
+                          fontSize: defaultSize * 1.8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold
                       ),
@@ -130,6 +136,7 @@ class Info extends StatelessWidget {
                     Text(
                       provincia,
                       style: TextStyle(
+                        fontSize: defaultSize * 1.8,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF8492A2),
                       ),
@@ -142,6 +149,7 @@ class Info extends StatelessWidget {
                   children: [
                     Text("Scuola: ",
                       style: TextStyle(
+                          fontSize: defaultSize * 1.8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold
                       ),
@@ -150,6 +158,7 @@ class Info extends StatelessWidget {
                     Text(
                       scuola,
                       style: TextStyle(
+                        fontSize: defaultSize * 1.8,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF8492A2),
                       ),
@@ -162,6 +171,7 @@ class Info extends StatelessWidget {
                   children: [
                     Text("Sesso: ",
                       style: TextStyle(
+                          fontSize: defaultSize * 1.8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold
                       ),
@@ -170,6 +180,7 @@ class Info extends StatelessWidget {
                     Text(
                       sesso,
                       style: TextStyle(
+                        fontSize: defaultSize * 1.8,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF8492A2),
                       ),
@@ -182,6 +193,7 @@ class Info extends StatelessWidget {
                   children: [
                     Text("Stato civile: ",
                       style: TextStyle(
+                          fontSize: defaultSize * 1.8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold
                       ),
@@ -190,6 +202,7 @@ class Info extends StatelessWidget {
                     Text(
                       statoCivile,
                       style: TextStyle(
+                        fontSize: defaultSize * 1.8,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF8492A2),
                       ),
