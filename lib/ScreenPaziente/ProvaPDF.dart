@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:depression_screening_app/services/Questionario.dart';
+import 'package:depression_screening_app/services/database.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,7 @@ class ProvaPDFState extends State<ProvaPDF>{
                   child: pw.Text("Easy Approach Document")
               ),
               pw.Paragraph(
-                  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."
+                  text: "ciao" + generaNome()
               ),
               pw.Paragraph(
                   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."
@@ -53,19 +55,27 @@ class ProvaPDFState extends State<ProvaPDF>{
     );
   }
 
+  String generaNome(){
+    DateTime dateTime = DateTime.now();
+    return dateTime.toString() + ".pdf";
+  }
+
   Future saveLocalPDF() async{
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String documentPath = documentDirectory.path;
-    File file = File("$documentPath/prova.pdf");
+    String nomeFile = generaNome();
+    File file = File("$documentPath/$nomeFile");
     file.writeAsBytes(pdf.save());
-    savePdf(file,"prova.pdf");
+    savePdf(file, nomeFile);
   }
 
   savePdf(File asset, String name) async{
     Reference reference = FirebaseStorage.instance.ref().child(name);
     UploadTask uploadTask = reference.putFile(asset);
     String url = await (await uploadTask).ref.getDownloadURL();
-    print("url " + url.toString());
+    print("url " + url);
+    Questionario quest = new Questionario(name, url);
+    await addPdfPaziente(quest);
     //documentFileUpload(url);
   }
   @override

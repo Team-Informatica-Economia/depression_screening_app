@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/services/Questionario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:depression_screening_app/services/Users.dart';
@@ -75,4 +76,12 @@ Future<List<Users>> readListPazienti() async{
   print(listaPazienti.toString());
 
   return listaPazienti;
+}
+
+Future<void> addPdfPaziente(Questionario questionario) async {
+  final Users utenteLoggato = await readUser();
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  print("Utente loggato ${uid} Utente aggiunto ");
+  databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("listaQuesionari").push().set(questionario.toJson());
 }
