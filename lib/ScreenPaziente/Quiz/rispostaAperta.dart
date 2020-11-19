@@ -4,7 +4,6 @@ import 'package:depression_screening_app/ScreenPaziente/Quiz/resultpage.dart';
 import 'package:depression_screening_app/components/title_question.dart';
 import 'package:depression_screening_app/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:audio_recorder/audio_recorder.dart';
 import 'dart:io' as io;
 
 

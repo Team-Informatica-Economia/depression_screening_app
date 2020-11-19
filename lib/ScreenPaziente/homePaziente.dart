@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/ScreenPaziente/Profile/compilazioneDatiPersonali.dart';
+import 'package:depression_screening_app/ScreenPaziente/ProvaPDF.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 
@@ -207,6 +208,19 @@ Widget displayInformation(BuildContext context,snapshot){
                   MaterialPageRoute(
                     builder: (context){
                       return ProvaLettura();
+                    },
+                  ),
+                );
+              },
+            ),
+            RoundedButton (
+              text: "PDF",
+              press: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context){
+                      return ProvaPDF();
                     },
                   ),
                 );
