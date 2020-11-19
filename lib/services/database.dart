@@ -72,9 +72,6 @@ Future<List<Users>> readListPazienti() async{
     listaPazienti.add(new Users(list[i]['nome'], list[i]['cognome'], list[i]['email'],  list[0]["uidPadre"]));
   }
 
-  print(listaPazienti[0].toString());
-  print(listaPazienti.toString());
-
   return listaPazienti;
 }
 
@@ -83,5 +80,34 @@ Future<void> addPdfPaziente(Questionario questionario) async {
   final User user = auth.currentUser;
   final uid = user.uid;
   print("Utente loggato ${uid} Utente aggiunto ");
-  databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("listaQuesionari").push().set(questionario.toJson());
+  databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("listaQuestionari").push().set(questionario.toJson());
+}
+
+Future<List<Questionario>> readListQuestionari(Users paziente) async{
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  DataSnapshot dataSnapshot = await databaseReference.child("users").child(uid).child("listaPazienti").once();
+
+  Map<dynamic, dynamic> values = dataSnapshot.value;
+  List list = new List();
+
+  if (dataSnapshot.value != null) {
+    values.forEach((key, value) {
+        if(value["email"]==paziente.email){
+          value.forEach((key, valueFin) {//attributi
+            if(key=="listaQuestionari"){
+              valueFin.forEach((key, value) {
+                list.add(value);
+              });
+            }
+          });
+        }
+    });
+  }
+
+  List<Questionario> listaQuestionari = new List();
+  for(int i = 0; i < list.length; i++) {
+    listaQuestionari.add(new Questionario(list[i]['titoloPdf'], list[i]['path']));
+  }
+  return listaQuestionari;
 }

@@ -1,5 +1,8 @@
+import 'package:depression_screening_app/ScreenPsicologo/Visualizza/PdfPreviewScreen.dart';
 import 'package:depression_screening_app/constants.dart';
+import 'package:depression_screening_app/services/Questionario.dart';
 import 'package:depression_screening_app/services/Users.dart';
+import 'package:depression_screening_app/services/database.dart';
 import 'package:flutter/material.dart';
 
 
@@ -18,6 +21,20 @@ class DetailPazienti extends StatefulWidget{
 class DetailPazientiState extends State<DetailPazienti> {
   Users user;
   DetailPazientiState(this.user);
+
+  Future userFuture;
+  List<Questionario> questionari;
+
+  @override
+  void initState() {
+    super.initState();
+    userFuture = _getQuestionari();
+
+  }
+  _getQuestionari() async {
+    return await readListQuestionari(user);
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,46 +83,84 @@ class DetailPazientiState extends State<DetailPazienti> {
           ),
           Padding(
             padding:  EdgeInsets.only(top: 175),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30.0),
-                    topLeft: Radius.circular(30.0),
-                  )
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding:  EdgeInsets.only(left: 30.0, top: 30),
-                      child: Text("Risultati Quiz", style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                      ),),
-                    ),
-                    SizedBox(height: 0),
-                    Container(
-                      height: 200,
-                      child: ListView(
-                        scrollDirection: Axis.vertical,
-                        children: <Widget>[
-                          Text("prova 1",),
-                          Text("prova 1",),
-                          Text("prova 1",),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            child: FutureBuilder(
+              future: userFuture,
+              builder: (context,snapshot){
+                if(snapshot.connectionState == ConnectionState.done){
+                  questionari = snapshot.data;
+
+                  return displayInformation(context, snapshot);
+                }else{
+                  return CircularProgressIndicator();
+                }
+              },
             ),
           )
         ],
       ),
     );
   }
-
+  Widget displayInformation(context,snapshot) {
+    return Padding(
+        padding: EdgeInsets.only(top: 15.0),
+        child: Container(
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: questionari.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Column(
+                    children: <Widget>[
+                      _buildQuestionarioItem(questionari[index]),
+                      SizedBox(height: 15.0),
+                    ],
+                  ),
+                );
+              }
+          ),
+        )
+    );
+  }
+  Widget  _buildQuestionarioItem(Questionario questionario) {
+    return Padding(
+        padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+        child: InkWell(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => PdfScreen(path: questionario.path)
+              ));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                    child: Row(
+                        children: [
+                          Image(
+                              image: AssetImage("assets/images/questionario.png"),
+                              fit: BoxFit.cover,
+                              height: 75.0,
+                              width: 75.0
+                          ),
+                          SizedBox(width: 10.0),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:[
+                                Text(
+                                    questionario.titoloPdf,
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold
+                                    )
+                                ),
+                              ]
+                          )
+                        ]
+                    )
+                ),
+              ],
+            )
+        ));
+  }
 }
