@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPaziente/AudioRecorder.dart';
 import 'package:depression_screening_app/ScreenPaziente/Profile/compilazioneDatiPersonali.dart';
 import 'package:depression_screening_app/ScreenPaziente/ProvaPDF.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
@@ -221,6 +222,20 @@ Widget displayInformation(BuildContext context,snapshot){
                   MaterialPageRoute(
                     builder: (context){
                       return ProvaPDF();
+                    },
+                  ),
+                );
+              },
+            ),
+
+            RoundedButton (
+              text: "Prova audio",
+              press: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context){
+                      return Audio();
                     },
                   ),
                 );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:depression_screening_app/ScreenPaziente/Quiz/resultpage.dart';
@@ -5,6 +6,9 @@ import 'package:depression_screening_app/components/title_question.dart';
 import 'package:depression_screening_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
+
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 class quizpageopen extends StatefulWidget {
@@ -21,12 +25,85 @@ class _quizpageopen extends State<quizpageopen>{
   _quizpageopen(this.microfono, this.risposta);
   bool _isMicrophoneActive = false;
 
+  FlutterAudioRecorder _recorder;
+  Recording _recording;
+  String _alert;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      _prepare();
+    });
+  }
+
+  Future _init() async {
+    String customPath = '/risposta';
+    io.Directory appDocDirectory;
+    if (io.Platform.isIOS) {
+      appDocDirectory = await getApplicationDocumentsDirectory();
+    } else {
+      appDocDirectory = await getExternalStorageDirectory();
+    }
+
+    // can add extension like ".mp4" ".wav" ".m4a" ".aac"
+    customPath = appDocDirectory.path +
+        customPath +
+        DateTime.now().millisecondsSinceEpoch.toString();
+
+    // .wav <---> AudioFormat.WAV
+    // .mp4 .m4a .aac <---> AudioFormat.AAC
+    // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
+
+    _recorder = FlutterAudioRecorder(customPath,
+        audioFormat: AudioFormat.WAV, sampleRate: 22050);
+    await _recorder.initialized;
+  }
+
+  Future _prepare() async {
+    var hasPermission = await FlutterAudioRecorder.hasPermissions;
+    if (hasPermission) {
+      await _init();
+      var result = await _recorder.current();
+      setState(() {
+        _recording = result;
+        //_buttonIcon = _playerIcon(_recording.status);
+        _alert = "";
+      });
+    } else {
+      setState(() {
+        _alert = "Permission Required.";
+      });
+    }
+  }
+
+  Future _startRecording() async {
+    await _recorder.start();
+    var current = await _recorder.current();
+    setState(() {
+      _recording = current;
+    });
+
+  }
+
+  Future _stopRecording() async {
+    var result = await _recorder.stop();
+
+
+    setState(() {
+      _recording = result;
+    });
+  }
+
+
   void _disabilitaNextDomanda(){
     setState(()  {
       if(_isMicrophoneActive == false) {
         _isMicrophoneActive = true;
+        _startRecording();
       }
       else
+        _stopRecording();
         _cambiaPage();
     });
   }
