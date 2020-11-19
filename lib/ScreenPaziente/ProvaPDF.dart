@@ -58,19 +58,19 @@ class ProvaPDFState extends State<ProvaPDF>{
     String documentPath = documentDirectory.path;
     File file = File("$documentPath/prova.pdf");
     file.writeAsBytes(pdf.save());
-    savePdf(file.readAsBytesSync(),"prova.pdf");
+    savePdf(file,"prova.pdf");
   }
 
-  savePdf(List<int> asset, String name) async{
+  savePdf(File asset, String name) async{
     Reference reference = FirebaseStorage.instance.ref().child(name);
-    UploadTask uploadTask = reference.putData(asset);
-    //String url = await (await uploadTask.onComplete).ref.getDownloadURL();
+    UploadTask uploadTask = reference.putFile(asset);
+    String url = await (await uploadTask).ref.getDownloadURL();
+    print("url " + url.toString());
     //documentFileUpload(url);
   }
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
