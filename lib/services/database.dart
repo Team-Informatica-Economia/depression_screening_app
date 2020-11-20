@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:depression_screening_app/services/Users.dart';
 
+import 'AppuntamentoObj.dart';
+
 var databaseReference = FirebaseDatabase.instance.reference();
 final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -79,7 +81,6 @@ Future<void> addPdfPaziente(Questionario questionario) async {
   final Users utenteLoggato = await readUser();
   final User user = auth.currentUser;
   final uid = user.uid;
-  print("Utente loggato ${uid} Utente aggiunto ");
   databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("listaQuestionari").push().set(questionario.toJson());
 }
 
@@ -110,4 +111,20 @@ Future<List<Questionario>> readListQuestionari(Users paziente) async{
     listaQuestionari.add(new Questionario(list[i]['titoloPdf'], list[i]['path']));
   }
   return listaQuestionari;
+}
+
+Future<void> addAppuntamento(String emailPaziente,AppuntamentoObj appuntamento) async {
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  DataSnapshot dataSnapshot = await databaseReference.child("users").child(uid).child("listaPazienti").once();
+  Map<dynamic, dynamic> values = dataSnapshot.value;
+
+
+  if (dataSnapshot.value != null) {
+    values.forEach((key, value) {
+      if(value["email"]==emailPaziente){
+        databaseReference.child("users").child(uid).child("listaPazienti").child(key).child("appuntamento").set(appuntamento.toJson());
+      }
+    });
+  }
 }

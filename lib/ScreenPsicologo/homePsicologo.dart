@@ -105,8 +105,6 @@ Widget displayInformation(BuildContext context,snapshot){
             .of(context)
             .size
             .height-165,
-
-
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
