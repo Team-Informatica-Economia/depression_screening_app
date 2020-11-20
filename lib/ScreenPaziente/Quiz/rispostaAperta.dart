@@ -60,6 +60,30 @@ class _quizpageopen extends State<quizpageopen>{
     await _recorder.initialized;
   }
 
+  void _opt() async {
+    print("Recording status "+_recording.status.toString());
+    switch (_recording.status) {
+      case RecordingStatus.Initialized:
+        {
+          await _startRecording();
+          break;
+        }
+      case RecordingStatus.Recording:
+        {
+          await _stopRecording();
+          break;
+        }
+      case RecordingStatus.Stopped:
+        {
+          await _prepare();
+          break;
+        }
+
+      default:
+        break;
+    }
+  }
+
   Future _prepare() async {
     var hasPermission = await FlutterAudioRecorder.hasPermissions;
     if (hasPermission) {
@@ -100,11 +124,15 @@ class _quizpageopen extends State<quizpageopen>{
     setState(()  {
       if(_isMicrophoneActive == false) {
         _isMicrophoneActive = true;
-        _startRecording();
+        _recording.status=RecordingStatus.Initialized;
+        _opt();
       }
-      else
-        _stopRecording();
+      else{
+        _recording.status=RecordingStatus.Recording;
+        _opt();
         _cambiaPage();
+      }
+
     });
   }
 
