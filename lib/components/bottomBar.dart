@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPaziente/Message/ChatScreen.dart';
 import 'package:depression_screening_app/ScreenPaziente/Profile/profileScreen.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/ScreenPaziente/homePaziente.dart';
@@ -46,7 +47,7 @@ class bottomBarPaziente extends StatelessWidget {
               children: <Widget>[
                 new GestureDetector(
                   onTap: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => QuestionarioPage(),));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ChatScreen(),));
                   },
                   child: _buildNavItem(Icons.notifications),
                 ),

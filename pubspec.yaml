@@ -40,6 +40,8 @@ dependencies:
   path_provider: ^1.6.24
   shared_preferences: ^0.5.12+4
 
+  flutter_chat_bubble: ^1.0.2
+
   pdf: ^1.11.2
   flutter_cached_pdfview: ^0.3.0
   flutter_audio_recorder: ^0.5.5

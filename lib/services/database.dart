@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/ScreenPsicologo/Visualizza/Appuntamento.dart';
+import 'package:depression_screening_app/services/Messaggio.dart';
 import 'package:depression_screening_app/services/Questionario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -137,4 +138,36 @@ Future<AppuntamentoObj> readAppuntamento( ) async{
 
   }
   return(obj);
+}
+Future<void> addMessaggioByPaziente(Messaggio messaggio) async {
+
+  final Users utenteLoggato = await readUser();
+  final User user = auth.currentUser;
+  final uid = user.uid;
+
+  databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("chat").push().set(messaggio.toJson());
+
+}
+
+Future<List<Messaggio>> readListMessaggio() async{
+  final Users utenteLoggato = await readUser();
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  DataSnapshot dataSnapshot = await databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("chat").once();
+
+  List list = new List();
+  Map<dynamic, dynamic> values = dataSnapshot.value;
+
+  if (dataSnapshot.value != null) {
+    values.forEach((key, value) {
+      list.add(value);
+    });
+  }
+  List<Messaggio> listaMessaggi = new List();
+  for(int i = 0; i < list.length; i++) {
+    listaMessaggi.add(Messaggio(list[i]['messaggio'], list[i]['isPaziente'], list[i]['data']));
+  }
+  listaMessaggi.sort((a, b) => a.data.compareTo(b.data));
+  print(listaMessaggi);
+  return listaMessaggi;
 }
