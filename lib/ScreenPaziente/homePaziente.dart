@@ -30,17 +30,21 @@ class _HomePageState extends State<HomePage> {
     userFuture = _getUser();
     appuntamentoFuture = _getAppuntamento();
   }
+
   _getUser() async {
     return await readUser();
   }
+
   _getAppuntamento() async {
     return await readAppuntamento();
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
-    if(firebaseUser == null){
-      return LoginScreen();
+    if (firebaseUser == null) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
     }
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -49,10 +53,10 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         child: FutureBuilder(
           future: userFuture,
-          builder: (context,snapshot){
-            if(snapshot.connectionState == ConnectionState.done){
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
               return displayInformation(context, snapshot);
-            }else{
+            } else {
               return CircularProgressIndicator();
             }
           },
@@ -61,7 +65,8 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: bottomBarPaziente(),
     );
   }
-  Widget displayInformation(BuildContext context,snapshot){
+
+  Widget displayInformation(BuildContext context, snapshot) {
     Users utenteLoggato = snapshot.data;
     return Column(
       children: <Widget>[
@@ -83,8 +88,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ],
-                  )
-              )
+                  ))
             ],
           ),
         ),
@@ -109,12 +113,7 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(height: 30.0),
         Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height-165,
-
-
+          height: MediaQuery.of(context).size.height - 165,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
@@ -131,10 +130,9 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       Container(
                         padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width*0.4,
+                          left: MediaQuery.of(context).size.width * 0.4,
                           top: 40,
                           right: 30,
-
                         ),
                         height: 120,
                         width: double.infinity,
@@ -148,30 +146,28 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: RichText(
-                          text: TextSpan(
-                              children: [
-                                TextSpan(
-                                    text: "Completa il quiz",
-                                    style: Theme.of(context).textTheme.title.copyWith(color: Colors.white)
-                                ),
-                              ]
-                          ),
+                          text: TextSpan(children: [
+                            TextSpan(
+                                text: "Completa il quiz",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .title
+                                    .copyWith(color: Colors.white)),
+                          ]),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: SvgPicture.asset("assets/icons/nurse.svg"),
                       ),
-
                     ],
                   ),
-
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context){
+                      builder: (context) {
                         return getjsonQuestionario();
                       },
                     ),
@@ -180,42 +176,29 @@ class _HomePageState extends State<HomePage> {
               ),
               FutureBuilder(
                 future: appuntamentoFuture,
-                builder: (context,snapshot){
-                  if(snapshot.connectionState == ConnectionState.done){
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
                     appuntamento = snapshot.data;
-                    if(appuntamento.giorno != ""){
-                      String str = "${appuntamento.giornoSettimana}, alle ore: ${appuntamento.orario}";
-                      return timeSlotWidget(appuntamento.giorno, appuntamento.mese, "Prossima visita", str);
-                    }else{
+                    if (appuntamento.giorno != "") {
+                      String str =
+                          "${appuntamento.giornoSettimana}, alle ore: ${appuntamento.orario}";
+                      return timeSlotWidget(appuntamento.giorno,
+                          appuntamento.mese, "Prossima visita", str);
+                    } else {
                       return Container(width: 0.0, height: 0.0);
                     }
-                  }else{
+                  } else {
                     return CircularProgressIndicator();
                   }
                 },
               ),
-
-              RoundedButton (
-                text: "PDF",
-                press: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context){
-                        return ProvaPDF();
-                      },
-                    ),
-                  );
-                },
-              ),
-
-              RoundedButton (
+              RoundedButton(
                 text: "Python",
-                press: (){
+                press: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context){
+                      builder: (context) {
                         return Audio();
                       },
                     ),
@@ -228,19 +211,21 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-  Container timeSlotWidget(String date, String month, String slotType, String time) {
+
+  Container timeSlotWidget(
+      String date, String month, String slotType, String time) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.only(bottom: 10, top: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: KPrimaryLightColor
-      ),
+          color: KPrimaryLightColor),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(11),
         child: Row(
           children: <Widget>[
             Container(
+              padding: EdgeInsets.all(5),
               width: 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -249,31 +234,45 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("$date", style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800
-                  ),),
-                  Text("$month", style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800
-                  ),)
+                  Text(
+                    "$date",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800),
+                  ),
+                  Text(
+                    "$month",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800),
+                  )
                 ],
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 20,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("$slotType", style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),),
-                Text("$time", style: TextStyle(
+                Text(
+                  "$slotType",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  "$time",
+                  style: TextStyle(
+                    color: Colors.black54,
                     fontSize: 17,
-                    fontWeight: FontWeight.w600
-                ),)
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
               ],
             )
           ],
@@ -282,5 +281,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-

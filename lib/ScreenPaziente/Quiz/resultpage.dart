@@ -108,7 +108,8 @@ class resultpageState extends State<resultpage> {
     UploadTask uploadTask = reference.putFile(asset);
     String url = await (await uploadTask).ref.getDownloadURL();
     print("url " + url);
-    Questionario quest = new Questionario(name, url);
+    name = name.substring(0,19);
+    Questionario quest = new Questionario(name, url, punteggio.toString());
     await addPdfPaziente(quest);
     //documentFileUpload(url);
   }

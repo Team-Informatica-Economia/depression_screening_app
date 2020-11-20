@@ -49,7 +49,7 @@ class bottomBarPaziente extends StatelessWidget {
                   onTap: (){
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ChatScreen(),));
                   },
-                  child: _buildNavItem(Icons.notifications),
+                  child: _buildNavItem(Icons.chat_bubble),
                 ),
                 SizedBox(width: 1,),
                 new GestureDetector(
@@ -74,7 +74,7 @@ class bottomBarPaziente extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text("Notifiche",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
+                Text("Chat",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
                 SizedBox(width: 1,),
                 Text("Home",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
                 SizedBox(width: 2,),

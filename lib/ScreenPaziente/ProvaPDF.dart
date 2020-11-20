@@ -74,7 +74,7 @@ class ProvaPDFState extends State<ProvaPDF>{
     UploadTask uploadTask = reference.putFile(asset);
     String url = await (await uploadTask).ref.getDownloadURL();
     print("url " + url);
-    Questionario quest = new Questionario(name, url);
+    Questionario quest = new Questionario(name, url, "0");
     await addPdfPaziente(quest);
     //documentFileUpload(url);
   }
