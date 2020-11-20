@@ -4,6 +4,7 @@ import 'package:depression_screening_app/components/rounded_button_quiz.dart';
 import 'package:depression_screening_app/components/title_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class getjson extends StatelessWidget{
   @override
@@ -47,6 +48,19 @@ class _quizpageState extends State<quizpage>{
   var mydata;
   _quizpageState(this.mydata);
 
+  static Future<SharedPreferences> getSharedPreferencesInstance() async {
+    return await SharedPreferences.getInstance();
+  }
+
+  static void saveKV(int numDomanda, String domanda, String risposta, int punteggio) async {
+    SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
+    sharedPreferences.setString("domanda" + numDomanda.toString(), domanda);
+    sharedPreferences.setString("risposta" + numDomanda.toString(), risposta);
+    sharedPreferences.setInt("punteggio", punteggio);
+  }
+
+
+
   void nextQuestion(String let) {
     setState(() {
       if (iDomanda < 3) {
@@ -65,7 +79,7 @@ class _quizpageState extends State<quizpage>{
 
   }
 
-  void checkanswer(int i, String let){
+  void checkanswer(int i, String let) {
     punteggio += i;
     print(iDomanda);
     String yDomanda = iDomanda.toString();
@@ -74,6 +88,7 @@ class _quizpageState extends State<quizpage>{
         MaterialPageRoute(builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][yDomanda][let])),
    );
 
+    saveKV(iDomanda, mydata[0][yDomanda.toString()], mydata[1][yDomanda][let], punteggio);
     nextQuestion(let);
     
   }
