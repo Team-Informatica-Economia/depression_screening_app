@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
               ),
 
               RoundedButton (
-                text: "Prova audio",
+                text: "Python",
                 press: (){
                   Navigator.push(
                     context,
