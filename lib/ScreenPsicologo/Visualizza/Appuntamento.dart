@@ -1,7 +1,10 @@
 import 'package:depression_screening_app/components/rounded_button.dart';
+import 'package:depression_screening_app/constants.dart';
 import 'package:depression_screening_app/services/AppuntamentoObj.dart';
 import 'package:depression_screening_app/services/database.dart';
 import 'package:flutter/material.dart';
+
+
 class Appuntamento extends StatefulWidget{
   final String emailPaziente;
 
@@ -46,9 +49,8 @@ class _AppuntamentoState extends State<Appuntamento>{
            RoundedButton(
              text: "Crea appuntamento",
              press: (){
-               String dataString = "${giorno.day}/${giorno.month}/${giorno.year}";
                String orarioString = "${orario.hour}:${orario.minute}";
-               addAppuntamento(emailPAziente,AppuntamentoObj(dataString, orarioString));
+               addAppuntamento(emailPAziente,AppuntamentoObj(giorno.day.toString(),monthsInYear[giorno.month],giorno.year.toString(),dayInWeek[giorno.weekday],orarioString));
              },
            )
          ],

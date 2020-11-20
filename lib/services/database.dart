@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPsicologo/Visualizza/Appuntamento.dart';
 import 'package:depression_screening_app/services/Questionario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -45,12 +46,6 @@ Future<Users> readUser() async{
       });
     });
   }
-
-  print(list.toString());
-
-  /*if(list[0]["statoCivile"] == null)
-    return new Users(list[0]['nome'], list[0]['cognome'], list[0]['email'], list[0]["uidPadre"]);
-  else*/
     return new Users.overloadedConstructor(list[0]['nome'], list[0]['cognome'], list[0]['email'], list[0]["statoCivile"], list[0]["sesso"], list[0]["scuola"], list[0]["regione"], list[0]["provincia"], list[0]["eta"], list[0]["uidPadre"]);
   }
 
@@ -127,4 +122,19 @@ Future<void> addAppuntamento(String emailPaziente,AppuntamentoObj appuntamento) 
       }
     });
   }
+}
+
+Future<AppuntamentoObj> readAppuntamento( ) async{
+
+  final Users utenteLoggato = await readUser();
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  AppuntamentoObj obj = AppuntamentoObj("", "", "", "", "");
+  DataSnapshot dataSnapshot = await databaseReference.child("users").child(utenteLoggato.uidPadre).child("listaPazienti").child(uid).child("appuntamento").once();
+  Map<dynamic, dynamic> values = dataSnapshot.value;
+  if (dataSnapshot.value != null) {
+    obj=  AppuntamentoObj(values["giorno"], values["mese"],values["anno"],values["giornoSettimana"],values["orario"]);
+
+  }
+  return(obj);
 }
