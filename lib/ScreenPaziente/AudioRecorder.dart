@@ -1,273 +1,160 @@
-import 'package:flutter/material.dart';
-import 'dart:io' as io;
 import 'dart:async';
 
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:sprintf/sprintf.dart';
 
-void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class Cronometro extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Audio Recorder Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Audio(title: 'Recorder ( AndroidX )'),
-    );
+  _Cronometro createState() => _Cronometro();
+}
+enum TimeFormat {
+  second,
+  centiSecond,
+}
+extension DoubleParsing on double {
+  String timeFormat(TimeFormat format) {
+    return sprintf("%02d", [
+      format == TimeFormat.second ? this.toInt() : ((this % 1.0) * 100).toInt()
+    ]);
   }
 }
 
-class Audio extends StatefulWidget {
-  Audio({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  _Audio createState() => _Audio();
-}
-
-class _Audio extends State<Audio> {
-  FlutterAudioRecorder _recorder;
-  Recording _recording;
-  Timer _t;
-  Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
-  String _alert;
+class _Cronometro extends State<Cronometro> {
+  var _timerValueInSec = 0.0;
+  TimeFormat _resetType;
+  Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      _prepare();
-    });
   }
-
-  void _opt() async {
-    print("Recording status "+_recording.status.toString());
-    switch (_recording.status) {
-      case RecordingStatus.Initialized:
-        {
-          await _startRecording();
-          break;
-        }
-      case RecordingStatus.Recording:
-        {
-          await _stopRecording();
-          break;
-        }
-      case RecordingStatus.Stopped:
-        {
-          await _prepare();
-          break;
-        }
-
-      default:
-        break;
-    }
-
-    // 刷新按钮
-    setState(() {
-      _buttonIcon = _playerIcon(_recording.status);
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    if (_timer != null)
+      _timer.cancel();
   }
-
-  Future _init() async {
-    String customPath = '/risposta';
-    io.Directory appDocDirectory;
-    if (io.Platform.isIOS) {
-      appDocDirectory = await getApplicationDocumentsDirectory();
-    } else {
-      appDocDirectory = await getExternalStorageDirectory();
-    }
-
-    // can add extension like ".mp4" ".wav" ".m4a" ".aac"
-    customPath = appDocDirectory.path +
-        customPath +
-        DateTime.now().millisecondsSinceEpoch.toString();
-
-    // .wav <---> AudioFormat.WAV
-    // .mp4 .m4a .aac <---> AudioFormat.AAC
-    // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
-
-    _recorder = FlutterAudioRecorder(customPath,
-        audioFormat: AudioFormat.WAV, sampleRate: 22050);
-    await _recorder.initialized;
-  }
-
-  Future _prepare() async {
-    var hasPermission = await FlutterAudioRecorder.hasPermissions;
-    if (hasPermission) {
-      await _init();
-      var result = await _recorder.current();
-      setState(() {
-        _recording = result;
-        _buttonIcon = _playerIcon(_recording.status);
-        _alert = "";
+  void _startTimer() {
+    if (_timer == null) {
+      _timer = Timer.periodic(Duration(milliseconds: 10), (timer) {
+        setState(() {
+          _timerValueInSec += 0.01;
+        });
       });
     } else {
+      _timer.cancel();
       setState(() {
-        _alert = "Permission Required.";
+        _timer = null;
       });
     }
   }
-
-  Future _startRecording() async {
-    await _recorder.start();
-    var current = await _recorder.current();
+  void _resetTimer() {
     setState(() {
-      _recording = current;
+      _timerValueInSec = _resetType == null ? 0 : _resetType == TimeFormat.second ? (_timerValueInSec % 1.0) : _timerValueInSec.floorToDouble();
     });
-
-    _t = Timer.periodic(Duration(milliseconds: 10), (Timer t) async {
-      var current = await _recorder.current();
-      setState(() {
-        _recording = current;
-        _t = t;
-      });
-    });
-  }
-
-  Future _stopRecording() async {
-    var result = await _recorder.stop();
-    _t.cancel();
-
-    setState(() {
-      _recording = result;
-    });
-  }
-
-  void _play() {
-    AudioPlayer player = AudioPlayer();
-    player.play(_recording.path, isLocal: true);
-  }
-
-  Widget _playerIcon(RecordingStatus status) {
-    switch (status) {
-      case RecordingStatus.Initialized:
-        {
-          return Icon(Icons.fiber_manual_record);
-        }
-      case RecordingStatus.Recording:
-        {
-          return Icon(Icons.stop);
-        }
-      case RecordingStatus.Stopped:
-        {
-          return Icon(Icons.replay);
-        }
-      default:
-        return Icon(Icons.do_not_disturb_on);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("prova"),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildResetHint(),
+          SizedBox(height: 12),
+          _buildTimerCard(),
+          SizedBox(height: 8),
+          _buildActionsCard(),
+        ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'File',
-                style: Theme.of(context).textTheme.title,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.path ?? "-"}',
-                style: Theme.of(context).textTheme.body1,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Duration',
-                style: Theme.of(context).textTheme.title,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.duration ?? "-"}',
-                style: Theme.of(context).textTheme.body1,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Metering Level - Average Power',
-                style: Theme.of(context).textTheme.title,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.metering?.averagePower ?? "-"}',
-                style: Theme.of(context).textTheme.body1,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Status',
-                style: Theme.of(context).textTheme.title,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.status ?? "-"}',
-                style: Theme.of(context).textTheme.body1,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RaisedButton(
-                child: Text('Play'),
-                disabledTextColor: Colors.white,
-                disabledColor: Colors.grey.withOpacity(0.5),
-                onPressed: _recording?.status == RecordingStatus.Stopped
-                    ? _play
-                    : null,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                '${_alert ?? ""}',
-                style: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Colors.red),
-              ),
-            ],
+    );
+  }
+  Widget _buildResetHint() {
+    return Text(
+      "Reset: ${_resetType == null ? "All" : _resetType == TimeFormat.second ? "Second" : "CentiSecond"}",
+      style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black
+      ),
+    );
+  }
+  Widget _buildTimerCard() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildTimer(),
+        Text(
+          ":",
+          style: TextStyle(
+              fontFamily: "NeuePixelSans",
+              fontSize: 100,
+              fontWeight: FontWeight.normal,
+              color: Colors.black
+          ),
+        ),
+        _buildTimer(format: TimeFormat.centiSecond),
+      ],
+    );
+  }
+  Widget _buildActionsCard() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildAction(),
+        _buildAction(isStart: false),
+      ],
+    );
+  }
+  Widget _buildAction({bool isStart = true}) {
+    return CupertinoButton(
+      padding: EdgeInsets.all(0),
+      onPressed: isStart ? _startTimer : _resetTimer,
+      child: Container(
+        color: isStart ? Colors.green : Colors.orangeAccent,
+        width: 140,
+        padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+        child: Text(
+          isStart ? (_timer == null ? "START" : "STOP") : "RESET",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w500,
+              color: Colors.white
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _opt,
-        child: _buttonIcon,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+  Widget _buildTimer({TimeFormat format = TimeFormat.second}) {
+    var _styleTimer = TextStyle(
+        fontSize: 100,
+        fontWeight: FontWeight.normal,
+        color: Colors.black
+    );
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: format == TimeFormat.second ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          CupertinoButton(
+            padding: EdgeInsets.all(0),
+            child: Container(
+              child: Text(
+                _timerValueInSec.timeFormat(format),
+                style: _styleTimer,
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                _resetType = _resetType  == format ? null : format;
+              });
+            },
+          )
+        ],
+      ),
     );
   }
 }

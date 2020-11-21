@@ -46,6 +46,7 @@ dependencies:
   flutter_cached_pdfview: ^0.3.0
   flutter_audio_recorder: ^0.5.5
   audioplayers: ^0.17.0
+  sprintf: ^5.0.0
 
 
 
