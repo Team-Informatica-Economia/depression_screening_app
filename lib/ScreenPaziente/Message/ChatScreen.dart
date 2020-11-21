@@ -4,10 +4,14 @@ import 'package:depression_screening_app/constants.dart';
 import 'package:depression_screening_app/services/Messaggio.dart';
 import 'package:depression_screening_app/services/Users.dart';
 import 'package:depression_screening_app/services/database.dart';
+import 'package:depression_screening_app/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_10.dart';
+
+import '../homePaziente.dart';
 
 class ChatScreen extends StatefulWidget{
   @override
@@ -36,6 +40,9 @@ class _ChatScreenState extends State<ChatScreen>{
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig sc = new SizeConfig();
+    sc.init(context);
+    double defaultSize = SizeConfig.defaultSize;
     return Scaffold(
       backgroundColor: KPrimaryColor,
       extendBody: true,
@@ -62,11 +69,45 @@ class _ChatScreenState extends State<ChatScreen>{
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Container(
+                  color: KPrimaryColor,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              icon: Icon(Icons.arrow_back_rounded),
+                              iconSize: 50,
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return HomePage();
+                                    },
+                                  ),
+                                );
+                              },
+                          ),
+                          Text(
+                            "Chat Psicologo",
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ),
                 SizedBox(
-                  height: 60,
+                  height: 1,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 15.0),
+                  padding: EdgeInsets.only(top: 1.0),
                   child: FutureBuilder(
                     future: messaggiFuture,
                     builder: (context,snapshot){
@@ -79,26 +120,41 @@ class _ChatScreenState extends State<ChatScreen>{
                     },
                   ),
                 ),
-                MyCustomInputBox(
-                  label: '.....',
-                  inputHint: 'Messaggio',
-                  controller: messaggioController,
-                ),
-                //
                 SizedBox(
-                  height: 15,
+                  height: 7,
                 ),
-                RoundedButton(
-                  text: "Invia messaggio",
-                  press: (){
-                    DateTime time = DateTime.now();
-                    addMessaggioByPaziente(Messaggio(messaggioController.text.trim(), "1", time.toString()));
-                    setState(() {
-                      messaggiFuture = _getMessaggi();
-                    });
-                    messaggioController.clear();
-                  },
-                )
+                Align(
+                  alignment: FractionalOffset.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.84,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              focusColor: KPrimaryColor,
+                              hoverColor: KPrimaryLightColor,
+                              border: OutlineInputBorder(),
+                              labelText: 'Message...',
+                            ),
+                            controller: messaggioController,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.send),
+                          onPressed: (){
+                            DateTime time = DateTime.now();
+                            addMessaggioByPaziente(Messaggio(messaggioController.text.trim(), "1", time.toString()));
+                            setState(() {
+                              messaggiFuture = _getMessaggi();
+                            });
+                            messaggioController.clear();
+                          },
+                        )
+                      ],
+                    ),
+                ),
+
               ],
             ),
           ],
@@ -111,14 +167,14 @@ class _ChatScreenState extends State<ChatScreen>{
       return ChatBubble(
         clipper:  ChatBubbleClipper10(type: BubbleType.sendBubble),
         alignment: Alignment.topRight,
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.only(top: 10),
         backGroundColor: Colors.blue,
         child: Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.7,
           ),
           child: Text( messaggio.messaggio,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontSize: 17),
           ),
         ),
       );
@@ -126,14 +182,14 @@ class _ChatScreenState extends State<ChatScreen>{
       return  ChatBubble(
         clipper: ChatBubbleClipper10(type: BubbleType.receiverBubble),
         backGroundColor: Color(0xffE7E7ED),
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.only(top: 10),
         child: Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.7,
           ),
           child: Text(
             messaggio.messaggio,
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black, fontSize: 17),
           ),
         ),
       );
@@ -141,8 +197,9 @@ class _ChatScreenState extends State<ChatScreen>{
   }
   Widget chatDisplay(context,snapshot) {
     return Padding(
-        padding: EdgeInsets.only(top: 15.0),
+        padding: EdgeInsets.only(left: 7.0, right: 7.0,),
         child: Container(
+          height: SizeConfig.defaultSize * 52,
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: listaMessaggi.length,
@@ -151,7 +208,7 @@ class _ChatScreenState extends State<ChatScreen>{
                   child: Column(
                     children: <Widget>[
                       _buildMessaggio(listaMessaggi[index]),
-                      SizedBox(height: 15.0),
+                      SizedBox(height: 10.0),
                     ],
                   ),
                 );
