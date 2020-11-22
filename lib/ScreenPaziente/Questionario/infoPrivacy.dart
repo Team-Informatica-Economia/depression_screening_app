@@ -3,6 +3,7 @@ import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class InfoPrivacy extends StatefulWidget {
   InfoPrivacy({Key key}) : super(key: key);
@@ -14,6 +15,7 @@ class InfoPrivacy extends StatefulWidget {
 class _InfoPrivacyState extends State<InfoPrivacy> {
   bool selected = false;
   bool avvisaPrivacy = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +130,7 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
               flex: 1,
               child: RoundedButton(
                 text: "Inizia il quiz",
-                press: () {
+                press: ()  async{
                   if(selected){
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => getjson(),
