@@ -47,7 +47,7 @@ dependencies:
   flutter_audio_recorder: ^0.5.5
   audioplayers: ^0.17.0
 
-
+  stop_watch_timer: ^0.6.0+1
   rflutter_alert: ^1.1.0
 
 
