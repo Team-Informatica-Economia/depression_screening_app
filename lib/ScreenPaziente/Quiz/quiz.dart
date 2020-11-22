@@ -5,14 +5,20 @@ import 'package:depression_screening_app/components/title_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
+
 
 class getjson extends StatelessWidget{
+  getjson();
+
+
   @override
   Widget build(BuildContext context) {
-   return FutureBuilder(
+    return FutureBuilder(
      future: DefaultAssetBundle.of(context).loadString("assets/questionario.json"),
      builder: (context,snapshot){
        List mydata = json.decode(snapshot.data.toString());
+
        if(mydata == null){
          return Scaffold(
            body: Center(
@@ -31,6 +37,7 @@ class getjson extends StatelessWidget{
 
 class quizpage extends StatefulWidget{
   List mydata;
+
   quizpage({
     Key key,
     @required this.mydata})
@@ -40,13 +47,14 @@ class quizpage extends StatefulWidget{
   _quizpageState createState() => _quizpageState( mydata);
 }
 class _quizpageState extends State<quizpage>{
-
   int punteggio = 0;
   int iDomanda = 1;
   bool microfono=false;
+  int secondiLetti;
 
   var mydata;
   _quizpageState(this.mydata);
+
 
   static Future<SharedPreferences> getSharedPreferencesInstance() async {
     return await SharedPreferences.getInstance();
@@ -70,16 +78,13 @@ class _quizpageState extends State<quizpage>{
           microfono=true;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][iDomanda.toString()][let],)));
-
       }
-
-
 
     });
 
   }
 
-  void checkanswer(int i, String let) {
+  void checkanswer(int i, String let, int value) {
     punteggio += i;
     print(iDomanda);
     String yDomanda = iDomanda.toString();
@@ -92,6 +97,7 @@ class _quizpageState extends State<quizpage>{
     nextQuestion(let);
     
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -124,25 +130,25 @@ class _quizpageState extends State<quizpage>{
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["a"],
                       press: (){
-                        checkanswer(0, "a");
+                        checkanswer(0, "a",secondiLetti);
                       },
                     ),
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["b"],
                       press: (){
-                        checkanswer(1, "b");
+                        checkanswer(1, "b",secondiLetti);
                       },
                     ),
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["c"],
                       press: (){
-                        checkanswer(2, "c");
+                        checkanswer(2, "c",secondiLetti);
                       },
                     ),
                     RoundedButtonQuiz(
                       text: mydata[1][iDomanda.toString()]["d"],
                       press: (){
-                        checkanswer(3, "d");
+                        checkanswer(3, "d",secondiLetti);
                       },
                     ),
                   ],

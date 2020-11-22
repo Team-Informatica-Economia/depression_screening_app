@@ -144,6 +144,7 @@ class _quizpageopen extends State<quizpageopen>{
             builder: (context) => resultpage()));
       } else {
         Navigator.pop(context);
+        print("Visualizzo domanda");
       }
     });
 
