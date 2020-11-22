@@ -1,4 +1,3 @@
-import 'package:depression_screening_app/ScreenPsicologo/Visualizza/Appuntamento.dart';
 import 'package:depression_screening_app/services/Messaggio.dart';
 import 'package:depression_screening_app/services/Questionario.dart';
 import 'package:firebase_auth/firebase_auth.dart';

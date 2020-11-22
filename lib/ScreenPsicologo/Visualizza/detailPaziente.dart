@@ -1,12 +1,12 @@
-import 'package:depression_screening_app/ScreenPsicologo/Visualizza/Appuntamento.dart';
 import 'package:depression_screening_app/ScreenPsicologo/Visualizza/PdfPreviewScreen.dart';
-import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/constants.dart';
+import 'package:depression_screening_app/services/AppuntamentoObj.dart';
 import 'package:depression_screening_app/services/Questionario.dart';
 import 'package:depression_screening_app/services/Users.dart';
 import 'package:depression_screening_app/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class DetailPazienti extends StatefulWidget{
   final Users user;
@@ -21,6 +21,8 @@ class DetailPazienti extends StatefulWidget{
 
 class DetailPazientiState extends State<DetailPazienti> {
   Users user;
+  DateTime giorno;
+  TimeOfDay orario;
   DetailPazientiState(this.user);
 
   Future userFuture;
@@ -30,6 +32,8 @@ class DetailPazientiState extends State<DetailPazienti> {
   void initState() {
     super.initState();
     userFuture = _getQuestionari();
+    giorno = DateTime.now();
+    orario = TimeOfDay.now();
 
   }
   _getQuestionari() async {
@@ -129,7 +133,52 @@ class DetailPazientiState extends State<DetailPazienti> {
 
                   ),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Appuntamento(emailPaziente: user.email,),));
+                    Alert(
+                        context: context,
+                        title: "Nuovo appuntamento",
+                        content: Column(
+                          children: <Widget>[ ListTile(
+                            title: Text("Giorno: ${giorno.day}/${giorno.month}/${giorno.year}"),
+                            trailing: Icon(Icons.keyboard_arrow_down),
+                            onTap: _pickGiorno,
+                          ),
+                            ListTile(
+                              title: Text("Orario: ${orario.hour}:${orario.minute}"),
+                              trailing: Icon(Icons.keyboard_arrow_down),
+                              onTap: _pickOrario,
+                            ),
+                          ],
+                        ),
+                        buttons: [
+                          DialogButton(
+                            onPressed: (){
+                              String orarioString = "${orario.hour}:${orario.minute}";
+                              addAppuntamento(user.email,AppuntamentoObj(giorno.day.toString(),monthsInYear[giorno.month],giorno.year.toString(),dayInWeek[giorno.weekday],orarioString));
+                              Navigator.pop(context);
+                              Alert(
+                                context: context,
+                                type: AlertType.success,
+                                title: "Appuntamento",
+                                desc: "Appuntamento creato con successo.",
+                                buttons: [
+                                  DialogButton(
+                                    child: Text(
+                                      "Chiudi",
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                    width: 120,
+                                  )
+                                ],
+                              ).show();
+                            },
+                            child: Text(
+                              "Crea appuntamento",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          )
+                        ]).show();
+                    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => Appuntamento(emailPaziente: user.email,),));
                   },
                 ),
                 SizedBox(height: 20.0),
@@ -226,5 +275,29 @@ class DetailPazientiState extends State<DetailPazienti> {
               ],
             )
         ));
+  }
+  _pickGiorno() async{
+    DateTime date = await showDatePicker(
+      context: context,
+      firstDate: DateTime(DateTime.now().year-2),
+      lastDate: DateTime(DateTime.now().year+2),
+      initialDate: giorno,
+    );
+    if(date!= null){
+      setState(() {
+        giorno = date;
+      });
+    }
+  }
+  _pickOrario() async{
+    TimeOfDay t = await showTimePicker(
+      context: context,
+      initialTime: orario,
+    );
+    if(t!= null){
+      setState(() {
+        orario = t;
+      });
+    }
   }
 }

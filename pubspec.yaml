@@ -48,6 +48,7 @@ dependencies:
   audioplayers: ^0.17.0
   sprintf: ^5.0.0
 
+  rflutter_alert: ^1.1.0
 
 
 dev_dependencies:
