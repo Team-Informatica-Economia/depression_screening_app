@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return Cronometro();
+                        return Python();
                       },
                     ),
                   );

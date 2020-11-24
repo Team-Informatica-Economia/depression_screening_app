@@ -1,394 +1,390 @@
+import 'dart:io';
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-void main() => runApp(Cronometro());
+import './tflite/tflite.dart' as tfl;
+import './tflite/src/tensor.dart';
+import './widgets/word_tile.dart';
+import './widgets/info_text.dart';
+import './utils.dart';
+import './classes.dart';
 
-class Cronometro extends StatefulWidget {
-  @override
-  _Cronometro createState() => _Cronometro();
+
+enum AppState {
+  IsInitializing,
+  IsError,
+  IsReady,
+  IsRecording,
+  IsPlaying,
+  IsPredicting
 }
 
-class _Cronometro extends State<Cronometro> {
-  final _isHours = true;
+/// The duration for a single recording.
+const RECORDING_DURATION = Duration(seconds: 1);
 
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer(
-    isLapHours: true,
-    onChange: (value) => print('onChange $value'),
-    onChangeRawSecond: (value) => print('onChangeRawSecond $value'),
-    onChangeRawMinute: (value) => print('onChangeRawMinute $value'),
-  );
+class Python extends StatefulWidget {
+  Python({Key key, this.title}) : super(key: key);
 
-  final _scrollController = ScrollController();
+  final String title;
+
+  @override
+  _Python createState() => _Python();
+}
+
+class _Python extends State<Python> {
+  AppState _appState = AppState.IsInitializing;
+  tfl.Interpreter _interpreter;
+  List<Prediction> _predictions = [];
+  FlutterAudioRecorder _recorder;
+  Recording _recording;
+  String _feedbackMessage;
 
   @override
   void initState() {
     super.initState();
-    _stopWatchTimer.rawTime.listen((value) =>
-        print('rawTime $value ${StopWatchTimer.getDisplayTime(value)}'));
-    _stopWatchTimer.minuteTime.listen((value) => print('minuteTime $value'));
-    _stopWatchTimer.secondTime.listen((value) => print('secondTime $value'));
-    _stopWatchTimer.records.listen((value) => print('records $value'));
 
-    /// Can be set preset time. This case is "00:01.23".
-    // _stopWatchTimer.setPresetTime(mSec: 1234);
+    Future.microtask(() async {
+      try {
+        await _initializeInterpreter();
+
+        /// True if the recorder was initialized successfully.
+        var hasPermissions = await _checkPermissionsForRecorder();
+
+        if (hasPermissions) {
+          setState(() {
+            _appState = AppState.IsReady;
+          });
+        } else {
+          setState(() {
+            _appState = AppState.IsError;
+            _feedbackMessage = 'You need to give the app proper permissions';
+          });
+        }
+      } catch (e) {
+        print(e);
+
+        setState(() {
+          _appState = AppState.IsError;
+          _feedbackMessage = e.message;
+        });
+      }
+    });
   }
 
-  @override
-  void dispose() async {
-    super.dispose();
-    await _stopWatchTimer.dispose();
+  /// Initializes the interpreter by loading the voice model and allocating tensors.
+  Future<void> _initializeInterpreter() async {
+    String appDirectory = (await getApplicationDocumentsDirectory()).path;
+    String srcPath = "assets/digitsnet.tflite";
+    String destPath = "$appDirectory/model.tflite";
+
+    /// Read the model as bytes and write it to a file in a location
+    /// which can be accessed by TFLite native code.
+    ByteData modelData = await rootBundle.load(srcPath);
+    await File(destPath).writeAsBytes(modelData.buffer.asUint8List());
+
+    /// Initialise the interpreter
+    _interpreter = tfl.Interpreter.fromFile(destPath);
+    _interpreter.allocateTensors();
+  }
+
+  /// Returns `true` if the user allowed for recording permissions.
+  Future<bool> _checkPermissionsForRecorder() async {
+    // Asks for proper permissions from the user
+    return await FlutterAudioRecorder.hasPermissions;
+  }
+
+  /// Initializes the recorder and deletes the last recording.
+  Future<void> _initializeRecorder() async {
+    String dirPath = (await getApplicationDocumentsDirectory()).path;
+    String filename = 'tempFile.wav';
+    String filePath = "$dirPath/$filename";
+    File file = File(filePath);
+
+    /// If the file exists, clean it up first
+    /// because the FlutterAudioRecorder will
+    /// throw an error if the file exists
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+
+    _recorder = FlutterAudioRecorder(
+      filePath,
+      audioFormat: AudioFormat.WAV,
+    );
+
+    await _recorder.initialized;
+  }
+
+  /// Spins the recorder up and clears the previous predictions.
+  Future<void> _startRecording() async {
+    await _initializeRecorder();
+    await _recorder.start();
+
+    /// The current status of the recording.
+    Recording recordingState = await _recorder.current();
+
+    setState(() {
+      _appState = AppState.IsRecording;
+      _recording = recordingState;
+
+      // We clear results so we can show the recording status.
+      _predictions.clear();
+    });
+  }
+
+  /// Sets the recorder into a finalizing state.
+  Future<void> _stopRecording() async {
+    Recording recordingState = await _recorder.stop();
+
+    setState(() {
+      _recording = recordingState;
+    });
+  }
+
+  /// Retrieves the confidences of the word classes for the latest recording.
+  ///
+  /// Reads the recording signal from the file, converts it to a spectrogram,
+  /// tensor data afterwards and gets the confidences for the input.
+  Future<void> _performPrediction() async {
+    setState(() {
+      _appState = AppState.IsPredicting;
+    });
+
+    try {
+      // Retrieves the tensor data for the last recording.
+      List<num> signalData = await getSignalFromFile(_recording?.path ?? '');
+      List<double> spectrogram = signalToSpectrogram(signalData);
+      Int8List inputData = spectrogramToTensor(spectrogram);
+
+      // The data is passed into the interpreter, which runs inference for loaded graph.
+      List<Tensor> inputTensors = _interpreter.getInputTensors();
+      inputTensors[0].data = inputData;
+      _interpreter.invoke();
+
+      // Get results and parse them into relations of confidences to classes.
+      List<Tensor> outputTensors = _interpreter.getOutputTensors();
+      Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
+      List<Prediction> predictions = processPredictions(outputData, classes);
+
+      /// The prediction sublist in order to just show the first three top confidences.
+      predictions = predictions.sublist(0, 3);
+
+      setState(() {
+        _appState = AppState.IsReady;
+        _predictions = predictions;
+      });
+    } catch (e) {
+      print(e);
+
+      setState(() {
+        _appState = AppState.IsError;
+        _feedbackMessage = e.message;
+      });
+    }
+  }
+
+  // Records the user's voice and computes the confidences for it.
+  Future<void> _recordAudio() async {
+    await _startRecording();
+    await Future.delayed(RECORDING_DURATION);
+    await _stopRecording();
+    await _performPrediction();
+  }
+
+  /// Plays the last recording.
+  Future<void> _playAudio() async {
+    setState(() {
+      _appState = AppState.IsPlaying;
+    });
+
+    AudioPlayer currentPlayer = AudioPlayer();
+    await currentPlayer.play(_recording.path, isLocal: true);
+
+    currentPlayer.onPlayerCompletion.listen((event) async {
+      await currentPlayer.dispose();
+
+      setState(() {
+        _appState = AppState.IsReady;
+      });
+    });
+  }
+
+  List<Widget> _statusText(AppState state) {
+    switch (state) {
+      case AppState.IsError:
+        return [
+          InfoText('ERROR:'),
+          InfoText(_feedbackMessage ?? 'Something went wrong'),
+        ];
+      case AppState.IsPredicting:
+        return [
+          InfoText('Calculating probability...'),
+        ];
+      case AppState.IsRecording:
+        return [
+          InfoText('Recording...'),
+        ];
+      case AppState.IsPlaying:
+        return [
+          InfoText('Playing...'),
+        ];
+      case AppState.IsInitializing:
+        return [
+          InfoText('Model is loading'),
+        ];
+      case AppState.IsReady:
+      default:
+        return [
+          InfoText('You can record your word.'),
+          InfoText('Recording takes 1 second.'),
+        ];
+    }
+  }
+
+  IconData _recordIcon(AppState state) {
+    switch (state) {
+      case AppState.IsReady:
+        return Icons.mic;
+      case AppState.IsRecording:
+      case AppState.IsPredicting:
+        return Icons.mic_none;
+      default:
+        return Icons.mic_off;
+    }
+  }
+
+  IconData _playIcon(AppState state) {
+    switch (state) {
+      case AppState.IsPlaying:
+        return Icons.pause;
+      default:
+        return Icons.play_arrow;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    bool _canRecord = _appState == AppState.IsReady;
+    bool _canPlay = _canRecord && (_recording?.path?.endsWith('.wav') ?? false);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("prova"),
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.blueGrey[50],
+      body:
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        /*
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: <Widget>[
+                InfoText(
+                    'Press "Record" and say one of the ${classes.length} words below.'),
+                InfoText('Xain Voice will predict which word it was.'),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 24,
+            ),
+            alignment: Alignment.center,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
+              children: classes.map<Widget>(
+                (String word) {
+                  bool isSelected = _predictions.isNotEmpty &&
+                          word == _predictions.first.className ??
+                      false;
+                  return WordTile(
+                    word,
+                    isSelected: isSelected,
+                  );
+                },
+              ).toList(),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 24,
+            ),
+            alignment: Alignment.center,
+            height: 102,
+            child: Column(
+              children: (_appState == AppState.IsReady ||
+                          _appState == AppState.IsPlaying) &&
+                      _predictions.isNotEmpty
+                  ? _predictions.map((prediction) {
+                      String className = prediction.className;
+                      String confidence =
+                          (prediction.confidence * 100).toStringAsFixed(2) +
+                              "%";
+                      return InfoText("$className = $confidence");
+                    }).toList()
+                  : _statusText(_appState),
+            ),
+          ),
+          Column(
             children: <Widget>[
-              /// Display stop watch time
               Padding(
-                padding: const EdgeInsets.only(bottom: 0),
-                child: StreamBuilder<int>(
-                  stream: _stopWatchTimer.rawTime,
-                  initialData: _stopWatchTimer.rawTime.value,
-                  builder: (context, snap) {
-                    final value = snap.data;
-                    final displayTime =
-                    StopWatchTimer.getDisplayTime(value, hours: _isHours);
-                    return Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            displayTime,
-                            style: const TextStyle(
-                                fontSize: 40,
-                                fontFamily: 'Helvetica',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            value.toString(),
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'Helvetica',
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                padding: EdgeInsets.all(12),
+                child: FloatingActionButton(
+                  /// Calls _recordAudio function if the record button
+                  /// is pressed and the app is in ready state.
+                  //onPressed: _canRecord ? _recordAudio : null,
+                  tooltip: 'Record voice',
+                  /*
+                  child: Icon(
+                    _recordIcon(_appState),
+                    color: _canRecord ? Colors.black54 : Colors.black26,
+                  ),
+                  */
+                  backgroundColor:
+                      _canRecord ? Colors.amber : Colors.blueGrey[100],
                 ),
               ),
-
-              /// Display every minute.
               Padding(
-                padding: const EdgeInsets.only(bottom: 0),
-                child: StreamBuilder<int>(
-                  stream: _stopWatchTimer.minuteTime,
-                  initialData: _stopWatchTimer.minuteTime.value,
-                  builder: (context, snap) {
-                    final value = snap.data;
-                    print('Listen every minute. $value');
-                    return Column(
-                      children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4),
-                                  child: Text(
-                                    'minute',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontFamily: 'Helvetica',
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                                  child: Text(
-                                    value.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 30,
-                                        fontFamily: 'Helvetica',
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            )),
-                      ],
-                    );
-                  },
+                padding: EdgeInsets.all(12),
+                child: FloatingActionButton(
+                  //onPressed: _canPlay ? _playAudio : null,
+                  mini: true,
+                  tooltip: 'Play voice',
+                  /*
+                  child: Icon(
+                    _playIcon(_appState),
+                    color: _canPlay ? Colors.black54 : Colors.black26,
+                  ),*/
+                  backgroundColor:
+                      _canPlay ? Colors.amber : Colors.blueGrey[100],
                 ),
               ),
-
-              /// Display every second.
-              Padding(
-                padding: const EdgeInsets.only(bottom: 0),
-                child: StreamBuilder<int>(
-                  stream: _stopWatchTimer.secondTime,
-                  initialData: _stopWatchTimer.secondTime.value,
-                  builder: (context, snap) {
-                    final value = snap.data;
-                    print('Listen every second. '+ _stopWatchTimer.secondTime.value.toString());
-                    return Column(
-                      children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4),
-                                  child: Text(
-                                    'second',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontFamily: 'Helvetica',
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                                  child: Text(
-                                    value.toString(),
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontFamily: 'Helvetica',
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            )),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
-              /// Lap time.
-              Container(
-                height: 120,
-                margin: const EdgeInsets.all(8),
-                child: StreamBuilder<List<StopWatchRecord>>(
-                  stream: _stopWatchTimer.records,
-                  initialData: _stopWatchTimer.records.value,
-                  builder: (context, snap) {
-                    final value = snap.data;
-                    if (value.isEmpty) {
-                      return Container();
-                    }
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      _scrollController.animateTo(
-                          _scrollController.position.maxScrollExtent,
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOut);
-                    });
-                    print('Listen records. $value');
-                    return ListView.builder(
-                      controller: _scrollController,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (BuildContext context, int index) {
-                        final data = value[index];
-                        return Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(
-                                '${index + 1} ${data.displayTime}',
-                                style: const TextStyle(
-                                    fontSize: 17,
-                                    fontFamily: 'Helvetica',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const Divider(
-                              height: 1,
-                            )
-                          ],
-                        );
-                      },
-                      itemCount: value.length,
-                    );
-                  },
-                ),
-              ),
-
-              /// Button
-              Padding(
-                padding: const EdgeInsets.all(2),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.lightBlue,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.onExecute
-                                    .add(StopWatchExecute.start);
-                              },
-                              child: const Text(
-                                'Start',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.green,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.onExecute
-                                    .add(StopWatchExecute.stop);
-                              },
-                              child: const Text(
-                                'Stop',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.red,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.onExecute
-                                    .add(StopWatchExecute.reset);
-                              },
-                              child: const Text(
-                                'Reset',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(0).copyWith(right: 8),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.deepPurpleAccent,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.onExecute
-                                    .add(StopWatchExecute.lap);
-                              },
-                              child: const Text(
-                                'Lap',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.pinkAccent,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.setPresetHoursTime(1);
-                              },
-                              child: const Text(
-                                'Set Hours',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.pinkAccent,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.setPresetMinuteTime(59);
-                              },
-                              child: const Text(
-                                'Set Minute',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(4),
-                              color: Colors.pinkAccent,
-                              shape: const StadiumBorder(),
-                              onPressed: () async {
-                                _stopWatchTimer.setPresetSecondTime(59);
-                              },
-                              child: const Text(
-                                'Set Second',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: RaisedButton(
-                        padding: const EdgeInsets.all(4),
-                        color: Colors.pinkAccent,
-                        shape: const StadiumBorder(),
-                        onPressed: () async {
-                          _stopWatchTimer.setPresetTime(mSec: 3599 * 1000);
-                        },
-                        child: const Text(
-                          'Set PresetTime',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
-        ),
+        ],*/
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Friendly deletion of interpreter instance
+    // and shutting down of audio player.
+    _interpreter.delete();
+
+    super.dispose();
   }
 }
