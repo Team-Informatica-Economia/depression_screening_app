@@ -55,7 +55,7 @@ class _Python extends State<Python> {
 
         /// True if the recorder was initialized successfully.
         var hasPermissions = await _checkPermissionsForRecorder();
-
+        /**/
         if (hasPermissions) {
           setState(() {
             _appState = AppState.IsReady;
