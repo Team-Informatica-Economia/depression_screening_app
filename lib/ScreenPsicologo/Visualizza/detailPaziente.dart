@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/ScreenPsicologo/Visualizza/PdfPreviewScreen.dart';
+import 'package:depression_screening_app/ScreenPsicologo/Visualizza/chatPsicologo.dart';
 import 'package:depression_screening_app/constants.dart';
 import 'package:depression_screening_app/services/AppuntamentoObj.dart';
 import 'package:depression_screening_app/services/Questionario.dart';
@@ -23,6 +24,7 @@ class DetailPazientiState extends State<DetailPazienti> {
   Users user;
   DateTime giorno;
   TimeOfDay orario;
+
   DetailPazientiState(this.user);
 
   Future userFuture;
@@ -77,6 +79,21 @@ class DetailPazientiState extends State<DetailPazienti> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 45.0),
+                    IconButton(
+                      icon: Icon(Icons.chat),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ChatPsicologo(
+                                user: user,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                     InkWell(
                       child: Container(
                         //height: 135,
@@ -266,6 +283,17 @@ class DetailPazientiState extends State<DetailPazienti> {
                                 fontFamily: 'Montserrat',
                                 fontSize: 17.0,
                                 fontWeight: FontWeight.bold)),
+                      ]),
+                  SizedBox(width: 30.0),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Punt." + questionario.punteggio,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 15.0,
+                                color: Colors.black45,
+                                fontWeight: FontWeight.w700)),
                       ])
                 ])),
               ],

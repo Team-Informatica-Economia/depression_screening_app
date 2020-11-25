@@ -229,7 +229,7 @@ packages:
       name: flutter_cached_pdfview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.3.1"
   flutter_chat_bubble:
     dependency: "direct main"
     description:
@@ -243,7 +243,7 @@ packages:
       name: flutter_pdfview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3+7"
+    version: "1.0.3+8"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

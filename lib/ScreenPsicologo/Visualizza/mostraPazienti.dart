@@ -6,7 +6,7 @@ import 'package:depression_screening_app/services/Users.dart';
 import 'package:depression_screening_app/services/database.dart';
 import 'package:flutter/material.dart';
 
-class MostraPazienti extends StatefulWidget{
+class MostraPazienti extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return MostraPazientiState();
@@ -26,47 +26,49 @@ class MostraPazientiState extends State<MostraPazienti> {
     userFuture = _getPazienti();
     _searchBarController.addListener(_onSearchChanged);
   }
+
   @override
-  void dispose(){
+  void dispose() {
     _searchBarController.removeListener(_onSearchChanged);
     _searchBarController.dispose();
     super.dispose();
   }
 
-  _onSearchChanged(){
+  _onSearchChanged() {
     searchResult();
   }
-  searchResult(){
+
+  searchResult() {
     List<Users> users = [];
-    if(_searchBarController.text != ""){
+    if (_searchBarController.text != "") {
       users = pazienti.where((note) {
         var nome = note.nome.toLowerCase();
         var cognome = note.cognome.toLowerCase();
-        String str = nome + " "+ cognome;
+        String str = nome + " " + cognome;
         return str.contains(_searchBarController.text.toLowerCase());
       }).toList();
-    }else{
+    } else {
       users = pazienti;
     }
     setState(() {
       pazientiView = users;
     });
   }
+
   _getPazienti() async {
     return await readListPazienti();
-
   }
+
   _searchBar() {
     return TextField(
-        decoration: InputDecoration(
-            hintText: 'Search...',
-            icon: Icon(
-              Icons.search,
-              color: KPrimaryColor,
-            ),
-            border: InputBorder.none
-        ),
-        controller: _searchBarController,
+      decoration: InputDecoration(
+          hintText: 'Search...',
+          icon: Icon(
+            Icons.search,
+            color: KPrimaryColor,
+          ),
+          border: InputBorder.none),
+      controller: _searchBarController,
     );
   }
 
@@ -77,7 +79,6 @@ class MostraPazientiState extends State<MostraPazienti> {
       extendBody: true,
       body: Column(
         children: <Widget>[
-
           Padding(
             padding: EdgeInsets.only(top: 55.0, left: 40.0),
             child: Row(
@@ -110,27 +111,27 @@ class MostraPazientiState extends State<MostraPazienti> {
               children: <Widget>[
                 SizedBox(height: 25),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(32),
                     color: Colors.white,
                     boxShadow: kElevationToShadow[6],
                   ),
                   child: _searchBar(),
-                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: 15.0),
                   child: FutureBuilder(
                     future: userFuture,
-                    builder: (context,snapshot){
-                      if(snapshot.connectionState == ConnectionState.done){
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
                         pazienti = snapshot.data;
-                        if(flag == 1){
+                        if (flag == 1) {
                           pazientiView = pazienti;
                           flag = 2;
                         }
                         return displayInformation(context, snapshot);
-                      }else{
+                      } else {
                         return CircularProgressIndicator();
                       }
                     },
@@ -144,75 +145,63 @@ class MostraPazientiState extends State<MostraPazienti> {
       bottomNavigationBar: bottomBarPsicologo(),
     );
   }
+
   Widget _buildUserItem(String imgPath, Users user) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailPazienti(user: user)
-              ));
+                  builder: (context) => DetailPazienti(user: user)));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                    child: Row(
-                        children: [
-                          Image(
-                              image: AssetImage(imgPath),
-                              fit: BoxFit.cover,
-                              height: 75.0,
-                              width: 75.0
-                          ),
-                          SizedBox(width: 10.0),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children:[
-                                Text(
-                                    user.nome+" "+user.cognome,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold
-                                    )
-                                ),
-                                Text(
-                                    user.email,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 15.0,
-                                        color: Colors.grey
-                                    )
-                                )
-                              ]
-                          )
-                        ]
-                    )
-                ),
+                    child: Row(children: [
+                  Image(
+                      image: AssetImage(imgPath),
+                      fit: BoxFit.cover,
+                      height: 75.0,
+                      width: 75.0),
+                  SizedBox(width: 10.0),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user.nome + " " + user.cognome,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold)),
+                        Text(user.email,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 15.0,
+                                color: Colors.grey))
+                      ])
+                ])),
               ],
-            )
-        ));
+            )));
   }
-  Widget displayInformation(context,snapshot) {
+
+  Widget displayInformation(context, snapshot) {
     return Padding(
         padding: EdgeInsets.only(top: 15.0),
         child: Container(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: pazientiView.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    child: Column(
-                      children: <Widget>[
-                        _buildUserItem("assets/images/pic.png", pazientiView[index]),
-                        SizedBox(height: 15.0),
-                      ],
-                    ),
-                  );
-                }
-                ),
-        )
-    );
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: pazientiView.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Column(
+                    children: <Widget>[
+                      _buildUserItem(
+                          "assets/images/pic.png", pazientiView[index]),
+                      SizedBox(height: 15.0),
+                    ],
+                  ),
+                );
+              }),
+        ));
   }
 }

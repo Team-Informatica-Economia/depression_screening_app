@@ -236,3 +236,89 @@ Future<List<Messaggio>> readListMessaggio() async {
 
   return listaMessaggi;
 }
+
+Future<String> readUidFromPaziente(String emailPaziente) async {
+
+  String uidPazienteChat;
+
+  DataSnapshot dataSnapshot = await databaseReference.child("users").once();
+
+  Map<dynamic, dynamic> values = dataSnapshot.value;
+
+  if (dataSnapshot.value != null) {
+    values.forEach((key, value) {
+      //psicologi
+      value.forEach((key1, valueFin) {
+        //attributi
+        if (key1 == "listaPazienti") {
+          valueFin.forEach((key2, valueSec) {
+            valueSec.forEach((key3, valueTer) {
+              if(key3 == "email"){
+                if (valueTer == emailPaziente){
+                  uidPazienteChat = key2;
+                }
+              }
+            });
+          });
+        }
+      });
+    });
+  }
+
+  return uidPazienteChat;
+}
+
+Future<List<Messaggio>> readListMessaggioPsicologo(String emailPaziente) async {
+
+  final String uidPazienteChat = await readUidFromPaziente(emailPaziente);
+  final User user = auth.currentUser;
+  final uid = user.uid;
+
+  DataSnapshot dataSnapshot = await databaseReference
+      .child("users")
+      .child(uid)
+      .child("listaPazienti")
+      .child(uidPazienteChat)
+      .child("chat")
+      .once();
+
+  List list = new List();
+  Map<dynamic, dynamic> values = dataSnapshot.value;
+
+  if (dataSnapshot.value != null) {
+    values.forEach((key, value) {
+      list.add(value);
+    });
+  }
+
+  List<Messaggio> listaMessaggi = new List();
+
+  for (int i = 0; i < list.length; i++) {
+    listaMessaggi.add(Messaggio(
+        list[i]['messaggio'],
+        list[i]['isPaziente'],
+        list[i]['data'])
+    );
+  }
+
+  listaMessaggi.sort((a, b) => a.data.compareTo(b.data));
+
+
+
+  return listaMessaggi;
+}
+
+Future<void> addMessaggioByPsicologo(Messaggio messaggio, String emailPaziente) async {
+  final String uidPazienteChat = await readUidFromPaziente(emailPaziente);
+  final User user = auth.currentUser;
+  final uid = user.uid;
+
+  databaseReference
+      .child("users")
+      .child(uid)
+      .child("listaPazienti")
+      .child(uidPazienteChat)
+      .child("chat")
+      .push()
+      .set(messaggio.toJson());
+}
