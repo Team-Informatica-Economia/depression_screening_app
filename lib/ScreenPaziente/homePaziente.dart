@@ -1,4 +1,3 @@
-import 'package:depression_screening_app/ScreenPaziente/AudioRecorder.dart';
 import 'package:depression_screening_app/ScreenPaziente/ProvaPDF.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
@@ -8,6 +7,7 @@ import 'package:depression_screening_app/constants.dart';
 import 'package:depression_screening_app/services/AppuntamentoObj.dart';
 import 'package:depression_screening_app/services/Users.dart';
 import 'package:depression_screening_app/services/database.dart';
+import 'package:depression_screening_app/voice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depression_screening_app/services/authentication.dart';
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return Python();
+                        return Voce();
                       },
                     ),
                   );

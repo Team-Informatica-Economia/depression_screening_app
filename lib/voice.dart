@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +16,20 @@ import './widgets/info_text.dart';
 import './utils.dart';
 import './classes.dart';
 
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Xain Voice',
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+      ),
+      home: Voce(title: 'Xain Voice'),
+    );
+  }
+}
 
 enum AppState {
   IsInitializing,
@@ -28,16 +43,16 @@ enum AppState {
 /// The duration for a single recording.
 const RECORDING_DURATION = Duration(seconds: 1);
 
-class Python extends StatefulWidget {
-  Python({Key key, this.title}) : super(key: key);
+class Voce extends StatefulWidget {
+  Voce({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _Python createState() => _Python();
+  _Voce createState() => _Voce();
 }
 
-class _Python extends State<Python> {
+class _Voce extends State<Voce> {
   AppState _appState = AppState.IsInitializing;
   tfl.Interpreter _interpreter;
   List<Prediction> _predictions = [];
@@ -55,7 +70,7 @@ class _Python extends State<Python> {
 
         /// True if the recorder was initialized successfully.
         var hasPermissions = await _checkPermissionsForRecorder();
-        /**/
+
         if (hasPermissions) {
           setState(() {
             _appState = AppState.IsReady;
@@ -275,15 +290,13 @@ class _Python extends State<Python> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("prova"),
+        title: Text("Voce"),
         centerTitle: true,
       ),
       backgroundColor: Colors.blueGrey[50],
-      body:
-      Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        /*
         children: <Widget>[
           Container(
             alignment: Alignment.center,
@@ -345,36 +358,33 @@ class _Python extends State<Python> {
                 child: FloatingActionButton(
                   /// Calls _recordAudio function if the record button
                   /// is pressed and the app is in ready state.
-                  //onPressed: _canRecord ? _recordAudio : null,
+                  onPressed: _canRecord ? _recordAudio : null,
                   tooltip: 'Record voice',
-                  /*
                   child: Icon(
                     _recordIcon(_appState),
                     color: _canRecord ? Colors.black54 : Colors.black26,
                   ),
-                  */
                   backgroundColor:
                       _canRecord ? Colors.amber : Colors.blueGrey[100],
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(12),
-                child: FloatingActionButton(
-                  //onPressed: _canPlay ? _playAudio : null,
-                  mini: true,
-                  tooltip: 'Play voice',
-                  /*
+                child: RaisedButton(
+                  onPressed: _canPlay ? _playAudio : null,
+                  //mini: true,
+                  //tooltip: 'Play voice',
                   child: Icon(
                     _playIcon(_appState),
                     color: _canPlay ? Colors.black54 : Colors.black26,
-                  ),*/
-                  backgroundColor:
-                      _canPlay ? Colors.amber : Colors.blueGrey[100],
+                  ),
+                  // backgroundColor:
+                    //  _canPlay ? Colors.amber : Colors.blueGrey[100],
                 ),
               ),
             ],
           ),
-        ],*/
+        ],
       ),
     );
   }
