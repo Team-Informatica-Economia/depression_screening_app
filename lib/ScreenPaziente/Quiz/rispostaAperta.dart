@@ -44,15 +44,16 @@ class _quizpageopen extends State<quizpageopen> {
   FlutterAudioRecorder _recorder;
   Recording _recording;
   String _alert;
+  String customPath;
 
   @override
   void initState() {
     super.initState();
 
     Future.microtask(() async {
-      _prepare();
 
       try {
+        await _prepare();
         await _initializeInterpreter();
       } catch (e) {
         print(e);
@@ -76,7 +77,7 @@ class _quizpageopen extends State<quizpageopen> {
   }
 
   Future _init() async {
-    String customPath = '/risposta';
+    customPath = '/risposta';
     io.Directory appDocDirectory;
     if (io.Platform.isIOS) {
       appDocDirectory = await getApplicationDocumentsDirectory();
@@ -161,7 +162,13 @@ class _quizpageopen extends State<quizpageopen> {
 
       // The data is passed into the interpreter, which runs inference for loaded graph.
       List<Tensor> inputTensors = _interpreter.getInputTensors();
+
+      print("prima " + inputTensors.length.toString());
+
       inputTensors[0].data = inputData;
+
+      print("dopo" + inputTensors[0].data.toString());
+
       _interpreter.invoke();
 
       // Get results and parse them into relations of confidences to classes.
@@ -181,31 +188,34 @@ class _quizpageopen extends State<quizpageopen> {
   }
 
   void _disabilitaNextDomanda() async {
-    setState(() async {
+
+    if (_isMicrophoneActive == false) {
+      _recording.status = RecordingStatus.Initialized;
+      await _opt();
+      _predictions.clear();
+    } else {
+      _recording.status = RecordingStatus.Recording;
+      await _opt();
+
+      //predict
+      await _performPrediction();
+
+      File file = File(customPath + ".wav");
+
+      file.deleteSync();
+      print("cancello audio " + numeroDomanda);
+
+    }
+
+    setState(() {
       if (_isMicrophoneActive == false) {
         _isMicrophoneActive = true;
-        _recording.status = RecordingStatus.Initialized;
-        await _opt();
-        _predictions.clear();
       } else {
-        _recording.status = RecordingStatus.Recording;
-        await _opt();
-
-        //predict
-        await _performPrediction();
-
-        String dirPath = (await getApplicationDocumentsDirectory()).path;
-        String filename = 'risposta.wav';
-        String filePath = "$dirPath/$filename";
-        File file = File(filePath);
-
-        //file.deleteSync();
-        print("cancello audio " + numeroDomanda);
-
         _cambiaPage();
       }
     });
   }
+
 
   void _cambiaPage() {
     setState(() {
@@ -264,6 +274,7 @@ class _quizpageopen extends State<quizpageopen> {
                 } else {
                   Navigator.pop(context);
                 }*/
+
             },
           ),
         ),
