@@ -77,7 +77,7 @@ class _quizpageState extends State<quizpage>{
       } else {
           microfono=true;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][iDomanda.toString()][let],)));
+              builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][iDomanda.toString()][let], numeroDomanda: iDomanda.toString(),)));
       }
 
     });
@@ -90,7 +90,7 @@ class _quizpageState extends State<quizpage>{
     String yDomanda = iDomanda.toString();
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][yDomanda][let])),
+        MaterialPageRoute(builder: (context) => quizpageopen(microfono: microfono, risposta: mydata[1][yDomanda][let], numeroDomanda: yDomanda,)),
    );
 
     saveKV(iDomanda, mydata[0][yDomanda.toString()], mydata[1][yDomanda][let], punteggio);

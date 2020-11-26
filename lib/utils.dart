@@ -10,6 +10,7 @@ Future<List<num>> getSignalFromFile(String filepath) async {
   final waveMetadataOffset = 44;
   final sampleRate = 16000;
   final file = File(filepath).readAsBytesSync();
+  print("letto file " + file.toString());
   final soundBuffer = file.buffer.asInt16List(waveMetadataOffset);
 
   // Padding to ensure exactly one second of sound for all

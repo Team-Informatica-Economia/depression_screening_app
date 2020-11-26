@@ -105,6 +105,7 @@ class _Voce extends State<Voce> {
 
     /// Initialise the interpreter
     _interpreter = tfl.Interpreter.fromFile(destPath);
+
     _interpreter.allocateTensors();
   }
 
