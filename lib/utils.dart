@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:math' as math;
 
+import 'package:depression_screening_app/classesEmotions.dart';
 import 'package:fft/fft.dart';
 
 /// Returns signal data as a list from a recording at [filepath].
@@ -87,7 +88,7 @@ List<Prediction> processPredictions(
         (index, confidence) => MapEntry(
           index,
           Prediction(
-            classes[index],
+            classesEmotions[index],
             confidence,
           ),
         ),

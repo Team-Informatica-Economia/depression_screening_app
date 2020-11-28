@@ -17,6 +17,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../classesEmotions.dart';
 import '../../utils.dart';
 import '../../tflite/tflite.dart' as tfl;
+import 'package:mfcc/mfcc.dart';
 
 class quizpageopen extends StatefulWidget {
   final bool microfono;
@@ -155,33 +156,64 @@ class _quizpageopen extends State<quizpageopen> {
 
   Future<void> _performPrediction() async {
     try {
-      // Retrieves the tensor data for the last recording.
       List<num> signalData = await getSignalFromFile(_recording?.path ?? '');
-      List<double> spectrogram = signalToSpectrogram(signalData);
-      Int8List inputData = spectrogramToTensor(spectrogram);
+      var sampleRate = 44100;
+      var windowLength = 1024;
+      var windowStride = 512;
+      var fftSize = 512;
+      var numFilter = 20;
+      var numCoefs = 13;
+      var signalDataDouble = signalData.map((i) => i.toDouble()).toList();
+      var features = MFCC.mfccFeats(
+          signalDataDouble,
+          sampleRate,
+          windowLength,
+          windowStride,
+          fftSize,
+          numFilter,
+          numCoefs);
+      print('Generated ${features.length} x ${features[0]
+          .length} MFCC features from signal of length ${signalDataDouble
+          .length}');
+      //print(features[5].toString());
+      List<double> mfccs = new List<double>();
 
-      // The data is passed into the interpreter, which runs inference for loaded graph.
+      for (int i = 0; i < features.length; i++) {
+        double sum = 0;
+        features[i].forEach((
+            element) { //calcolo la somma dei singoli elementi features[0]..ecc
+          sum = sum + element.toDouble();
+        });
+        mfccs.add(sum / features[i].length);
+      }
+
+      for (int i = mfccs.length; i < 215; i++) {
+        mfccs.add(0);
+      }
+
+      mfccs = Float32List.fromList(mfccs);
+
+      print("Mfcss (float32) ha lunghezza " + mfccs.length.toString() + " " +
+          mfccs.toString());
       List<Tensor> inputTensors = _interpreter.getInputTensors();
-
-      print("prima " + inputTensors.length.toString());
-
-      inputTensors[0].data = inputData;
-
-      print("dopo" + inputTensors[0].data.toString());
-
+      Uint8List intBytes = Uint8List.fromList(inputTensors[0].data);
+      List<double> floatList = intBytes.buffer.asFloat32List().toList();
+      floatList= mfccs;
       _interpreter.invoke();
 
-      // Get results and parse them into relations of confidences to classes.
       List<Tensor> outputTensors = _interpreter.getOutputTensors();
       Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
-      List<Prediction> predictions =
-          processPredictions(outputData, classesEmotions);
+      print(outputData.toString());
+      List<Prediction> predictions = processPredictions(outputData, classesEmotions);
 
-      print(predictions.toString());
+      predictions.forEach((element) {
+        print(element.className+": "+(element.confidence*100).toString()+ " %");
+      });
 
       setState(() {
         _predictions = predictions;
       });
+
     } catch (e) {
       print(e);
     }

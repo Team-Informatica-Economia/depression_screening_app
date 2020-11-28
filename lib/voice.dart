@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:depression_screening_app/classesEmotions.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -225,7 +226,11 @@ class _Voce extends State<Voce> {
       List<Tensor> outputTensors = _interpreter.getOutputTensors();
       Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
 
-      print("output" +outputData.length.toString());
+      List<Prediction> predictions = processPredictions(outputData, classesEmotions);
+
+      predictions.forEach((element) {
+        print(element.className+": "+(element.confidence*100).toString()+ " %");
+      });
 
       /*
       List<double> spectrogram = signalToSpectrogram(signalData);
