@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
@@ -15,6 +16,7 @@ import './widgets/word_tile.dart';
 import './widgets/info_text.dart';
 import './utils.dart';
 import './classes.dart';
+import 'package:mfcc/mfcc.dart';
 
 void main() => runApp(MyApp());
 
@@ -95,7 +97,7 @@ class _Voce extends State<Voce> {
   /// Initializes the interpreter by loading the voice model and allocating tensors.
   Future<void> _initializeInterpreter() async {
     String appDirectory = (await getApplicationDocumentsDirectory()).path;
-    String srcPath = "assets/digitsnet.tflite";
+    String srcPath = "assets/modelVoice.tflite";
     String destPath = "$appDirectory/model.tflite";
 
     /// Read the model as bytes and write it to a file in a location
@@ -175,6 +177,57 @@ class _Voce extends State<Voce> {
     try {
       // Retrieves the tensor data for the last recording.
       List<num> signalData = await getSignalFromFile(_recording?.path ?? '');
+      var sampleRate = 16000;
+      var windowLength = 1024;
+      var windowStride = 512;
+      var fftSize = 512;
+      var numFilter = 20;
+      var numCoefs = 13;
+      var signalDataDouble = signalData.map((i) => i.toDouble()).toList();
+      var features = MFCC.mfccFeats(
+          signalDataDouble,
+          sampleRate,
+          windowLength,
+          windowStride,
+          fftSize,
+          numFilter,
+          numCoefs);
+      print('Generated ${features.length} x ${features[0]
+          .length} MFCC features from signal of length ${signalDataDouble
+          .length}');
+      //print(features[5].toString());
+      List<double> mfccs = new List<double>();
+
+      for (int i = 0; i < features.length; i++) {
+        double sum = 0;
+        features[i].forEach((
+            element) { //calcolo la somma dei singoli elementi features[0]..ecc
+          sum = sum + element.toDouble();
+        });
+        mfccs.add(sum / features[i].length);
+      }
+
+      for (int i = mfccs.length; i < 215; i++) {
+        mfccs.add(0);
+      }
+
+      mfccs = Float32List.fromList(mfccs);
+
+      print("Mfcss (float32) ha lunghezza " + mfccs.length.toString() + " " +
+          mfccs.toString());
+      List<Tensor> inputTensors = _interpreter.getInputTensors();
+      Uint8List intBytes = Uint8List.fromList(inputTensors[0].data);
+      List<double> floatList = intBytes.buffer.asFloat32List().toList();
+      floatList= mfccs;
+      print(floatList);
+      _interpreter.invoke();
+
+      List<Tensor> outputTensors = _interpreter.getOutputTensors();
+      Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
+
+      print("output" +outputData.length.toString());
+
+      /*
       List<double> spectrogram = signalToSpectrogram(signalData);
       Int8List inputData = spectrogramToTensor(spectrogram);
 
@@ -202,6 +255,11 @@ class _Voce extends State<Voce> {
         _appState = AppState.IsError;
         _feedbackMessage = e.message;
       });
+    }
+    */
+    }
+      catch(e){
+        print(e);
     }
   }
 
