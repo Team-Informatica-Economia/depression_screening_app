@@ -18,6 +18,7 @@ import '../../classesEmotions.dart';
 import '../../utils.dart';
 import '../../tflite/tflite.dart' as tfl;
 import 'package:mfcc/mfcc.dart';
+import 'package:t_stats/t_stats.dart';
 
 class quizpageopen extends StatefulWidget {
   final bool microfono;
@@ -193,12 +194,22 @@ class _quizpageopen extends State<quizpageopen> {
 
       mfccs = Float32List.fromList(mfccs);
 
-      print("Mfcss (float32) ha lunghezza " + mfccs.length.toString() + " " +
+      print("Mfcss (float32) prima di normalizzare " + mfccs.length.toString() + " " +
           mfccs.toString());
+
+      var stats = Statistic.from(mfccs);
+      var mean=stats.mean;
+      var std=stats.stdDeviation;
+
+      for(int i=0; i<mfccs.length; i++){
+        mfccs[i]=(mfccs[i]-mean)/std;
+      }
+
       List<Tensor> inputTensors = _interpreter.getInputTensors();
       Uint8List intBytes = Uint8List.fromList(inputTensors[0].data);
       List<double> floatList = intBytes.buffer.asFloat32List().toList();
       floatList= mfccs;
+      print(floatList);
       _interpreter.invoke();
 
       List<Tensor> outputTensors = _interpreter.getOutputTensors();

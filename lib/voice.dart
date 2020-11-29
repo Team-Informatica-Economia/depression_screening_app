@@ -98,7 +98,7 @@ class _Voce extends State<Voce> {
   /// Initializes the interpreter by loading the voice model and allocating tensors.
   Future<void> _initializeInterpreter() async {
     String appDirectory = (await getApplicationDocumentsDirectory()).path;
-    String srcPath = "assets/modelVoice.tflite";
+    String srcPath = "assets/digitsnet.tflite";
     String destPath = "$appDirectory/model.tflite";
 
     /// Read the model as bytes and write it to a file in a location
@@ -226,9 +226,9 @@ class _Voce extends State<Voce> {
       List<Tensor> outputTensors = _interpreter.getOutputTensors();
       Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
 
-      List<Prediction> predictions = processPredictions(outputData, classesEmotions);
+      List<Prediction> predictions = processPredictions(outputData, classes);
 
-      predictions.forEach((element) {
+     predictions.forEach((element) {
         print(element.className+": "+(element.confidence*100).toString()+ " %");
       });
 
