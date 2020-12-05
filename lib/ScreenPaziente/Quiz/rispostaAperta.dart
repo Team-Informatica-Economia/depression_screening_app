@@ -13,6 +13,7 @@ import 'dart:io' as io;
 
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../classesEmotions.dart';
 import '../../utils.dart';
@@ -53,13 +54,29 @@ class _quizpageopen extends State<quizpageopen> {
     super.initState();
 
     Future.microtask(() async {
-
       try {
         await _prepare();
         await _initializeInterpreter();
       } catch (e) {
         print(e);
       }
+    });
+  }
+
+  static Future<SharedPreferences> getSharedPreferencesInstance() async {
+    return await SharedPreferences.getInstance();
+  }
+
+  static void saveKV(String numeroDomanda, List<Prediction> predictions) async {
+    SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
+    /*sharedPreferences.setString("domanda" + numDomanda.toString(), domanda);
+    sharedPreferences.setString("risposta" + numDomanda.toString(), risposta);
+    sharedPreferences.setInt("punteggio", punteggio);*/
+
+    predictions.forEach((element) {
+      sharedPreferences.setString("voce" + element.className + numeroDomanda, (element.confidence * 100).toStringAsFixed(2) + "%");
+      //print("Classname" + element.className);
+      //print((element.confidence * 100).toStringAsFixed(2) + "%");
     });
   }
 
@@ -171,19 +188,23 @@ class _quizpageopen extends State<quizpageopen> {
       // Get results and parse them into relations of confidences to classes.
       List<Tensor> outputTensors = _interpreter.getOutputTensors();
       Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
-      List<Prediction> predictions = processPredictions(outputData, classesEmotions);
+      List<Prediction> predictions =
+          processPredictions(outputData, classesEmotions);
 
       predictions.forEach((element) {
-        print(element.className);
-        print(element.confidence);
+        print("Classname: " + element.className);
+        print((element.confidence * 100).toStringAsFixed(2) + "%");
+
       });
+
+      await saveKV(numeroDomanda, predictions);
+
     } catch (e) {
       print(e);
     }
   }
 
   void _disabilitaNextDomanda() async {
-
     if (_isMicrophoneActive == false) {
       _recording.status = RecordingStatus.Initialized;
       await _opt();
@@ -199,7 +220,6 @@ class _quizpageopen extends State<quizpageopen> {
 
       file.deleteSync();
       print("cancello audio " + numeroDomanda);
-
     }
 
     setState(() {
@@ -210,7 +230,6 @@ class _quizpageopen extends State<quizpageopen> {
       }
     });
   }
-
 
   void _cambiaPage() {
     setState(() {
@@ -269,7 +288,6 @@ class _quizpageopen extends State<quizpageopen> {
                 } else {
                   Navigator.pop(context);
                 }*/
-
             },
           ),
         ),
