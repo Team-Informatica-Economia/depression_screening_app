@@ -19,10 +19,10 @@ Future<List<num>> getSignalFromFile(String filepath) async {
       .asMap()
       .map(
         (index, value) => MapEntry(
-          index,
-          index < soundBuffer.length ? soundBuffer[index] : 0,
-        ),
-      )
+      index,
+      index < soundBuffer.length ? soundBuffer[index] : 0,
+    ),
+  )
       .values
       .toList();
 }
@@ -52,7 +52,7 @@ List<double> signalToSpectrogram(List<num> signal) {
     int end = start + winSize;
     List<num> chunk = signal.sublist(start, end);
     List<double> fft =
-        FFT().Transform(window.apply(chunk)).sublist(0, freqLen).map((e) {
+    FFT().Transform(window.apply(chunk)).sublist(0, freqLen).map((e) {
       double val = math.log(e.modulus + epsilon);
       return double.parse("$val");
     }).toList();
@@ -79,22 +79,22 @@ class Prediction {
 /// Maps the confidences to the corresponding classes by using the
 /// index in a list of `Prediction`.
 List<Prediction> processPredictions(
-  Float32List confidences,
-  List<String> classes,
-) {
+    Float32List confidences,
+    List<String> classes,
+    ) {
   return List<double>.from(confidences)
       .asMap()
       .map(
         (index, confidence) => MapEntry(
-          index,
-          Prediction(
-            classesEmotions[index],
-            confidence,
-          ),
-        ),
-      )
+      index,
+      Prediction(
+        classesEmotions[index],
+        confidence,
+      ),
+    ),
+  )
       .values
       .toList()
-        ..sort((a, b) => b.confidence.compareTo(a.confidence))
-        ..toList();
+    ..sort((a, b) => b.confidence.compareTo(a.confidence))
+    ..toList();
 }

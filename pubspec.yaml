@@ -56,6 +56,7 @@ dependencies:
   io: ^0.3.4
   mfcc: ^1.1.0
   t_stats: ^2.1.1+1
+  starflut: any
 
 
 dev_dependencies:

@@ -18,6 +18,7 @@ import './widgets/info_text.dart';
 import './utils.dart';
 import './classes.dart';
 import 'package:mfcc/mfcc.dart';
+import 'package:starflut/starflut.dart';
 
 void main() => runApp(MyApp());
 
@@ -69,6 +70,7 @@ class _Voce extends State<Voce> {
 
     Future.microtask(() async {
       try {
+        StarCoreFactory starcore = await Starflut.getFactory();
         await _initializeInterpreter();
 
         /// True if the recorder was initialized successfully.

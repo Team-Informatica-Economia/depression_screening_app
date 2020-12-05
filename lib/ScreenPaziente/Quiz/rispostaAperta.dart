@@ -65,7 +65,7 @@ class _quizpageopen extends State<quizpageopen> {
 
   Future<void> _initializeInterpreter() async {
     String appDirectory = (await getApplicationDocumentsDirectory()).path;
-    String srcPath = "assets/modelVoice.tflite";
+    String srcPath = "assets/tonoVoce.tflite";
     String destPath = "$appDirectory/model.tflite";
 
     /// Read the model as bytes and write it to a file in a location
@@ -157,74 +157,26 @@ class _quizpageopen extends State<quizpageopen> {
 
   Future<void> _performPrediction() async {
     try {
+      // Retrieves the tensor data for the last recording.
       List<num> signalData = await getSignalFromFile(_recording?.path ?? '');
-      var sampleRate = 44100;
-      var windowLength = 1024;
-      var windowStride = 512;
-      var fftSize = 512;
-      var numFilter = 20;
-      var numCoefs = 13;
-      var signalDataDouble = signalData.map((i) => i.toDouble()).toList();
-      var features = MFCC.mfccFeats(
-          signalDataDouble,
-          sampleRate,
-          windowLength,
-          windowStride,
-          fftSize,
-          numFilter,
-          numCoefs);
-      print('Generated ${features.length} x ${features[0]
-          .length} MFCC features from signal of length ${signalDataDouble
-          .length}');
-      //print(features[5].toString());
-      List<double> mfccs = new List<double>();
+      List<double> spectrogram = signalToSpectrogram(signalData);
+      print(spectrogram.length);
+      Int8List inputData = spectrogramToTensor(spectrogram);
 
-      for (int i = 0; i < features.length; i++) {
-        double sum = 0;
-        features[i].forEach((
-            element) { //calcolo la somma dei singoli elementi features[0]..ecc
-          sum = sum + element.toDouble();
-        });
-        mfccs.add(sum / features[i].length);
-      }
-
-      for (int i = mfccs.length; i < 215; i++) {
-        mfccs.add(0);
-      }
-
-      mfccs = Float32List.fromList(mfccs);
-
-      print("Mfcss (float32) prima di normalizzare " + mfccs.length.toString() + " " +
-          mfccs.toString());
-
-      var stats = Statistic.from(mfccs);
-      var mean=stats.mean;
-      var std=stats.stdDeviation;
-
-      for(int i=0; i<mfccs.length; i++){
-        mfccs[i]=(mfccs[i]-mean)/std;
-      }
-
+      // The data is passed into the interpreter, which runs inference for loaded graph.
       List<Tensor> inputTensors = _interpreter.getInputTensors();
-      Uint8List intBytes = Uint8List.fromList(inputTensors[0].data);
-      List<double> floatList = intBytes.buffer.asFloat32List().toList();
-      floatList= mfccs;
-      print(floatList);
+      inputTensors[0].data = inputData;
       _interpreter.invoke();
 
+      // Get results and parse them into relations of confidences to classes.
       List<Tensor> outputTensors = _interpreter.getOutputTensors();
       Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
-      print(outputData.toString());
       List<Prediction> predictions = processPredictions(outputData, classesEmotions);
 
       predictions.forEach((element) {
-        print(element.className+": "+(element.confidence*100).toString()+ " %");
+        print(element.className);
+        print(element.confidence);
       });
-
-      setState(() {
-        _predictions = predictions;
-      });
-
     } catch (e) {
       print(e);
     }
