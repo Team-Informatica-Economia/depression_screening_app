@@ -68,16 +68,26 @@ class _quizpageopen extends State<quizpageopen> {
   }
 
   static void saveKV(String numeroDomanda, List<Prediction> predictions) async {
+
     SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
-    /*sharedPreferences.setString("domanda" + numDomanda.toString(), domanda);
-    sharedPreferences.setString("risposta" + numDomanda.toString(), risposta);
-    sharedPreferences.setInt("punteggio", punteggio);*/
 
     predictions.forEach((element) {
       sharedPreferences.setString("voce" + element.className + numeroDomanda, (element.confidence * 100).toStringAsFixed(2) + "%");
-      //print("Classname" + element.className);
-      //print((element.confidence * 100).toStringAsFixed(2) + "%");
     });
+  }
+
+  static void saveKVPrefNonRispondere(String numeroDomanda) async {
+
+    SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
+
+    sharedPreferences.setString("voceangry" + numeroDomanda, "Preferisco non rispondere");
+    sharedPreferences.setString("voceneutral" + numeroDomanda, "Preferisco non rispondere");
+    sharedPreferences.setString("vocefear" + numeroDomanda, "Preferisco non rispondere");
+    sharedPreferences.setString("vocesurprise" + numeroDomanda, "Preferisco non rispondere");
+    sharedPreferences.setString("vocesad" + numeroDomanda, "Preferisco non rispondere");
+    sharedPreferences.setString("vocedisgust" + numeroDomanda, "Preferisco non rispondere");
+    sharedPreferences.setString("vocehappy" + numeroDomanda, "Preferisco non rispondere");
+
   }
 
   Future<void> _initializeInterpreter() async {
@@ -243,6 +253,20 @@ class _quizpageopen extends State<quizpageopen> {
     });
   }
 
+  void _cambiaPagePrefNonRispondere() async{
+    await saveKVPrefNonRispondere(numeroDomanda);
+
+    setState(() {
+      if (microfono) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => resultpage()));
+      } else {
+        Navigator.pop(context);
+        print("Visualizzo domanda");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -276,7 +300,7 @@ class _quizpageopen extends State<quizpageopen> {
                     Icons.mic,
                     size: 110,
                   ),
-            backgroundColor: _isMicrophoneActive ? Colors.red : KColorIcon,
+            backgroundColor: _isMicrophoneActive ? Colors.redAccent : KColorIcon,
             elevation: 20,
             onPressed: () {
               _disabilitaNextDomanda();
@@ -302,7 +326,7 @@ class _quizpageopen extends State<quizpageopen> {
             style:
                 Theme.of(context).textTheme.title.copyWith(color: Colors.black),
           ),
-          onPressed: _isMicrophoneActive ? null : _cambiaPage,
+          onPressed: _isMicrophoneActive ? null : _cambiaPagePrefNonRispondere,
         ),
       ),
       SizedBox(

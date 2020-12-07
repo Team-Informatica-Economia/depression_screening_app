@@ -45,14 +45,11 @@ class resultpageState extends State<resultpage> {
         domande[i - 1] = sharedPrefs.getString("domanda" + i.toString());
         risposte[i - 1] = sharedPrefs.getString("risposta" + i.toString());
         voceAngry[i - 1] = sharedPrefs.getString("voceangry" + i.toString());
-        voceNeutral[i - 1] =
-            sharedPrefs.getString("voceneutral" + i.toString());
+        voceNeutral[i - 1] = sharedPrefs.getString("voceneutral" + i.toString());
         voceFear[i - 1] = sharedPrefs.getString("vocefear" + i.toString());
-        voceSurprise[i - 1] =
-            sharedPrefs.getString("vocesurprise" + i.toString());
+        voceSurprise[i - 1] = sharedPrefs.getString("vocesurprise" + i.toString());
         voceSad[i - 1] = sharedPrefs.getString("vocesad" + i.toString());
-        voceDisgust[i - 1] =
-            sharedPrefs.getString("vocedisgust" + i.toString());
+        voceDisgust[i - 1] = sharedPrefs.getString("vocedisgust" + i.toString());
         voceHappy[i - 1] = sharedPrefs.getString("vocehappy" + i.toString());
       }
       punteggio = sharedPrefs.getInt("punteggio");
