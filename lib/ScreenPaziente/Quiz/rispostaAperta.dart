@@ -15,6 +15,9 @@ import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+
+
 import '../../classesEmotions.dart';
 import '../../utils.dart';
 import '../../tflite/tflite.dart' as tfl;
@@ -49,9 +52,16 @@ class _quizpageopen extends State<quizpageopen> {
   String _alert;
   String customPath;
 
+  stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _textRiconosciuto = '';
+  double _confidence = 1.0;
+
   @override
   void initState() {
     super.initState();
+
+    _speech = stt.SpeechToText();
 
     Future.microtask(() async {
       try {
@@ -88,6 +98,31 @@ class _quizpageopen extends State<quizpageopen> {
     sharedPreferences.setString("vocedisgust" + numeroDomanda, "Preferisco non rispondere");
     sharedPreferences.setString("vocehappy" + numeroDomanda, "Preferisco non rispondere");
 
+  }
+
+  void _listen() async {
+    print("sono in listen");
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+    if (available) {
+      setState(() => _isListening = true);
+      _speech.listen(
+          onResult: (val) => setState(() {
+            _textRiconosciuto = val.recognizedWords;
+            print("-----------------------------------------Testo riconosciuto: " + _textRiconosciuto);
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+          }),
+        );
+    }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   Future<void> _initializeInterpreter() async {
@@ -215,6 +250,7 @@ class _quizpageopen extends State<quizpageopen> {
   }
 
   void _disabilitaNextDomanda() async {
+
     if (_isMicrophoneActive == false) {
       _recording.status = RecordingStatus.Initialized;
       await _opt();
@@ -230,6 +266,7 @@ class _quizpageopen extends State<quizpageopen> {
 
       file.deleteSync();
       print("cancello audio " + numeroDomanda);
+
     }
 
     setState(() {
@@ -302,9 +339,10 @@ class _quizpageopen extends State<quizpageopen> {
                   ),
             backgroundColor: _isMicrophoneActive ? Colors.redAccent : KColorIcon,
             elevation: 20,
-            onPressed: () {
+            onPressed: ()  {
+              _listen();
               _disabilitaNextDomanda();
-              print("ciao" + _isMicrophoneActive.toString());
+              //print("ciao" + _isMicrophoneActive.toString());
 
               /*if(microfono){
                   Navigator.of(context).pushReplacement(MaterialPageRoute(

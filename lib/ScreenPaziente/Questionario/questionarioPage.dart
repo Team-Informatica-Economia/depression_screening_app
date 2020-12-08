@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class getjsonQuestionario extends StatelessWidget {
   @override
@@ -58,7 +59,15 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   List<String> statoCivile = ["Nubile", "Celibe", "Sposato/a", "Vedovo/a"];
   List<String> sesso = ["M", "F", "Preferisco non specificarlo"];
   List<String> gradoIstruzione = ["Primaria", "Secondaria", "Universitaria"];
-  List<String> eta = ["18-20", "21-30", "31-40", "41-50", "51-60", "61-70", "70+"];
+  List<String> eta = [
+    "18-20",
+    "21-30",
+    "31-40",
+    "41-50",
+    "51-60",
+    "61-70",
+    "70+"
+  ];
   bool firstCompilation;
 
   _QuestionarioPageState(this.myData);
@@ -73,43 +82,54 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
     return await readUser();
   }
 
+  static Future<SharedPreferences> getSharedPreferencesInstance() async {
+    return await SharedPreferences.getInstance();
+  }
+
+  static void saveKV(Users user) async {
+    SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
+
+    sharedPreferences.setString("nome", user.nome);
+    sharedPreferences.setString("cognome", user.cognome);
+    sharedPreferences.setString("email", user.email);
+    sharedPreferences.setString("statoCivile", user.statoCivile);
+    sharedPreferences.setString("sesso", user.sesso);
+    sharedPreferences.setString("scuola", user.scuola);
+    sharedPreferences.setString("regione", user.regione);
+    sharedPreferences.setString("provincia", user.provincia);
+    sharedPreferences.setString("eta", user.eta);
+  }
+
   @override
   Widget build(BuildContext context) {
     regioni = listaRegioni();
-    var scrWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var scrHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var scrWidth = MediaQuery.of(context).size.width;
+    var scrHeight = MediaQuery.of(context).size.height;
     Users utenteLoggato;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      FutureBuilder(
-                        future: userFuture,
-                        builder: (context, snapshot) {
-                          utenteLoggato = snapshot.data;
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return displayInformation(context, snapshot);
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        },
-                      ),
-                    ],
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FutureBuilder(
+                    future: userFuture,
+                    builder: (context, snapshot) {
+                      utenteLoggato = snapshot.data;
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return displayInformation(context, snapshot);
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
                   ),
-                )
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -136,10 +156,14 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
     return lista;
   }
 
-
   Widget displayInformation(context, snapshot) {
     Users utenteLoggato = snapshot.data;
-    if((utenteLoggato.statoCivile == null) || (utenteLoggato.sesso == null) || (utenteLoggato.scuola == null) || (utenteLoggato.regione == null) || (utenteLoggato.provincia == null) || (utenteLoggato.eta == null))
+    if ((utenteLoggato.statoCivile == null) ||
+        (utenteLoggato.sesso == null) ||
+        (utenteLoggato.scuola == null) ||
+        (utenteLoggato.regione == null) ||
+        (utenteLoggato.provincia == null) ||
+        (utenteLoggato.eta == null))
       firstCompilation = true;
     else
       firstCompilation = false;
@@ -177,8 +201,8 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                )),
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            )),
             hint: new Text(
               'Seleziona lo stato civile',
               style: TextStyle(
@@ -205,8 +229,8 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                )),
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            )),
             hint: new Text(
               'Seleziona il genere',
               style: TextStyle(
@@ -233,8 +257,8 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                )),
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            )),
             hint: new Text(
               'Seleziona grado istruzione',
               style: TextStyle(
@@ -261,10 +285,12 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                )),
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            )),
             hint: new Text(
-              !firstCompilation ? "${utenteLoggato.regione}" : "Seleziona regione",
+              !firstCompilation
+                  ? "${utenteLoggato.regione}"
+                  : "Seleziona regione",
               style: TextStyle(
                 fontFamily: 'Product Sans',
                 fontSize: 15,
@@ -275,8 +301,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
               setState(() {
                 utenteLoggato.provincia = " ";
                 utenteLoggato.regione = value;
-                province =
-                    listaProvince(regioni, utenteLoggato.regione);
+                province = listaProvince(regioni, utenteLoggato.regione);
                 selectedProvincia = province[0];
               });
             },
@@ -294,10 +319,12 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                )),
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            )),
             hint: new Text(
-              !firstCompilation ? "${utenteLoggato.provincia}" : "Seleziona provincia",
+              !firstCompilation
+                  ? "${utenteLoggato.provincia}"
+                  : "Seleziona provincia",
               style: TextStyle(
                 fontFamily: 'Product Sans',
                 fontSize: 15,
@@ -325,8 +352,8 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                )),
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            )),
             hint: new Text(
               'Seleziona fascia età',
               style: TextStyle(
@@ -349,8 +376,13 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
         ),
         RoundedButton(
           text: "Avanti",
-          press: () {
-            if((utenteLoggato.statoCivile!=null) && (utenteLoggato.sesso!=null) && (utenteLoggato.scuola!=null) && (utenteLoggato.regione!=null) && (utenteLoggato.provincia!=null) && (utenteLoggato.eta!=null)) {
+          press: () async {
+            if ((utenteLoggato.statoCivile != null) &&
+                (utenteLoggato.sesso != null) &&
+                (utenteLoggato.scuola != null) &&
+                (utenteLoggato.regione != null) &&
+                (utenteLoggato.provincia != null) &&
+                (utenteLoggato.eta != null)) {
               Users newUser = new Users.overloadedConstructor(
                   utenteLoggato.nome,
                   utenteLoggato.cognome,
@@ -363,6 +395,8 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
                   utenteLoggato.eta.toString(),
                   utenteLoggato.uidPadre);
               updateUser(newUser);
+
+              await saveKV(newUser);
 
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => InfoPrivacy(),

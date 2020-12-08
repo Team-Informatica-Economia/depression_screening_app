@@ -21,6 +21,16 @@ class resultpage extends StatefulWidget {
 class resultpageState extends State<resultpage> {
   final pdf = pw.Document();
 
+  String nome;
+  String cognome;
+  String email;
+  String statoCivile;
+  String sesso;
+  String scuola;
+  String regione;
+  String provincia;
+  String eta;
+
   List<String> domande = new List(3);
   List<String> risposte = new List(3);
 
@@ -41,6 +51,16 @@ class resultpageState extends State<resultpage> {
   readSharedPreferences() async {
     SharedPreferences sharedPrefs = await getSharedPreferencesInstance();
     setState(() {
+      nome = sharedPrefs.getString("nome");
+      cognome = sharedPrefs.getString("cognome");
+      email = sharedPrefs.getString("email");
+      statoCivile = sharedPrefs.getString("statoCivile");
+      sesso = sharedPrefs.getString("sesso");
+      scuola = sharedPrefs.getString("scuola");
+      regione = sharedPrefs.getString("regione");
+      provincia = sharedPrefs.getString("provincia");
+      eta = sharedPrefs.getString("eta");
+
       for (int i = 1; i <= 3; i++) {
         domande[i - 1] = sharedPrefs.getString("domanda" + i.toString());
         risposte[i - 1] = sharedPrefs.getString("risposta" + i.toString());
@@ -65,7 +85,16 @@ class resultpageState extends State<resultpage> {
           pw.Header(level: 0, child: pw.Text("Risultati questionario")),
           pw.Paragraph(
               text: "Di seguito sono riportati i risultati del questionario: " +
-                  generaNome()),
+                  generaNome() + "\n"
+                  + "Svolto da: " + cognome + " " + nome + "\n"
+                  + "Email: " + email + "\n"
+                  + "Stato civile: " + statoCivile + "\n"
+                  + "Sesso: " + sesso + "\n"
+                  + "Formazione scolastica: " + scuola + "\n"
+                  + "Regione: " + regione + "\n"
+                  + "Provincia: " + provincia + "\n"
+                  + "Fascia d'età: " + eta + "\n"
+          ),
           pw.Header(level: 1, child: pw.Text("1)" + domande[0].toString())),
           pw.Paragraph(text: risposte[0].toString()),
           pw.Paragraph(

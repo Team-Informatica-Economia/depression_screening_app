@@ -14,6 +14,8 @@ import 'package:depression_screening_app/services/authentication.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import '../provaSpeechToText.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -193,13 +195,13 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               RoundedButton(
-                text: "Python",
+                text: "Prova Speech To Text",
                 press: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return Voce();
+                        return ProvaSpeechToText();
                       },
                     ),
                   );
