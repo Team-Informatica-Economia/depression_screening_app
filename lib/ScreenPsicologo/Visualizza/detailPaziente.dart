@@ -49,7 +49,7 @@ class DetailPazientiState extends State<DetailPazienti> {
         body: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: 40.0, top: 70),
+              padding: EdgeInsets.only(left: 40.0, top: 50),
               child: Row(
                 children: <Widget>[
                   Text(user.nome,
@@ -63,7 +63,23 @@ class DetailPazientiState extends State<DetailPazienti> {
                       style: TextStyle(
                           fontFamily: 'Montserrat',
                           color: Colors.white,
-                          fontSize: 25.0))
+                          fontSize: 25.0)),
+                  SizedBox(width: 100.0),
+                  IconButton(
+                    icon: Icon(Icons.chat,color: Colors.white,),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ChatPsicologo(
+                              user: user,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -78,24 +94,8 @@ class DetailPazientiState extends State<DetailPazienti> {
                 padding: EdgeInsets.only(left: 25.0, right: 20.0),
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 45.0),
-                    IconButton(
-                      icon: Icon(Icons.chat),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ChatPsicologo(
-                                user: user,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
                     InkWell(
-                      child: Container(
+                      child: Container  (
                         //height: 135,
 
                         width: double.infinity,
@@ -236,7 +236,7 @@ class DetailPazientiState extends State<DetailPazienti> {
   Widget displayInformation(context, snapshot) {
     return ConstrainedBox(
         constraints: new BoxConstraints(
-          maxHeight: 420.0,
+          maxHeight: 380.0,
         ),
         child: ListView.builder(
             shrinkWrap: true,
@@ -284,7 +284,7 @@ class DetailPazientiState extends State<DetailPazienti> {
                                 fontSize: 17.0,
                                 fontWeight: FontWeight.bold)),
                       ]),
-                  SizedBox(width: 30.0),
+                  SizedBox(width: 20.0),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
