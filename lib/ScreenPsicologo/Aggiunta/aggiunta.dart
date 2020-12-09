@@ -45,6 +45,16 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
+                  height: 55,
+                ),
+                Text('Aggiungi paziente',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.0)
+                ),
+                SizedBox(
                   height: 15,
                 ),
                 //
@@ -70,7 +80,7 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
 
                 MyCustomInputBox(
                   label: 'Email',
-                  inputHint: 'mario@gmail.com',
+                  inputHint: 'email@address.com',
                   controller: emailController,
                 ),
                 SizedBox(
@@ -79,11 +89,11 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
 
                 MyCustomInputBox(
                   label: 'Password',
-                  inputHint: 'password',
+                  inputHint: 'Password',
                   controller: passwordController,
                 ),
                 RoundedButton(
-                  text: "Aggiungi paziente",
+                  text: "Aggiungi",
                   press: (){
                     Users u = new Users(nomeController.text.trim(), cognomeController.text.trim(), emailController.text.trim(), uid);
                     context.read<AuthenticationService>().sigUp(
