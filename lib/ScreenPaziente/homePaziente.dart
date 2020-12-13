@@ -1,5 +1,6 @@
 import 'package:depression_screening_app/ScreenPaziente/ProvaPDF.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
+import 'package:depression_screening_app/ScreenPaziente/cameraProva.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
@@ -201,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return ProvaSpeechToText();
+                        return CameraProva();
                       },
                     ),
                   );
