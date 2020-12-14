@@ -1,3 +1,4 @@
+import 'package:depression_screening_app/ScreenPaziente/Questionario/validazione.dart';
 import 'package:depression_screening_app/ScreenPsicologo/homePsicologo.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/components/customInputBox.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AggiungiPazientePage extends StatefulWidget{
   AggiungiPazientePage({Key key}): super(key: key);
@@ -19,6 +21,8 @@ class AggiungiPazientePage extends StatefulWidget{
 }
 
 class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
+  Validazione validazione = new Validazione();
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
@@ -101,9 +105,49 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
                       password: passwordController.text.trim(),
                       user: u,
                     );
-                    /*
-                    writeNewUser(u);*/
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePagePsicologo(),));
+
+
+                    if(validazione.isValid(nomeController.text.trim()) && validazione.isValid(cognomeController.text.trim()) && validazione.isValidEmail(emailController.text.trim()) && validazione.isValidPassword(passwordController.text.trim())){
+                      Alert(
+                        context: context,
+                        type: AlertType.success,
+                        title: "Aggiunto",
+                        desc: "Paziente aggiunto con successo.",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "Chiudi",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePagePsicologo(),)),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
+                    } else {
+
+                      Alert(
+                        context: context,
+                        type: AlertType.error,
+                        title: "Non aggiunto",
+                        desc: "Attenzione! Paziente non aggiunto, controllare i campi.",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "Chiudi",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
+                    }
+
 
                   },
                 )

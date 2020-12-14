@@ -172,6 +172,7 @@ class MostraPazientiState extends State<MostraPazienti> {
                             style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 17.0,
+                                color: Colors.black87,
                                 fontWeight: FontWeight.bold)),
                         Text(user.email,
                             style: TextStyle(
@@ -186,8 +187,11 @@ class MostraPazientiState extends State<MostraPazienti> {
 
   Widget displayInformation(context, snapshot) {
     return Padding(
-        padding: EdgeInsets.only(top: 15.0),
-        child: Container(
+        padding: EdgeInsets.only(top: 2.0),
+        child: ConstrainedBox(
+          constraints: new BoxConstraints(
+            maxHeight: 380.0,
+          ),
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: pazientiView.length,
@@ -202,6 +206,7 @@ class MostraPazientiState extends State<MostraPazienti> {
                   ),
                 );
               }),
-        ));
+        )
+    );
   }
 }

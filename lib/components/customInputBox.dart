@@ -13,14 +13,20 @@ class MyCustomInputBox extends StatefulWidget {
   MyCustomInputBox( {this.label, this.inputHint,
     @required this.controller});
   @override
-  _MyCustomInputBoxState createState() => _MyCustomInputBoxState();
+  _MyCustomInputBoxState createState() => _MyCustomInputBoxState(this.label);
 }
 
 class _MyCustomInputBoxState extends State<MyCustomInputBox> {
-  bool isSubmitted = false;
+  int isSubmitted = 0;
 
   final checkBoxIcon = 'assets/icons/checkbox.svg';
   final xIcon='assets/icons/red-x.svg';
+
+  String label;
+  _MyCustomInputBoxState(this.label);
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +56,15 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
             controller: widget.controller,
             onChanged: (value) {
               setState(() {
-                if(validazione.isValid(value))
-                  isSubmitted = true;
+                if(label=="Email" && validazione.isValidEmail(value))
+                  isSubmitted = 1;
+                else if(label=="Password" && validazione.isValidPassword(value))
+                  isSubmitted = 1;
+                else if((label=="Nome" || label=="Cognome") && validazione.isValid(value))
+                  isSubmitted = 1;
                 else
-                  isSubmitted=false;
+                  isSubmitted = 2;
+
               }
 
               );
@@ -81,10 +92,21 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
                   color: Colors.grey[350],
                 ),
               ),
-              suffixIcon: isSubmitted == true
+              suffixIcon: isSubmitted == 0
               // will turn the visibility of the 'checkbox' icon
               // ON or OFF based on the condition we set before
                   ? Visibility(
+                visible: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: SvgPicture.asset(
+                    checkBoxIcon,
+                    height: 0.2,
+                  ),
+                ),
+              )
+                  : isSubmitted == 1 ?
+              Visibility(
                 visible: true,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -94,7 +116,8 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
                   ),
                 ),
               )
-                  : Visibility(
+              :
+              Visibility(
                 visible: true,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -104,7 +127,6 @@ class _MyCustomInputBoxState extends State<MyCustomInputBox> {
                   ),
                 ),
               ),
-
 
             ),
 

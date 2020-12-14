@@ -219,7 +219,21 @@ class DetailPazientiState extends State<DetailPazienti> {
                         if (snapshot.connectionState == ConnectionState.done) {
                           questionari = snapshot.data;
 
-                          return displayInformation(context, snapshot);
+                          if(questionari.length == 0)
+                            return Padding(
+                                padding: EdgeInsets.only(left: 1.0, right: 1.0, top:30.0),
+                                child:
+                                  Text("Non sono ancora stati completati questionari!",
+                                  style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 20.0,
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w700),
+                                  textAlign: TextAlign.center,
+                              )
+                            );
+                          else
+                            return displayInformation(context, snapshot);
                         } else {
                           return CircularProgressIndicator();
                         }
