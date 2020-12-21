@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:depression_screening_app/ScreenPaziente/ProvaPDF.dart';
 import 'package:depression_screening_app/ScreenPaziente/Questionario/questionarioPage.dart';
 import 'package:depression_screening_app/ScreenPaziente/cameraProva.dart';
@@ -40,6 +41,20 @@ class _HomePageState extends State<HomePage> {
 
   _getAppuntamento() async {
     return await readAppuntamento();
+  }
+  _getCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final cameras = await availableCameras();
+    final firstCamera = cameras.elementAt(1);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return CameraProva(camera: firstCamera,);
+        },
+      ),
+    );
+
   }
 
   @override
@@ -198,14 +213,7 @@ class _HomePageState extends State<HomePage> {
               RoundedButton(
                 text: "Prova Speech To Text",
                 press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return CameraProva();
-                      },
-                    ),
-                  );
+                  _getCamera();
                 },
               ),
             ],

@@ -59,7 +59,8 @@ dependencies:
   mfcc: ^1.1.0
   t_stats: ^2.1.1+1
   starflut: any
-
+  camera: ^0.6.0
+  path: ^1.7.0
   image_picker: ^0.6.7+15
 
 
