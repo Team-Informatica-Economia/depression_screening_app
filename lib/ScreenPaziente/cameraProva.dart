@@ -1,10 +1,16 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:tflite/tflite.dart';
+
+
+import 'package:flutter/services.dart';
+
 
 class CameraProva extends StatefulWidget{
   final CameraDescription camera;
@@ -19,9 +25,12 @@ class CameraProva extends StatefulWidget{
   }
 }
 class CameraProvaState extends State<CameraProva>{
-
+  bool _loading = true;
+  File _image;
+  List _output;
   CameraController _controller;
   Future<void> _initializeControllerFuture;
+  XFile file;
 
   @override
   void initState(){
@@ -38,11 +47,42 @@ class CameraProvaState extends State<CameraProva>{
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
 
+    loadModel().then((value) {
+      setState(() {});
+    });
   }
+
+  loadModel() async {
+    await Tflite.loadModel(
+        model: "assets/espressioniFacciali.tflite", labels: 'assets/labels.txt');
+
+    print("Ho caricato il modello!!!!!!!!");
+  }
+
+  classifyImage(String image) async {
+    print("Ho letto l'immagine"+image);
+    File file= new File(image);
+    var output = await Tflite.runModelOnImage(
+        path: file.path,
+        numResults: 7,
+        threshold: 0.5,
+        imageMean: 127.5,
+        imageStd: 127.5,
+    );
+
+    setState(() {
+      _output = output;
+      _loading = false;
+    });
+
+    print("OUTPUT "+_output.toString());
+  }
+
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
+    Tflite.close();
     super.dispose();
   }
   Widget build(BuildContext context) {
@@ -85,7 +125,10 @@ class CameraProvaState extends State<CameraProva>{
             );
             // Attempt to take a picture and log where it's been saved.
             print(path);
-           XFile file = await _controller.takePicture();
+           file = await _controller.takePicture();
+           print("Foto scattata "+file.path);
+
+           await classifyImage(file.path);
             // If the picture was taken, display it on a new screen.
             Navigator.push(
               context,
