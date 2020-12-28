@@ -8,6 +8,7 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 import 'package:depression_screening_app/tflite/src/tensor.dart';
+import '../classesEmotionsFace.dart';
 import '../tflite/tflite.dart' as tfl;
 import 'package:image/image.dart' as img;
 
@@ -15,6 +16,8 @@ import 'package:image/image.dart' as img;
 
 
 import 'package:flutter/services.dart';
+
+import '../utils.dart';
 
 
 class CameraProva extends StatefulWidget{
@@ -80,15 +83,52 @@ class CameraProvaState extends State<CameraProva>{
     _interpreter.allocateTensors();
   }
 
+  img.Image grayscale(img.Image src) {
+  var p = src.getBytes();
+    for (var i = 0, len = p.length; i < len; i += 4) {
+      var l = img.getLuminanceRgb(p[i], p[i + 1], p[i + 2]);
+      p[i] = l;
+      p[i + 1] = l;
+      p[i + 2] = l;
+    }
+    return src;
+  }
+
   Future<void> _performPrediction(File file) async {
     try {
       img.Image image = img.decodeImage(File(file.path).readAsBytesSync());
+
+      image = grayscale(image);
       image = img.copyResize(image, width: 24, height: 24);
 
+      List<num> x = image.getBytes();
 
-      List<int> x = image.getBytes();
+      List<double> nuoviEl = new List<double>();
 
-      print(x.length);
+      for (int i = 0; i < x.length; i++){
+        nuoviEl.add(x[i]/255);
+      }
+
+      print(nuoviEl.length);
+      print(nuoviEl);
+
+      Int8List inputData = spectrogramToTensor(nuoviEl);
+
+      // The data is passed into the interpreter, which runs inference for loaded graph.
+      List<Tensor> inputTensors = _interpreter.getInputTensors();
+      inputTensors[0].data = inputData;
+      _interpreter.invoke();
+
+      List<Tensor> outputTensors = _interpreter.getOutputTensors();
+      Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
+      List<Prediction> predictions =
+      processPredictions(outputData, classesEmotionsFace);
+
+      predictions.forEach((element) {
+        print("Classname: " + element.className);
+        print((element.confidence * 100).toStringAsFixed(2) + "%");
+
+      });
 
       // Retrieves the tensor data for the last recording.
       /*List<num> signalData = await getSignalFromFile(_recording?.path ?? '');
