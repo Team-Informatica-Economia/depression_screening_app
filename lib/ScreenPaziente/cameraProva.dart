@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
+import 'package:depression_screening_app/tflite/src/tensor.dart';
+import '../tflite/tflite.dart' as tfl;
+import 'package:image/image.dart' as img;
+
+
 
 
 import 'package:flutter/services.dart';
@@ -31,6 +36,8 @@ class CameraProvaState extends State<CameraProva>{
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   XFile file;
+  tfl.Interpreter _interpreter;
+
 
   @override
   void initState(){
@@ -41,50 +48,87 @@ class CameraProvaState extends State<CameraProva>{
       // Get a specific camera from the list of available cameras.
       widget.camera,
       // Define the resolution to use.
-      ResolutionPreset.max,
+      ResolutionPreset.low,
     );
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
 
-    loadModel().then((value) {
-      setState(() {});
+
+    Future.microtask(() async {
+      try {
+        await _initializeInterpreter();
+      } catch (e) {
+        print(e);
+      }
     });
   }
 
-  loadModel() async {
-    await Tflite.loadModel(
-        model: "assets/espressioniFacciali.tflite", labels: 'assets/labels.txt');
 
-    print("Ho caricato il modello!!!!!!!!");
+  Future<void> _initializeInterpreter() async {
+    String appDirectory = (await getApplicationDocumentsDirectory()).path;
+    String srcPath = "assets/espressioniFacciali.tflite";
+    String destPath = "$appDirectory/modelDue.tflite";
+
+    /// Read the model as bytes and write it to a file in a location
+    /// which can be accessed by TFLite native code.
+    ByteData modelData = await rootBundle.load(srcPath);
+    await File(destPath).writeAsBytes(modelData.buffer.asUint8List());
+
+    /// Initialise the interpreter
+    _interpreter = tfl.Interpreter.fromFile(destPath);
+    _interpreter.allocateTensors();
   }
 
-  classifyImage(String image) async {
-    print("Ho letto l'immagine"+image);
-    File file= new File(image);
-    var output = await Tflite.runModelOnImage(
-        path: file.path,
-        numResults: 7,
-        threshold: 0.5,
-        imageMean: 127.5,
-        imageStd: 127.5,
-    );
+  Future<void> _performPrediction(File file) async {
+    try {
+      img.Image image = img.decodeImage(File(file.path).readAsBytesSync());
+      image = img.copyResize(image, width: 24, height: 24);
 
-    setState(() {
-      _output = output;
-      _loading = false;
-    });
 
-    print("OUTPUT "+_output.toString());
+      List<int> x = image.getBytes();
+
+      print(x.length);
+
+      // Retrieves the tensor data for the last recording.
+      /*List<num> signalData = await getSignalFromFile(_recording?.path ?? '');
+      List<double> spectrogram = signalToSpectrogram(signalData);
+      print(spectrogram.length);
+      Int8List inputData = spectrogramToTensor(spectrogram);
+
+      // The data is passed into the interpreter, which runs inference for loaded graph.
+      List<Tensor> inputTensors = _interpreter.getInputTensors();
+      inputTensors[0].data = inputData;
+      _interpreter.invoke();
+
+      // Get results and parse them into relations of confidences to classes.
+      List<Tensor> outputTensors = _interpreter.getOutputTensors();
+      Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
+      List<Prediction> predictions =
+      processPredictions(outputData, classesEmotions);
+
+      predictions.forEach((element) {
+        print("Classname: " + element.className);
+        print((element.confidence * 100).toStringAsFixed(2) + "%");
+
+      });
+*/
+
+    } catch (e) {
+      print(e);
+    }
   }
+
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     Tflite.close();
+    _interpreter.delete();
     super.dispose();
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<void>(
@@ -128,7 +172,8 @@ class CameraProvaState extends State<CameraProva>{
            file = await _controller.takePicture();
            print("Foto scattata "+file.path);
 
-           await classifyImage(file.path);
+           //await classifyImage(file.path);
+            await _performPrediction(File(file.path));
             // If the picture was taken, display it on a new screen.
             Navigator.push(
               context,

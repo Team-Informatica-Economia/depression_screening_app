@@ -140,6 +140,15 @@ class _quizpageopen extends State<quizpageopen> {
     _interpreter.allocateTensors();
   }
 
+
+  @override
+  void dispose() {
+    // Friendly deletion of interpreter instance
+    // and shutting down of audio player.
+    _interpreter.delete();
+    super.dispose();
+  }
+
   Future _init() async {
     customPath = '/risposta';
     io.Directory appDocDirectory;
