@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:camera/camera.dart';
 import 'package:depression_screening_app/ScreenPaziente/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';
 import 'package:depression_screening_app/components/title_question.dart';
@@ -47,6 +48,8 @@ class _quizpageState extends State<quizpage> {
   bool microfono = false;
   int secondiLetti;
 
+  var firstCamera;
+
   var mydata;
 
   _quizpageState(this.mydata);
@@ -63,7 +66,17 @@ class _quizpageState extends State<quizpage> {
     sharedPreferences.setInt("punteggio", punteggio);
   }
 
-  void nextQuestion(String let) {
+  _getCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final cameras = await availableCameras();
+    setState(() {
+      firstCamera = cameras.elementAt(1);
+    });
+
+  }
+
+  void nextQuestion(String let) async{
+    await _getCamera();
     setState(() {
       if (iDomanda < 3) {
         iDomanda++;
@@ -75,12 +88,15 @@ class _quizpageState extends State<quizpage> {
                   microfono: microfono,
                   risposta: mydata[1][iDomanda.toString()][let],
                   numeroDomanda: iDomanda.toString(),
+                  camera: firstCamera,
                 )));
       }
     });
   }
 
-  void checkanswer(int i, String let, int value) {
+  void checkanswer(int i, String let, int value) async{
+    await _getCamera();
+
     punteggio += i;
     print(iDomanda);
     String yDomanda = iDomanda.toString();
@@ -91,6 +107,7 @@ class _quizpageState extends State<quizpage> {
                 microfono: microfono,
                 risposta: mydata[1][yDomanda][let],
                 numeroDomanda: yDomanda,
+                camera: firstCamera,
               )),
     );
 

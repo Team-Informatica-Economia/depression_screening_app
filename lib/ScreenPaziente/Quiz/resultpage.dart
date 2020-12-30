@@ -42,6 +42,14 @@ class resultpageState extends State<resultpage> {
   List<String> voceDisgust = new List(3);
   List<String> voceHappy = new List(3);
 
+  List<String> faceAngry = new List(3);
+  List<String> faceNeutral = new List(3);
+  List<String> faceFear = new List(3);
+  List<String> faceSurprise = new List(3);
+  List<String> faceSad = new List(3);
+  List<String> faceDisgust = new List(3);
+  List<String> faceHappy = new List(3);
+
   int punteggio;
 
   static Future<SharedPreferences> getSharedPreferencesInstance() async {
@@ -64,6 +72,7 @@ class resultpageState extends State<resultpage> {
       for (int i = 1; i <= 3; i++) {
         domande[i - 1] = sharedPrefs.getString("domanda" + i.toString());
         risposte[i - 1] = sharedPrefs.getString("risposta" + i.toString());
+
         voceAngry[i - 1] = sharedPrefs.getString("voceangry" + i.toString());
         voceNeutral[i - 1] = sharedPrefs.getString("voceneutral" + i.toString());
         voceFear[i - 1] = sharedPrefs.getString("vocefear" + i.toString());
@@ -71,6 +80,14 @@ class resultpageState extends State<resultpage> {
         voceSad[i - 1] = sharedPrefs.getString("vocesad" + i.toString());
         voceDisgust[i - 1] = sharedPrefs.getString("vocedisgust" + i.toString());
         voceHappy[i - 1] = sharedPrefs.getString("vocehappy" + i.toString());
+
+        faceAngry[i - 1] = sharedPrefs.getString("faceangry" + i.toString());
+        faceNeutral[i - 1] = sharedPrefs.getString("faceneutral" + i.toString());
+        faceFear[i - 1] = sharedPrefs.getString("facefear" + i.toString());
+        faceSurprise[i - 1] = sharedPrefs.getString("facesurprise" + i.toString());
+        faceSad[i - 1] = sharedPrefs.getString("facesad" + i.toString());
+        faceDisgust[i - 1] = sharedPrefs.getString("facedisgust" + i.toString());
+        faceHappy[i - 1] = sharedPrefs.getString("facehappy" + i.toString());
       }
       punteggio = sharedPrefs.getInt("punteggio");
     });
@@ -98,7 +115,7 @@ class resultpageState extends State<resultpage> {
           pw.Header(level: 1, child: pw.Text("1)" + domande[0].toString())),
           pw.Paragraph(text: risposte[0].toString()),
           pw.Paragraph(
-              text: "Analisi tono vocale:\n"
+              text: "Analisi tono vocale su risposta aperta:\n"
                   + "Angry: " +
                   voceAngry[0] +
                   "\n" +
@@ -120,10 +137,33 @@ class resultpageState extends State<resultpage> {
                   "Happy: " +
                   voceHappy[0] +
                   "\n"),
+          pw.Paragraph(
+              text: "Analisi espressione facciale su risposta aperta:\n"
+                  + "Angry: " +
+                  faceAngry[0] +
+                  "\n" +
+                  "Neutral: " +
+                  faceNeutral[0] +
+                  "\n" +
+                  "Fear: " +
+                  faceFear[0] +
+                  "\n" +
+                  "Surprise: " +
+                  faceSurprise[0] +
+                  "\n" +
+                  "Sad: " +
+                  faceSad[0] +
+                  "\n" +
+                  "Disgust: " +
+                  faceDisgust[0] +
+                  "\n" +
+                  "Happy: " +
+                  faceHappy[0] +
+                  "\n"),
           pw.Header(level: 1, child: pw.Text("2)" + domande[1].toString())),
           pw.Paragraph(text: risposte[1].toString()),
           pw.Paragraph(
-              text: "Analisi tono vocale:\n"
+              text: "Analisi tono vocale su risposta aperta:\n"
                   + "Angry: " +
                   voceAngry[1] +
                   "\n" +
@@ -145,10 +185,33 @@ class resultpageState extends State<resultpage> {
                   "Happy: " +
                   voceHappy[1] +
                   "\n"),
+          pw.Paragraph(
+              text: "Analisi espressione facciale su risposta aperta:\n"
+                  + "Angry: " +
+                  faceAngry[1] +
+                  "\n" +
+                  "Neutral: " +
+                  faceNeutral[1] +
+                  "\n" +
+                  "Fear: " +
+                  faceFear[1] +
+                  "\n" +
+                  "Surprise: " +
+                  faceSurprise[1] +
+                  "\n" +
+                  "Sad: " +
+                  faceSad[1] +
+                  "\n" +
+                  "Disgust: " +
+                  faceDisgust[1] +
+                  "\n" +
+                  "Happy: " +
+                  faceHappy[1] +
+                  "\n"),
           pw.Header(level: 1, child: pw.Text("3)" + domande[2].toString())),
           pw.Paragraph(text: risposte[2].toString()),
           pw.Paragraph(
-              text: "Analisi tono vocale:\n"
+              text: "Analisi tono vocale su risposta aperta:\n"
                   + "Angry: " +
                   voceAngry[2] +
                   "\n" +
@@ -169,6 +232,29 @@ class resultpageState extends State<resultpage> {
                   "\n" +
                   "Happy: " +
                   voceHappy[2] +
+                  "\n"),
+          pw.Paragraph(
+              text: "Analisi espressione facciale su risposta aperta:\n"
+                  + "Angry: " +
+                  faceAngry[2] +
+                  "\n" +
+                  "Neutral: " +
+                  faceNeutral[2] +
+                  "\n" +
+                  "Fear: " +
+                  faceFear[2] +
+                  "\n" +
+                  "Surprise: " +
+                  faceSurprise[2] +
+                  "\n" +
+                  "Sad: " +
+                  faceSad[2] +
+                  "\n" +
+                  "Disgust: " +
+                  faceDisgust[2] +
+                  "\n" +
+                  "Happy: " +
+                  faceHappy[2] +
                   "\n"),
           pw.Header(level: 2, child: pw.Text("Punteggio ottenuto: ")),
           pw.Paragraph(text: punteggio.toString()),

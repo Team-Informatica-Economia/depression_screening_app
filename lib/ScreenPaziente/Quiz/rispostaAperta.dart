@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:camera/camera.dart';
 import 'package:depression_screening_app/ScreenPaziente/Quiz/resultpage.dart';
 import 'package:depression_screening_app/components/title_question.dart';
 import 'package:depression_screening_app/constants.dart';
@@ -19,8 +20,11 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 
 import '../../classesEmotions.dart';
+import '../../classesEmotionsFace.dart';
 import '../../utils.dart';
 import '../../tflite/tflite.dart' as tfl;
+import 'package:image/image.dart' as img;
+
 import 'package:mfcc/mfcc.dart';
 import 'package:t_stats/t_stats.dart';
 
@@ -28,8 +32,9 @@ class quizpageopen extends StatefulWidget {
   final bool microfono;
   final String risposta;
   final String numeroDomanda;
+  final CameraDescription camera;
 
-  quizpageopen({Key key, this.microfono, this.risposta, this.numeroDomanda})
+  quizpageopen({Key key, this.microfono, this.risposta, this.numeroDomanda, this.camera})
       : super(key: key);
 
   @override
@@ -57,20 +62,38 @@ class _quizpageopen extends State<quizpageopen> {
   String _textRiconosciuto = '';
   double _confidence = 1.0;
 
+  CameraController _controller;
+  Future<void> _initializeControllerFuture;
+  XFile file;
+  tfl.Interpreter _interpreterFace;
+
   @override
   void initState() {
     super.initState();
 
     _speech = stt.SpeechToText();
 
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      widget.camera,
+      // Define the resolution to use.
+      ResolutionPreset.low,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+
     Future.microtask(() async {
       try {
         await _prepare();
         await _initializeInterpreter();
+        await _initializeInterpreterFace();
       } catch (e) {
         print(e);
       }
     });
+
+
   }
 
   static Future<SharedPreferences> getSharedPreferencesInstance() async {
@@ -83,6 +106,16 @@ class _quizpageopen extends State<quizpageopen> {
 
     predictions.forEach((element) {
       sharedPreferences.setString("voce" + element.className + numeroDomanda, (element.confidence * 100).toStringAsFixed(2) + "%");
+    });
+  }
+
+  static void saveKVFace(String numeroDomanda, List<Prediction> predictions) async {
+
+    SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
+
+    predictions.forEach((element) {
+      //print("---------------------------------------------------------------" + element.className + " " + (element.confidence * 100).toStringAsFixed(2) + "%");
+      sharedPreferences.setString("face" + element.className + numeroDomanda, (element.confidence * 100).toStringAsFixed(2) + "%");
     });
   }
 
@@ -122,6 +155,75 @@ class _quizpageopen extends State<quizpageopen> {
     } else {
       setState(() => _isListening = false);
       _speech.stop();
+    }
+  }
+
+  Future<void> _initializeInterpreterFace() async {
+    String appDirectory = (await getApplicationDocumentsDirectory()).path;
+    String srcPath = "assets/espressioniFacciali.tflite";
+    String destPath = "$appDirectory/modelDue.tflite";
+
+    /// Read the model as bytes and write it to a file in a location
+    /// which can be accessed by TFLite native code.
+    ByteData modelData = await rootBundle.load(srcPath);
+    await File(destPath).writeAsBytes(modelData.buffer.asUint8List());
+
+    /// Initialise the interpreter
+    _interpreterFace = tfl.Interpreter.fromFile(destPath);
+    _interpreterFace.allocateTensors();
+  }
+
+  img.Image grayscale(img.Image src) {
+    var p = src.getBytes();
+    for (var i = 0, len = p.length; i < len; i += 4) {
+      var l = img.getLuminanceRgb(p[i], p[i + 1], p[i + 2]);
+      p[i] = l;
+      p[i + 1] = l;
+      p[i + 2] = l;
+    }
+    return src;
+  }
+
+  Future<void> _performPredictionFace(File file) async {
+    try {
+      img.Image image = img.decodeImage(File(file.path).readAsBytesSync());
+
+      image = grayscale(image);
+      image = img.copyResize(image, width: 24, height: 24);
+
+      List<num> x = image.getBytes();
+
+      List<double> nuoviEl = new List<double>();
+
+      for (int i = 0; i < x.length; i++){
+        nuoviEl.add(x[i]/255);
+      }
+
+      print(nuoviEl.length);
+      print(nuoviEl);
+
+      Int8List inputData = spectrogramToTensor(nuoviEl);
+
+      // The data is passed into the interpreter, which runs inference for loaded graph.
+      List<Tensor> inputTensors = _interpreterFace.getInputTensors();
+      inputTensors[0].data = inputData;
+      _interpreterFace.invoke();
+
+      List<Tensor> outputTensors = _interpreterFace.getOutputTensors();
+      Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
+      List<Prediction> predictions =
+      processPredictions(outputData, classesEmotionsFace);
+
+      predictions.forEach((element) {
+        print("Classname: " + element.className);
+        print((element.confidence * 100).toStringAsFixed(2) + "%");
+
+      });
+
+      await saveKVFace(numeroDomanda, predictions);
+
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -348,8 +450,21 @@ class _quizpageopen extends State<quizpageopen> {
                   ),
             backgroundColor: _isMicrophoneActive ? Colors.redAccent : KColorIcon,
             elevation: 20,
-            onPressed: ()  {
-              _listen();
+            onPressed: () async {
+              //per lo speech to text
+              //_listen();
+
+              try {
+                await _initializeControllerFuture;
+
+                file = await _controller.takePicture();
+                print("Foto scattata "+file.path);
+
+                await _performPredictionFace(File(file.path));
+              } catch (e) {
+                print(e);
+              }
+
               _disabilitaNextDomanda();
               //print("ciao" + _isMicrophoneActive.toString());
 

@@ -39,7 +39,7 @@ class CameraProvaState extends State<CameraProva>{
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   XFile file;
-  tfl.Interpreter _interpreter;
+  tfl.Interpreter _interpreterFace;
 
 
   @override
@@ -60,7 +60,7 @@ class CameraProvaState extends State<CameraProva>{
 
     Future.microtask(() async {
       try {
-        await _initializeInterpreter();
+        await _initializeInterpreterFace();
       } catch (e) {
         print(e);
       }
@@ -68,7 +68,7 @@ class CameraProvaState extends State<CameraProva>{
   }
 
 
-  Future<void> _initializeInterpreter() async {
+  Future<void> _initializeInterpreterFace() async {
     String appDirectory = (await getApplicationDocumentsDirectory()).path;
     String srcPath = "assets/espressioniFacciali.tflite";
     String destPath = "$appDirectory/modelDue.tflite";
@@ -79,8 +79,8 @@ class CameraProvaState extends State<CameraProva>{
     await File(destPath).writeAsBytes(modelData.buffer.asUint8List());
 
     /// Initialise the interpreter
-    _interpreter = tfl.Interpreter.fromFile(destPath);
-    _interpreter.allocateTensors();
+    _interpreterFace = tfl.Interpreter.fromFile(destPath);
+    _interpreterFace.allocateTensors();
   }
 
   img.Image grayscale(img.Image src) {
@@ -94,7 +94,7 @@ class CameraProvaState extends State<CameraProva>{
     return src;
   }
 
-  Future<void> _performPrediction(File file) async {
+  Future<void> _performPredictionFace(File file) async {
     try {
       img.Image image = img.decodeImage(File(file.path).readAsBytesSync());
 
@@ -115,11 +115,11 @@ class CameraProvaState extends State<CameraProva>{
       Int8List inputData = spectrogramToTensor(nuoviEl);
 
       // The data is passed into the interpreter, which runs inference for loaded graph.
-      List<Tensor> inputTensors = _interpreter.getInputTensors();
+      List<Tensor> inputTensors = _interpreterFace.getInputTensors();
       inputTensors[0].data = inputData;
-      _interpreter.invoke();
+      _interpreterFace.invoke();
 
-      List<Tensor> outputTensors = _interpreter.getOutputTensors();
+      List<Tensor> outputTensors = _interpreterFace.getOutputTensors();
       Float32List outputData = outputTensors[0].data.buffer.asFloat32List();
       List<Prediction> predictions =
       processPredictions(outputData, classesEmotionsFace);
@@ -165,7 +165,7 @@ class CameraProvaState extends State<CameraProva>{
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     Tflite.close();
-    _interpreter.delete();
+    _interpreterFace.delete();
     super.dispose();
   }
 
@@ -213,7 +213,7 @@ class CameraProvaState extends State<CameraProva>{
            print("Foto scattata "+file.path);
 
            //await classifyImage(file.path);
-            await _performPrediction(File(file.path));
+            await _performPredictionFace(File(file.path));
             // If the picture was taken, display it on a new screen.
             Navigator.push(
               context,
