@@ -50,6 +50,8 @@ class resultpageState extends State<resultpage> {
   List<String> faceDisgust = new List(3);
   List<String> faceHappy = new List(3);
 
+  List<List<String>> strList = new List(8);
+
   int punteggio;
 
   static Future<SharedPreferences> getSharedPreferencesInstance() async {
@@ -90,8 +92,23 @@ class resultpageState extends State<resultpage> {
         faceHappy[i - 1] = sharedPrefs.getString("facehappy" + i.toString());
       }
       punteggio = sharedPrefs.getInt("punteggio");
+
     });
   }
+
+  List<List<String>> getTabella (int numDomanda) {
+    strList[0] = ['Emozione', 'Tono vocale', 'Espressione facciale'];
+    strList[1] = ['Arrabbiato', voceAngry[numDomanda], faceAngry[numDomanda]];
+    strList[2] = ['Neutrale', voceNeutral[numDomanda], faceNeutral[numDomanda]];
+    strList[3] = ['Impaurito', voceFear[numDomanda], faceFear[numDomanda]];
+    strList[4] = ['Sorpreso', voceSurprise[numDomanda], faceSurprise[numDomanda]];
+    strList[5] = ['Triste', voceSad[numDomanda], faceSad[numDomanda]];
+    strList[6] = ['Disgustato', voceDisgust[numDomanda], faceDisgust[numDomanda]];
+    strList[7] = ['Felice', voceHappy[numDomanda], faceHappy[numDomanda]];
+
+    return strList;
+  }
+
 
   writePDF() {
     pdf.addPage(pw.MultiPage(
@@ -114,148 +131,16 @@ class resultpageState extends State<resultpage> {
           ),
           pw.Header(level: 1, child: pw.Text("1)" + domande[0].toString())),
           pw.Paragraph(text: risposte[0].toString()),
-          pw.Paragraph(
-              text: "Analisi tono vocale su risposta aperta:\n"
-                  + "Angry: " +
-                  voceAngry[0] +
-                  "\n" +
-                  "Neutral: " +
-                  voceNeutral[0] +
-                  "\n" +
-                  "Fear: " +
-                  voceFear[0] +
-                  "\n" +
-                  "Surprise: " +
-                  voceSurprise[0] +
-                  "\n" +
-                  "Sad: " +
-                  voceSad[0] +
-                  "\n" +
-                  "Disgust: " +
-                  voceDisgust[0] +
-                  "\n" +
-                  "Happy: " +
-                  voceHappy[0] +
-                  "\n"),
-          pw.Paragraph(
-              text: "Analisi espressione facciale su risposta aperta:\n"
-                  + "Angry: " +
-                  faceAngry[0] +
-                  "\n" +
-                  "Neutral: " +
-                  faceNeutral[0] +
-                  "\n" +
-                  "Fear: " +
-                  faceFear[0] +
-                  "\n" +
-                  "Surprise: " +
-                  faceSurprise[0] +
-                  "\n" +
-                  "Sad: " +
-                  faceSad[0] +
-                  "\n" +
-                  "Disgust: " +
-                  faceDisgust[0] +
-                  "\n" +
-                  "Happy: " +
-                  faceHappy[0] +
-                  "\n"),
+          pw.Table.fromTextArray(context: context, data: getTabella(0)),
+
           pw.Header(level: 1, child: pw.Text("2)" + domande[1].toString())),
           pw.Paragraph(text: risposte[1].toString()),
-          pw.Paragraph(
-              text: "Analisi tono vocale su risposta aperta:\n"
-                  + "Angry: " +
-                  voceAngry[1] +
-                  "\n" +
-                  "Neutral: " +
-                  voceNeutral[1] +
-                  "\n" +
-                  "Fear: " +
-                  voceFear[1] +
-                  "\n" +
-                  "Surprise: " +
-                  voceSurprise[1] +
-                  "\n" +
-                  "Sad: " +
-                  voceSad[1] +
-                  "\n" +
-                  "Disgust: " +
-                  voceDisgust[1] +
-                  "\n" +
-                  "Happy: " +
-                  voceHappy[1] +
-                  "\n"),
-          pw.Paragraph(
-              text: "Analisi espressione facciale su risposta aperta:\n"
-                  + "Angry: " +
-                  faceAngry[1] +
-                  "\n" +
-                  "Neutral: " +
-                  faceNeutral[1] +
-                  "\n" +
-                  "Fear: " +
-                  faceFear[1] +
-                  "\n" +
-                  "Surprise: " +
-                  faceSurprise[1] +
-                  "\n" +
-                  "Sad: " +
-                  faceSad[1] +
-                  "\n" +
-                  "Disgust: " +
-                  faceDisgust[1] +
-                  "\n" +
-                  "Happy: " +
-                  faceHappy[1] +
-                  "\n"),
+          pw.Table.fromTextArray(context: context, data: getTabella(1)),
+
           pw.Header(level: 1, child: pw.Text("3)" + domande[2].toString())),
           pw.Paragraph(text: risposte[2].toString()),
-          pw.Paragraph(
-              text: "Analisi tono vocale su risposta aperta:\n"
-                  + "Angry: " +
-                  voceAngry[2] +
-                  "\n" +
-                  "Neutral: " +
-                  voceNeutral[2] +
-                  "\n" +
-                  "Fear: " +
-                  voceFear[2] +
-                  "\n" +
-                  "Surprise: " +
-                  voceSurprise[2] +
-                  "\n" +
-                  "Sad: " +
-                  voceSad[2] +
-                  "\n" +
-                  "Disgust: " +
-                  voceDisgust[2] +
-                  "\n" +
-                  "Happy: " +
-                  voceHappy[2] +
-                  "\n"),
-          pw.Paragraph(
-              text: "Analisi espressione facciale su risposta aperta:\n"
-                  + "Angry: " +
-                  faceAngry[2] +
-                  "\n" +
-                  "Neutral: " +
-                  faceNeutral[2] +
-                  "\n" +
-                  "Fear: " +
-                  faceFear[2] +
-                  "\n" +
-                  "Surprise: " +
-                  faceSurprise[2] +
-                  "\n" +
-                  "Sad: " +
-                  faceSad[2] +
-                  "\n" +
-                  "Disgust: " +
-                  faceDisgust[2] +
-                  "\n" +
-                  "Happy: " +
-                  faceHappy[2] +
-                  "\n"),
+          pw.Table.fromTextArray(context: context, data: getTabella(2)),
+
           pw.Header(level: 2, child: pw.Text("Punteggio ottenuto: ")),
           pw.Paragraph(text: punteggio.toString()),
         ];
