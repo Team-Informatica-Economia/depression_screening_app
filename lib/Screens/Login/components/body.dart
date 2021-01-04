@@ -43,13 +43,9 @@ class _BodyState extends State<Body> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Login",
-              style: TextStyle(fontWeight: FontWeight.bold ),
-            ),
             SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
-              "assets/icons/login.svg",
+            Image.asset(
+              "assets/icons/loginImg2.png",
               height: size.height*0.3,
             ),
             SizedBox(height: size.height * 0.03),
@@ -65,7 +61,7 @@ class _BodyState extends State<Body> {
                         Icons.person,
                         color: KPrimaryColor,
                       ),
-                      hintText: "Your Email",
+                      hintText: "Email",
                       border: InputBorder.none
                   ),
                 ),
@@ -95,7 +91,7 @@ class _BodyState extends State<Body> {
             ),
 
             RoundedButton(
-              text: "LOGIN",
+              text: "Login",
               press: (){
                 context.read<AuthenticationService>().sigIn(
                   email: _email,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'services/Users.dart';
 
-const KPrimaryColor = Color(0xff0181DA);
+const KPrimaryColor = Color(0xff5397cd);
 const KPrimaryLightColor = Color(0xFFF0F9FF);
 const KColorButtonDark = Color(0xff84a6c7);
 const KColorButtonLight = Color(0xffc5e8ff);

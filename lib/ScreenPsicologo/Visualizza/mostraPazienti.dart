@@ -1,4 +1,5 @@
 import 'package:depression_screening_app/ScreenPsicologo/Visualizza/detailPaziente.dart';
+import 'package:depression_screening_app/ScreenPsicologo/homePsicologo.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
 import 'package:depression_screening_app/components/searchBar.dart';
 import 'package:depression_screening_app/constants.dart';
@@ -83,6 +84,20 @@ class MostraPazientiState extends State<MostraPazienti> {
             padding: EdgeInsets.only(top: 55.0, left: 40.0),
             child: Row(
               children: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.arrow_back_rounded),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return HomePagePsicologo();
+                          },
+                        ),
+                      );
+                    }
+                ),
                 Text('Lista',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
@@ -142,7 +157,7 @@ class MostraPazientiState extends State<MostraPazienti> {
           )
         ],
       ),
-      bottomNavigationBar: bottomBarPsicologo(),
+      //bottomNavigationBar: bottomBarPsicologo(),
     );
   }
 

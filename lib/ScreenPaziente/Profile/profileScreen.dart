@@ -7,7 +7,7 @@ class ProfileScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       body:Body(),
-      bottomNavigationBar: bottomBarPaziente(),
+      bottomNavigationBar: bottomBarPaziente(numPage: 2,),
     );
   }
 

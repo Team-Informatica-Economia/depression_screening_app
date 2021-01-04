@@ -49,7 +49,7 @@ class _HomePagePsicologoState extends State<HomePagePsicologo> {
           },
         ),
       ),
-      bottomNavigationBar: bottomBarPsicologo(),
+      //bottomNavigationBar: bottomBarPsicologo(),
     );
   }
 }

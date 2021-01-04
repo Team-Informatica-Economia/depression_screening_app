@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../homePsicologo.dart';
+import 'mostraPazienti.dart';
+
 class DetailPazienti extends StatefulWidget {
   final Users user;
 
@@ -52,19 +55,33 @@ class DetailPazientiState extends State<DetailPazienti> {
               padding: EdgeInsets.only(left: 40.0, top: 50),
               child: Row(
                 children: <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.arrow_back_rounded),
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MostraPazienti();
+                            },
+                          ),
+                        );
+                      }
+                  ),
                   Text(user.nome,
                       style: TextStyle(
                           fontFamily: 'Montserrat',
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 25.0)),
-                  SizedBox(width: 10.0),
+                  SizedBox(width: 3.0),
                   Text(user.cognome,
                       style: TextStyle(
                           fontFamily: 'Montserrat',
                           color: Colors.white,
                           fontSize: 25.0)),
-                  SizedBox(width: 100.0),
+                  SizedBox(width: 30.0),
                   IconButton(
                     icon: Icon(Icons.chat,color: Colors.white,),
                     onPressed: () {

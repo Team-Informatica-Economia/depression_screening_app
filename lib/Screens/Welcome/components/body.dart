@@ -10,21 +10,22 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Background(child: Column(
+    return Background(
+      child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
           "Una parola d’incoraggiamento durante un momento di difficoltà, vale più di un’ora di lodi dopo il successo.",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21, fontStyle: FontStyle.italic),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21, fontStyle: FontStyle.italic, color: Colors.black54),
           textAlign: TextAlign.center,
       ),
-      SizedBox(height: size.height * 0.05),
-      SvgPicture.asset(
-        "assets/icons/chat.svg",
+      SizedBox(height: size.height * 0.04),
+      Image.asset(
+        "assets/icons/welcomeImage.png",
         height: size.height*0.5,
       ),
         RoundedButton(
-          text: "LOGIN",
+          text: "Login",
           press: (){Navigator.push(
             context,
             MaterialPageRoute(

@@ -4,6 +4,7 @@ import 'package:depression_screening_app/ScreenPaziente/Questionario/questionari
 import 'package:depression_screening_app/ScreenPaziente/cameraProva.dart';
 import 'package:depression_screening_app/Screens/Login/login_screen.dart';
 import 'package:depression_screening_app/components/bottomBar.dart';
+import 'package:depression_screening_app/components/bottomBarDinamic.dart';
 import 'package:depression_screening_app/components/rounded_button.dart';
 import 'package:depression_screening_app/constants.dart';
 import 'package:depression_screening_app/services/AppuntamentoObj.dart';
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      bottomNavigationBar: bottomBarPaziente(),
+      bottomNavigationBar: bottomBarPaziente(numPage: 1,),
     );
   }
 
@@ -210,12 +211,20 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
-              RoundedButton(
+              /*RoundedButton(
                 text: "Prova Speech To Text",
                 press: () {
-                  _getCamera();
+                  //_getCamera();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return SnakeNavigationBarExampleScreen();
+                      },
+                    ),
+                  );
                 },
-              ),
+              ),*/
             ],
           ),
         ),
