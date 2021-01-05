@@ -31,7 +31,7 @@ class Title_question extends StatelessWidget {
             children: [
               TextSpan(
                   text: testo,
-                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white, fontSize: 27),
+                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white, fontSize: 24),
               ),
             ]
         ),

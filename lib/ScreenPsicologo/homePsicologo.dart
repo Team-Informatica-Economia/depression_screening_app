@@ -55,6 +55,8 @@ class _HomePagePsicologoState extends State<HomePagePsicologo> {
 }
 
 Widget displayInformation(BuildContext context,snapshot){
+  Size size = MediaQuery.of(context).size;
+
   return Column(
     children: <Widget>[
       Padding(
@@ -160,7 +162,9 @@ Widget displayInformation(BuildContext context,snapshot){
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: SvgPicture.asset("assets/icons/nurse.svg"),
+                      child: Image.asset("assets/icons/psicologo1.png",
+                        width: size.width/2.3,
+                        height: size.height/4.5,),
                     ),
 
                   ],
@@ -214,7 +218,9 @@ Widget displayInformation(BuildContext context,snapshot){
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: SvgPicture.asset("assets/icons/nurse.svg"),
+                      child: Image.asset("assets/icons/psicologo2.png",
+                      width: size.width/2.3,
+                      height: size.height/4.5,),
                     ),
 
                   ],

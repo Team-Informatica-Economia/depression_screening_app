@@ -62,10 +62,10 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
                     children: <Widget>[
                       Flexible(
                         child: Text(
-                          "Per favore legga attentamente le affermazioni di ciascun gruppo.Per ogni gruppo scelga quella che "
-                              "meglio descrive come Lei si è sentito nelle ultime due settimane (incluso oggi).Faccia"
+                          "Per favore legga attentamente le affermazioni di ciascun gruppo. Per ogni gruppo scelga quella che "
+                              "meglio descrive come Lei si è sentito nelle ultime due settimane (incluso oggi). Faccia "
                               "una crocetta sul numero corrispondente all’affermazione da Lei scelta. Se più di una"
-                              " affermazione dello stesso gruppo descrive ugualmente bene come Lei si sente, faccia"
+                              " affermazione dello stesso gruppo descrive ugualmente bene come Lei si sente, faccia "
                               "una crocetta sul numero più elevato per quel gruppo",
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.visible,

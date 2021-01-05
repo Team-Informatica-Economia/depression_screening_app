@@ -180,6 +180,9 @@ class resultpageState extends State<resultpage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              "assets/icons/quizTerminato.png",
+            ),
             Text("Quiz terminato"),
             RoundedButton(
               text: "Vai alla Home",

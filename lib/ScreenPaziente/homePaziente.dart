@@ -65,7 +65,6 @@ class _HomePageState extends State<HomePage> {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
     }
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: KPrimaryColor,
       extendBody: true,
@@ -86,6 +85,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget displayInformation(BuildContext context, snapshot) {
+    Size size = MediaQuery.of(context).size;
     Users utenteLoggato = snapshot.data;
     return Column(
       children: <Widget>[
@@ -150,8 +150,8 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         padding: EdgeInsets.only(
                           left: MediaQuery.of(context).size.width * 0.4,
-                          top: 40,
-                          right: 30,
+                          top: 50,
+                          right: 20,
                         ),
                         height: 120,
                         width: double.infinity,
@@ -176,8 +176,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: SvgPicture.asset("assets/icons/nurse.svg"),
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Image.asset(
+                          "assets/icons/quiz.png",
+                          width: size.width/2.3,
+                          height: size.height/4.5,
+                        ),
                       ),
                     ],
                   ),

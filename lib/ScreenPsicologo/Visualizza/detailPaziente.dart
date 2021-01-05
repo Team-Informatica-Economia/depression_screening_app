@@ -47,6 +47,8 @@ class DetailPazientiState extends State<DetailPazienti> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
         backgroundColor: KPrimaryColor,
         body: Column(
@@ -150,7 +152,9 @@ class DetailPazientiState extends State<DetailPazienti> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
-                              child: SvgPicture.asset("assets/icons/nurse.svg"),
+                              child:  Image.asset("assets/icons/psicologo3.png",
+                                width: size.width/2.7,
+                                height: size.height/4.5,),
                             ),
                           ],
                         ),
@@ -301,7 +305,7 @@ class DetailPazientiState extends State<DetailPazienti> {
                 Container(
                     child: Row(children: [
                   Image(
-                      image: AssetImage("assets/images/questionario.png"),
+                      image: AssetImage("assets/icons/lente.png"),
                       fit: BoxFit.cover,
                       height: 75.0,
                       width: 75.0),

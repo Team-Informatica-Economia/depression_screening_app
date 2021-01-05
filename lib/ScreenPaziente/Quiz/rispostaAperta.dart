@@ -420,7 +420,7 @@ class _quizpageopen extends State<quizpageopen> {
     return Scaffold(
         body: Column(children: <Widget>[
       Expanded(
-        flex: 3,
+        flex: 5,
         child: Container(
           alignment: Alignment.bottomCenter,
           width: double.infinity,
@@ -478,18 +478,15 @@ class _quizpageopen extends State<quizpageopen> {
           ),
         ),
       ),
-      Expanded(
-        flex: 1,
-        child: RaisedButton(
-          color: Color(0xffb8cae7),
-          elevation: 4,
+       Expanded(
+        flex: 2,
           child: Text(
-            "Preferisco non rispondere",
+            "Puoi decidere di non giustificare la tua risposta dicendo: preferisco non rispondere.",
             style:
                 Theme.of(context).textTheme.title.copyWith(color: Colors.black),
+            textAlign: TextAlign.center,
           ),
-          onPressed: _isMicrophoneActive ? null : _cambiaPagePrefNonRispondere,
-        ),
+
       ),
       SizedBox(
         height: 10,
