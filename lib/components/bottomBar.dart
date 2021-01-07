@@ -167,6 +167,8 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
 
   void _onPageChanged(int page) {
     containerColor = containerColors[page];
+
+
     switch (page) {
       case 0:
         setState(() {
@@ -197,6 +199,7 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
           showSelectedLabels = true;
           showUnselectedLabels = true;
         });
+
         Navigator.push(
           context,
           MaterialPageRoute(

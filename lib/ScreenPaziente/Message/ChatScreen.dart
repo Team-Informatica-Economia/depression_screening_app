@@ -80,14 +80,15 @@ class _ChatScreenState extends State<ChatScreen>{
                               iconSize: 50,
                               color: Colors.white,
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pop(context);
+                              /*  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return HomePage();
                                     },
                                   ),
-                                );
+                                ); */
                               },
                           ),
                           Text(

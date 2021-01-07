@@ -61,6 +61,8 @@ class DetailPazientiState extends State<DetailPazienti> {
                       icon: Icon(Icons.arrow_back_rounded),
                       color: Colors.white,
                       onPressed: () {
+                        Navigator.pop(context);
+                        /*
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -68,7 +70,7 @@ class DetailPazientiState extends State<DetailPazienti> {
                               return MostraPazienti();
                             },
                           ),
-                        );
+                        ); */
                       }
                   ),
                   Text(user.nome,

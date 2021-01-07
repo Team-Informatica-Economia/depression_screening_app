@@ -87,6 +87,8 @@ class _ChatPsicologoState extends State<ChatPsicologo>{
                           iconSize: 50,
                           color: Colors.white,
                           onPressed: () {
+                            Navigator.pop(context);
+                            /*
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -94,7 +96,7 @@ class _ChatPsicologoState extends State<ChatPsicologo>{
                                   return DetailPazienti(user: user,);
                                 },
                               ),
-                            );
+                            ); */
                           },
                         ),
                         Text(

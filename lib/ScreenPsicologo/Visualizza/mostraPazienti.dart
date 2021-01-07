@@ -88,6 +88,8 @@ class MostraPazientiState extends State<MostraPazienti> {
                     icon: Icon(Icons.arrow_back_rounded),
                     color: Colors.white,
                     onPressed: () {
+                        Navigator.pop(context);
+                      /*
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -95,7 +97,7 @@ class MostraPazientiState extends State<MostraPazienti> {
                             return HomePagePsicologo();
                           },
                         ),
-                      );
+                      ); */
                     }
                 ),
                 Text('Lista',
