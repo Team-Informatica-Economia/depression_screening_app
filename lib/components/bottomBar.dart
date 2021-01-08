@@ -58,77 +58,7 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
   @override
   Widget build(BuildContext context) {
 
-    /*return Container(
-      height: 120,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: <Widget>[
-          Positioned(
-              bottom: 0,
-              child:ClipPath(
-                clipper: NavBarClipper(),
-                child: Container(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            KColorButtonDark,
-                            KColorButtonLight,
-                          ]
-                      )
-                  ),
-                ),
-              )
-          ),
-          Positioned(
-            bottom: 45,
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                new GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ChatScreen(),));
-                  },
-                  child: _buildNavItem(Icons.chat_bubble),
-                ),
-                SizedBox(width: 1,),
-                new GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage(),));
-                  },
-                  child: _buildNavItem(Icons.home),
-                ),
-                SizedBox(width: 1,),
-                new GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfileScreen(),));
-                  },
-                  child: _buildNavItem(Icons.account_circle),
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 10,
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text("Chat",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
-                SizedBox(width: 1,),
-                Text("Home",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
-                SizedBox(width: 2,),
-                Text("Profilo",style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
-              ],
-            ),
-          )
-        ],
-      ),
-    );*/
+
     return SnakeNavigationBar.color(
       behaviour: snakeBarStyle,
       snakeShape: snakeShape,
@@ -151,7 +81,7 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
 
       currentIndex: _selectedItemPosition,
       onTap: (index) => setState(() {
-        _selectedItemPosition = index;
+        //_selectedItemPosition = index;
         _onPageChanged(index);
       }),
       items: [
@@ -200,14 +130,13 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
           showUnselectedLabels = true;
         });
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return HomePage();
-            },
-          ),
-        );
+
+        if(_selectedItemPosition != 1){
+
+          Navigator.pop(
+            context
+          );
+        }
         break;
 
       case 2:
@@ -220,14 +149,17 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
           showSelectedLabels = true;
           showUnselectedLabels = true;
         });
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return ProfileScreen();
-            },
-          ),
-        );
+        print(_selectedItemPosition);
+        if(_selectedItemPosition != 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return ProfileScreen();
+              },
+            ),
+          );
+        }
         break;
     }
   }
