@@ -121,7 +121,7 @@ class _AggiungiPazientePageState extends State<AggiungiPazientePage> {
                                   color: Colors.white,
                                   fontSize: 20),
                             ),
-                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePagePsicologo(),)),
+                            onPressed: () => Navigator.pop(context),
                             width: 120,
                           )
                         ],
