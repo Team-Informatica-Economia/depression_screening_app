@@ -53,6 +53,8 @@ class resultpageState extends State<resultpage> {
   List<List<String>> strList = new List(8);
 
   int punteggio;
+  String inizioTest;
+  String gradoDepressione;
 
   static Future<SharedPreferences> getSharedPreferencesInstance() async {
     return await SharedPreferences.getInstance();
@@ -92,8 +94,29 @@ class resultpageState extends State<resultpage> {
         faceHappy[i - 1] = sharedPrefs.getString("facehappy" + i.toString());
       }
       punteggio = sharedPrefs.getInt("punteggio");
+      inizioTest = sharedPrefs.getString("inizio");
+
+      /*
+      Punteggi 0-13 indicano un’assenza di contenuti depressivi;
+      punteggi compresi tra 14-19:  una depressione lieve punteggi
+      27-29 una depressione di grado moderato; punteggi
+      30- 63: una depressione di grado severo.
+       */
+
+      gradoDepressione = getGrado(punteggio);
+
 
     });
+  }
+
+  String getGrado(int punteggio){
+    if(punteggio>=0 && punteggio<=13)
+      return "Assenza di contenuti depressivi";
+    else if(punteggio>=14 && punteggio<=19)
+      return "Depressione lieve";
+    else if(punteggio>=27 && punteggio<=29)
+      return "Depressione di grado moderato";
+    else "Depressione di grado severo"; //tra 30 e 63
   }
 
   List<List<String>> getTabella (int numDomanda) {
@@ -142,7 +165,15 @@ class resultpageState extends State<resultpage> {
           pw.Table.fromTextArray(context: context, data: getTabella(2)),
 
           pw.Header(level: 2, child: pw.Text("Punteggio ottenuto: ")),
-          pw.Paragraph(text: punteggio.toString()),
+          pw.Paragraph(text: gradoDepressione),
+
+          pw.Header(level: 2, child: pw.Text("Test iniziato: ")),
+          pw.Paragraph(text: inizioTest),
+
+          pw.Header(level: 3, child: pw.Text("Test finito: ")),
+          pw.Paragraph(text: DateTime.now().toString()),
+
+
         ];
       },
     ));

@@ -47,6 +47,8 @@ class _quizpageState extends State<quizpage> {
   int iDomanda = 1;
   bool microfono = false;
   int secondiLetti;
+  DateTime inizioTest;
+  bool flag=false;
 
   var firstCamera;
 
@@ -59,11 +61,12 @@ class _quizpageState extends State<quizpage> {
   }
 
   static void saveKV(
-      int numDomanda, String domanda, String risposta, int punteggio) async {
+      int numDomanda, String domanda, String risposta, int punteggio, String inizioTest) async {
     SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
     sharedPreferences.setString("domanda" + numDomanda.toString(), domanda);
     sharedPreferences.setString("risposta" + numDomanda.toString(), risposta);
     sharedPreferences.setInt("punteggio", punteggio);
+    sharedPreferences.setString("inizio", inizioTest);
   }
 
   _getCamera() async {
@@ -77,6 +80,7 @@ class _quizpageState extends State<quizpage> {
 
   void nextQuestion(String let) async{
     await _getCamera();
+
     setState(() {
       if (iDomanda < 3) {
         iDomanda++;
@@ -112,7 +116,7 @@ class _quizpageState extends State<quizpage> {
     );
 
     saveKV(iDomanda, mydata[0][yDomanda.toString()], mydata[1][yDomanda][let],
-        punteggio);
+        punteggio, inizioTest.toString());
     nextQuestion(let);
   }
 
@@ -120,6 +124,13 @@ class _quizpageState extends State<quizpage> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+
+   if(iDomanda==1 && flag==false){
+     flag=true;
+     inizioTest=DateTime.now();
+     print("Inizio test "+inizioTest.toString());
+   }
+
     return WillPopScope(
       child: Scaffold(
         body: Column(
