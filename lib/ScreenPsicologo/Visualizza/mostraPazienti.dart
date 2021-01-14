@@ -207,7 +207,7 @@ class MostraPazientiState extends State<MostraPazienti> {
         padding: EdgeInsets.only(top: 2.0),
         child: ConstrainedBox(
           constraints: new BoxConstraints(
-            maxHeight: 380.0,
+            maxHeight: MediaQuery.of(context).size.width * 0.9,
           ),
           child: ListView.builder(
               shrinkWrap: true,

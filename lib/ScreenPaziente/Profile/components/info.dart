@@ -65,7 +65,7 @@ class Info extends StatelessWidget {
                   name,
                   style: TextStyle(
                     fontSize: defaultSize * 2.9, // 22
-                    color: Colors.black,
+                    color: Color(0xff4e4b44),
                   ),
                 ),
                 SizedBox(height: defaultSize / 2), //5
@@ -84,7 +84,7 @@ class Info extends StatelessWidget {
                     Text("Fascia di età: ",
                       style: TextStyle(
                           fontSize: defaultSize * 1.8,
-                          color: Colors.black,
+                          color: Color(0xff4e4b44),
                           fontWeight: FontWeight.bold
                       ),
                     ),
@@ -106,7 +106,7 @@ class Info extends StatelessWidget {
                     Text("Regione: ",
                       style: TextStyle(
                           fontSize: defaultSize * 1.8,
-                          color: Colors.black,
+                          color: Color(0xff4e4b44),
                           fontWeight: FontWeight.bold
                       ),
                     ),
@@ -128,7 +128,7 @@ class Info extends StatelessWidget {
                     Text("Provincia: ",
                       style: TextStyle(
                           fontSize: defaultSize * 1.8,
-                          color: Colors.black,
+                          color: Color(0xff4e4b44),
                           fontWeight: FontWeight.bold
                       ),
                     ),
@@ -150,7 +150,7 @@ class Info extends StatelessWidget {
                     Text("Scuola: ",
                       style: TextStyle(
                           fontSize: defaultSize * 1.8,
-                          color: Colors.black,
+                          color: Color(0xff4e4b44),
                           fontWeight: FontWeight.bold
                       ),
                     ),
@@ -172,7 +172,7 @@ class Info extends StatelessWidget {
                     Text("Sesso: ",
                       style: TextStyle(
                           fontSize: defaultSize * 1.8,
-                          color: Colors.black,
+                          color: Color(0xff4e4b44),
                           fontWeight: FontWeight.bold
                       ),
                     ),
@@ -194,7 +194,7 @@ class Info extends StatelessWidget {
                     Text("Stato civile: ",
                       style: TextStyle(
                           fontSize: defaultSize * 1.8,
-                          color: Colors.black,
+                          color: Color(0xff4e4b44),
                           fontWeight: FontWeight.bold
                       ),
                     ),

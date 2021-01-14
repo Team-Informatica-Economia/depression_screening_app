@@ -29,7 +29,7 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
                 alignment: Alignment.bottomCenter,
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(30),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -50,6 +50,9 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 30,
+            ),
             Expanded(
               flex: 2,
               child: Container(
@@ -66,12 +69,12 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
                               "meglio descrive come Lei si è sentito nelle ultime due settimane (incluso oggi). Faccia "
                               "una crocetta sul numero corrispondente all’affermazione da Lei scelta. Se più di una"
                               " affermazione dello stesso gruppo descrive ugualmente bene come Lei si sente, faccia "
-                              "una crocetta sul numero più elevato per quel gruppo",
+                              "una crocetta sul numero più elevato per quel gruppo.",
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.visible,
                           style: TextStyle(
                             fontFamily: 'Product Sans',
-                            fontSize: 20,
+                            fontSize: 18,
                             color: Color(0xff8f9db5),
                           ),
                         ),
@@ -118,13 +121,16 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
                         "Accetta informativa sulla privacy",
                         style: TextStyle(
                           fontFamily: 'Product Sans',
-                          fontSize: 18,
+                          fontSize: 20,
                           color: Color(0xff8f9db5),
                         ),
                     ),
                   ],
                 ),
               ),
+            ),
+            SizedBox(
+              height: 30,
             ),
             Expanded(
               flex: 1,

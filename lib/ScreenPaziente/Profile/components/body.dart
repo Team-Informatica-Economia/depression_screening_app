@@ -65,7 +65,7 @@ Widget displayInformation(context, snapshot) {
           image: "assets/images/pic.png",
           name: "${utenteLoggato.nome}"+" ${utenteLoggato.cognome}",
           email: "${utenteLoggato.email}",
-          eta: "${utenteLoggato.eta}"=="null" ? "Da inserire" : "${utenteLoggato.eta}"+" anni",
+          eta: "${utenteLoggato.eta}"=="null" ? "Da inserire" : "${utenteLoggato.eta}",
           regione:  "${utenteLoggato.regione}"=="null" ? "Da inserire" : "${utenteLoggato.regione}",
           provincia:  "${utenteLoggato.provincia}"=="null" ? "Da inserire" : "${utenteLoggato.provincia}",
           scuola:  "${utenteLoggato.scuola}"=="null" ? "Da inserire" : "${utenteLoggato.scuola}",

@@ -56,17 +56,17 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
   Future userFuture;
   String nomeUtente;
   String cognomeUtente;
-  List<String> statoCivile = ["Nubile", "Celibe", "Sposato/a", "Vedovo/a"];
+  List<String> statoCivile = ["Nubile", "Celibe", "Sposato/a", "Vedovo/a", "Divorziato/a"];
   List<String> sesso = ["M", "F", "Preferisco non specificarlo"];
-  List<String> gradoIstruzione = ["Primaria", "Secondaria", "Universitaria"];
+  List<String> gradoIstruzione = ["Elementari", "Medie", "Diploma", "Laurea"];
   List<String> eta = [
-    "18-20",
-    "21-30",
-    "31-40",
-    "41-50",
-    "51-60",
-    "61-70",
-    "70+"
+    "18-20 anni",
+    "21-30 anni",
+    "31-40 anni",
+    "41-50 anni",
+    "51-60 anni",
+    "61-70 anni",
+    "70+ anni"
   ];
   bool firstCompilation;
 
@@ -173,7 +173,7 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
         Padding(
           padding: EdgeInsets.only(top: 30.0),
           child: Text(
-            "Questionario dati personali",
+            "Dati personali",
             style: TextStyle(
               fontFamily: 'Product Sans',
               fontSize: 30,

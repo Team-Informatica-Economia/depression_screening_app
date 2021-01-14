@@ -309,8 +309,8 @@ class DetailPazientiState extends State<DetailPazienti> {
                   Image(
                       image: AssetImage("assets/icons/lente.png"),
                       fit: BoxFit.cover,
-                      height: 75.0,
-                      width: 75.0),
+                      height: 70.0,
+                      width: 70.0),
                   SizedBox(width: 10.0),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

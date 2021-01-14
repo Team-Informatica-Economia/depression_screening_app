@@ -11,6 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../constants.dart';
+
 class resultpage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -164,19 +166,41 @@ class resultpageState extends State<resultpage> {
           pw.Paragraph(text: risposte[2].toString()),
           pw.Table.fromTextArray(context: context, data: getTabella(2)),
 
-          pw.Header(level: 2, child: pw.Text("Punteggio ottenuto: ")),
-          pw.Paragraph(text: gradoDepressione),
+          pw.Header(level: 2, child: pw.Text("Risultato ottenuto: " + gradoDepressione)),
 
-          pw.Header(level: 2, child: pw.Text("Test iniziato: ")),
-          pw.Paragraph(text: inizioTest),
+          pw.Header(level: 2, child: pw.Text("Ora inizio test: " + convertData(inizioTest))),
 
-          pw.Header(level: 3, child: pw.Text("Test finito: ")),
-          pw.Paragraph(text: DateTime.now().toString()),
+          pw.Header(level: 2, child: pw.Text("Ora fine test: " + convertData(DateTime.now().toString()))),
 
+          pw.Header(level: 2, child: pw.Text("Tempo impiegato: " + differenzaTime(inizioTest, DateTime.now().toString()))),
 
         ];
       },
     ));
+  }
+
+  String convertData(String str) {
+    DateTime parsedDate = DateTime.parse(str);
+
+    String retStr = "";
+    retStr = parsedDate.day.toString() + " " + monthsInYear[parsedDate.month] + ", " + parsedDate.year.toString();
+    retStr = retStr + " " +  parsedDate.hour.toString() + ":" + parsedDate.minute.toString() + ":" + parsedDate.second.toString();
+
+    return retStr;
+  }
+
+  String differenzaTime(String a, String b) {
+    DateTime data1 = DateTime.parse(a);
+    DateTime data2 = DateTime.parse(b);
+
+    int x = data2.difference(data1).inSeconds;
+
+    String retStr = "";
+    double minuti = x/60;
+    int minutiInt = minuti.toInt();
+    retStr = "Minuti: " + minutiInt.toString() + ", Secondi: " + (x%60).toString();
+
+    return retStr;
   }
 
   String generaNome() {

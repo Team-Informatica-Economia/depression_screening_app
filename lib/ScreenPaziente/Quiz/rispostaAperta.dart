@@ -479,15 +479,35 @@ class _quizpageopen extends State<quizpageopen> {
         ),
       ),
        Expanded(
-        flex: 2,
-          child: Text(
-            "Puoi decidere di non giustificare la tua risposta dicendo: preferisco non rispondere.",
-            style:
-                Theme.of(context).textTheme.title.copyWith(color: Colors.black),
+        flex: 1,
+          child:
+          Text(
+           "Puoi decidere di non giustificare la risposta dicendo:",
+           style: TextStyle(
+             fontFamily: 'Montserrat',
+             color: Colors.black45,
+             fontWeight: FontWeight.normal,
+             fontSize: 18,
+           ),
             textAlign: TextAlign.center,
-          ),
+         ),
 
       ),
+          Expanded(
+            flex: 1,
+            child:
+            Text(
+              "Preferisco non rispondere",
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+          ),
       SizedBox(
         height: 10,
       )

@@ -149,9 +149,9 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       Container(
                         padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.4,
-                          top: 50,
-                          right: 20,
+                          left: MediaQuery.of(context).size.width * 0.45,
+                          top: 45,
+                          right: 0,
                         ),
                         height: 120,
                         width: double.infinity,
@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                         child: RichText(
                           text: TextSpan(children: [
                             TextSpan(
-                                text: "Completa il quiz",
+                                text: "Completa quiz",
                                 style: Theme.of(context)
                                     .textTheme
                                     .title
@@ -175,14 +175,27 @@ class _HomePageState extends State<HomePage> {
                           ]),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Container(
+                        padding: EdgeInsets.only(
+                          bottom: 0,
+                          left: 0,
+                        ),
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.56,
                         child: Image.asset(
                           "assets/icons/quiz.png",
-                          width: size.width/2.3,
-                          height: size.height/4.5,
+                          width: size.width/1.3,
+                          height: size.height/3.1,
                         ),
                       ),
+                      /*Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: Image.asset(
+                          "assets/icons/quiz.png",
+                          width: size.width/1.79,
+                          height: size.height/3.8,
+                        ),
+                      ),*/
                     ],
                   ),
                 ),
