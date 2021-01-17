@@ -21,136 +21,143 @@ class _InfoPrivacyState extends State<InfoPrivacy> {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.all(30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Flexible(
-                        child: Text(
-                          "Leggi attentamente le seguenti istruzioni",
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          style: TextStyle(
-                            fontFamily: 'Product Sans',
-                            fontSize: 30,
-                            color: KPrimaryColor,
+        body:
+        DecoratedBox(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage("assets/backgroundQuestionario.jpg"), fit: BoxFit.cover),
+          ),
+          child: Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.all(30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Flexible(
+                            child: Text(
+                              "Leggi attentamente le seguenti istruzioni!",
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                fontFamily: 'Product Sans',
+                                fontSize: 30,
+                                color: KPrimaryColor,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Flexible(
-                        child: Text(
-                          "Per favore legga attentamente le affermazioni di ciascun gruppo. Per ogni gruppo scelga quella che "
-                              "meglio descrive come Lei si è sentito nelle ultime due settimane (incluso oggi). Faccia "
-                              "una crocetta sul numero corrispondente all’affermazione da Lei scelta. Se più di una"
-                              " affermazione dello stesso gruppo descrive ugualmente bene come Lei si sente, faccia "
-                              "una crocetta sul numero più elevato per quel gruppo.",
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
+                SizedBox(
+                  height: 30,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Flexible(
+                            child: Text(
+                              "Per favore legga attentamente le affermazioni di ciascun gruppo. Per ogni gruppo scelga quella che "
+                                  "meglio descrive come Lei si è sentito nelle ultime due settimane (incluso oggi). Faccia "
+                                  "una crocetta sul numero corrispondente all’affermazione da Lei scelta. Se più di una"
+                                  " affermazione dello stesso gruppo descrive ugualmente bene come Lei si sente, faccia "
+                                  "una crocetta sul numero più elevato per quel gruppo.",
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                fontFamily: 'Product Sans',
+                                fontSize: 18,
+                                color: Color(0xff8f9db5),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Transform.scale(
+                          scale: 1.0,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
+                                  left: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
+                                  right: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
+                                  bottom: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
+                                ),
+                              ),
+                              child: Transform.scale(
+                                scale: 2.0,
+                                child: Checkbox(
+                                    value: selected,
+                                    activeColor: KPrimaryColor,
+                                    onChanged:(bool newValue){
+                                      setState(() {
+                                        selected = newValue;
+                                      });
+                                    }
+                                ),
+                              )
+                          ),
+                        ),
+                        Text(
+                          "Accetta informativa sulla privacy",
                           style: TextStyle(
                             fontFamily: 'Product Sans',
-                            fontSize: 18,
+                            fontSize: 20,
                             color: Color(0xff8f9db5),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Transform.scale(
-                      scale: 1.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
-                            left: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
-                            right: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
-                            bottom: BorderSide(width: 1.5, color: avvisaPrivacy ? Colors.red : Colors.transparent),
-                          ),
-                        ),
-                        child: Transform.scale(
-                          scale: 2.0,
-                          child: Checkbox(
-                              value: selected,
-                              activeColor: KPrimaryColor,
-                              onChanged:(bool newValue){
-                                setState(() {
-                                  selected = newValue;
-                                });
-                              }
-                          ),
-                        )
-                      ),
-                    ),
-                    Text(
-                        "Accetta informativa sulla privacy",
-                        style: TextStyle(
-                          fontFamily: 'Product Sans',
-                          fontSize: 20,
-                          color: Color(0xff8f9db5),
-                        ),
-                    ),
-                  ],
+                SizedBox(
+                  height: 30,
                 ),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Expanded(
-              flex: 1,
-              child: RoundedButton(
-                text: "Inizia il quiz",
-                press: ()  async{
-                  if(selected){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => getjson(),
-                    ));
-                  } else {
-                    setState(() {
-                      avvisaPrivacy = true;
-                    });
-                  }
-                },
-              )
-            ),
-          ]
+                Expanded(
+                    flex: 1,
+                    child: RoundedButton(
+                      text: "Inizia il quiz",
+                      press: ()  async{
+                        if(selected){
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => getjson(),
+                          ));
+                        } else {
+                          setState(() {
+                            avvisaPrivacy = true;
+                          });
+                        }
+                      },
+                    )
+                ),
+              ]
+          ),
         )
+
     ));
   }
 }

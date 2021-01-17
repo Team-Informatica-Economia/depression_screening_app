@@ -109,29 +109,36 @@ class _QuestionarioPageState extends State<QuestionarioPage> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  FutureBuilder(
-                    future: userFuture,
-                    builder: (context, snapshot) {
-                      utenteLoggato = snapshot.data;
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return displayInformation(context, snapshot);
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    },
-                  ),
-                ],
-              ),
-            )
-          ],
+        child:
+        DecoratedBox(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage("assets/backgroundQuestionario.jpg"), fit: BoxFit.cover),
+          ),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FutureBuilder(
+                      future: userFuture,
+                      builder: (context, snapshot) {
+                        utenteLoggato = snapshot.data;
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return displayInformation(context, snapshot);
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
+
       ),
     );
   }

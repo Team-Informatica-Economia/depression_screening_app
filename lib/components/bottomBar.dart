@@ -60,6 +60,7 @@ class bottomBarPazienteState extends State<bottomBarPaziente> {
 
 
     return SnakeNavigationBar.color(
+      backgroundColor: KColorBottomBar,
       behaviour: snakeBarStyle,
       snakeShape: snakeShape,
       shape: bottomBarShape,

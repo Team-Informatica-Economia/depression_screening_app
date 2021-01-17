@@ -14,9 +14,10 @@ class Body extends StatelessWidget {
       child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        SizedBox(height: size.height * 0.05),
         Text(
-          "Una parola d’incoraggiamento durante un momento di difficoltà, vale più di un’ora di lodi dopo il successo.",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21, fontStyle: FontStyle.italic, color: Colors.black54),
+          "Cadi sette volte, rialzati otto",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),
           textAlign: TextAlign.center,
       ),
       SizedBox(height: size.height * 0.04),

@@ -7,6 +7,8 @@ const KPrimaryLightColor = Color(0xFFF0F9FF);
 const KColorButtonDark = Color(0xff84a6c7);
 const KColorButtonLight = Color(0xffc5e8ff);
 const KColorIcon = Color(0xff4682b4);
+const KColorBottomBar = Color(0xFFF0F9FF);
+
 const Map<int,String> monthsInYear = {
   1: "Gen",
   2: "Feb",
