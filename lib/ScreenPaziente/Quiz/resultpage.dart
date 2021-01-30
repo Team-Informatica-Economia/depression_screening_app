@@ -33,24 +33,24 @@ class resultpageState extends State<resultpage> {
   String provincia;
   String eta;
 
-  List<String> domande = new List(3);
-  List<String> risposte = new List(3);
+  List<String> domande = new List(NUM_DOMANDE);
+  List<String> risposte = new List(NUM_DOMANDE);
 
-  List<String> voceAngry = new List(3);
-  List<String> voceNeutral = new List(3);
-  List<String> voceFear = new List(3);
-  List<String> voceSurprise = new List(3);
-  List<String> voceSad = new List(3);
-  List<String> voceDisgust = new List(3);
-  List<String> voceHappy = new List(3);
+  List<String> voceAngry = new List(NUM_DOMANDE);
+  List<String> voceNeutral = new List(NUM_DOMANDE);
+  List<String> voceFear = new List(NUM_DOMANDE);
+  List<String> voceSurprise = new List(NUM_DOMANDE);
+  List<String> voceSad = new List(NUM_DOMANDE);
+  List<String> voceDisgust = new List(NUM_DOMANDE);
+  List<String> voceHappy = new List(NUM_DOMANDE);
 
-  List<String> faceAngry = new List(3);
-  List<String> faceNeutral = new List(3);
-  List<String> faceFear = new List(3);
-  List<String> faceSurprise = new List(3);
-  List<String> faceSad = new List(3);
-  List<String> faceDisgust = new List(3);
-  List<String> faceHappy = new List(3);
+  List<String> faceAngry = new List(NUM_DOMANDE);
+  List<String> faceNeutral = new List(NUM_DOMANDE);
+  List<String> faceFear = new List(NUM_DOMANDE);
+  List<String> faceSurprise = new List(NUM_DOMANDE);
+  List<String> faceSad = new List(NUM_DOMANDE);
+  List<String> faceDisgust = new List(NUM_DOMANDE);
+  List<String> faceHappy = new List(NUM_DOMANDE);
 
   List<List<String>> strList = new List(8);
 
@@ -75,7 +75,7 @@ class resultpageState extends State<resultpage> {
       provincia = sharedPrefs.getString("provincia");
       eta = sharedPrefs.getString("eta");
 
-      for (int i = 1; i <= 3; i++) {
+      for (int i = 1; i <= NUM_DOMANDE; i++) {
         domande[i - 1] = sharedPrefs.getString("domanda" + i.toString());
         risposte[i - 1] = sharedPrefs.getString("risposta" + i.toString());
 
@@ -165,6 +165,83 @@ class resultpageState extends State<resultpage> {
           pw.Header(level: 1, child: pw.Text("3)" + domande[2].toString())),
           pw.Paragraph(text: risposte[2].toString()),
           pw.Table.fromTextArray(context: context, data: getTabella(2)),
+
+          //di prova
+
+          pw.Header(level: 1, child: pw.Text("4)" + domande[3].toString())),
+          pw.Paragraph(text: risposte[3].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(3)),
+
+          pw.Header(level: 1, child: pw.Text("5)" + domande[4].toString())),
+          pw.Paragraph(text: risposte[4].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(4)),
+
+          pw.Header(level: 1, child: pw.Text("6)" + domande[5].toString())),
+          pw.Paragraph(text: risposte[5].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(5)),
+
+          pw.Header(level: 1, child: pw.Text("7)" + domande[6].toString())),
+          pw.Paragraph(text: risposte[6].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(6)),
+
+          pw.Header(level: 1, child: pw.Text("8)" + domande[7].toString())),
+          pw.Paragraph(text: risposte[7].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(7)),
+
+          pw.Header(level: 1, child: pw.Text("9)" + domande[8].toString())),
+          pw.Paragraph(text: risposte[8].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(8)),
+
+          pw.Header(level: 1, child: pw.Text("10)" + domande[9].toString())),
+          pw.Paragraph(text: risposte[9].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(9)),
+
+          pw.Header(level: 1, child: pw.Text("11)" + domande[10].toString())),
+          pw.Paragraph(text: risposte[10].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(10)),
+
+          pw.Header(level: 1, child: pw.Text("12)" + domande[11].toString())),
+          pw.Paragraph(text: risposte[11].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(11)),
+
+          pw.Header(level: 1, child: pw.Text("13)" + domande[12].toString())),
+          pw.Paragraph(text: risposte[12].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(12)),
+
+          pw.Header(level: 1, child: pw.Text("14)" + domande[13].toString())),
+          pw.Paragraph(text: risposte[13].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(13)),
+
+          pw.Header(level: 1, child: pw.Text("15)" + domande[14].toString())),
+          pw.Paragraph(text: risposte[14].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(14)),
+
+          pw.Header(level: 1, child: pw.Text("16)" + domande[15].toString())),
+          pw.Paragraph(text: risposte[15].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(15)),
+
+          pw.Header(level: 1, child: pw.Text("17)" + domande[16].toString())),
+          pw.Paragraph(text: risposte[16].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(16)),
+
+          pw.Header(level: 1, child: pw.Text("18)" + domande[17].toString())),
+          pw.Paragraph(text: risposte[17].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(17)),
+
+          pw.Header(level: 1, child: pw.Text("19)" + domande[18].toString())),
+          pw.Paragraph(text: risposte[18].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(18)),
+
+          pw.Header(level: 1, child: pw.Text("20)" + domande[19].toString())),
+          pw.Paragraph(text: risposte[19].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(19)),
+
+          pw.Header(level: 1, child: pw.Text("21)" + domande[20].toString())),
+          pw.Paragraph(text: risposte[20].toString()),
+          pw.Table.fromTextArray(context: context, data: getTabella(20)),
+
+
+
 
           pw.Header(level: 2, child: pw.Text("Risultato ottenuto: " + gradoDepressione)),
 

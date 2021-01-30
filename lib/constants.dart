@@ -9,6 +9,8 @@ const KColorButtonLight = Color(0xffc5e8ff);
 const KColorIcon = Color(0xff4682b4);
 const KColorBottomBar = Color(0xFFF0F9FF);
 
+const int NUM_DOMANDE = 21;
+
 const Map<int,String> monthsInYear = {
   1: "Gen",
   2: "Feb",

@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:depression_screening_app/ScreenPaziente/Quiz/rispostaAperta.dart';
 import 'package:depression_screening_app/components/rounded_button_quiz.dart';
 import 'package:depression_screening_app/components/title_question.dart';
+import 'package:depression_screening_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,7 +83,7 @@ class _quizpageState extends State<quizpage> {
     await _getCamera();
 
     setState(() {
-      if (iDomanda < 3) {
+      if (iDomanda < NUM_DOMANDE) {
         iDomanda++;
         print(iDomanda);
       } else {
