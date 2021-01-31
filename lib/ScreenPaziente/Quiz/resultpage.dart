@@ -10,7 +10,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
+import 'dart:collection';
+import 'package:scidart/numdart.dart';
 import '../../constants.dart';
 
 class resultpage extends StatefulWidget {
@@ -52,11 +53,16 @@ class resultpageState extends State<resultpage> {
   List<String> faceDisgust = new List(NUM_DOMANDE);
   List<String> faceHappy = new List(NUM_DOMANDE);
 
+  List<double> Q = new List(NUM_DOMANDE);
+  List<double> F = new List(NUM_DOMANDE);
+
   List<List<String>> strList = new List(8);
 
   int punteggio;
   String inizioTest;
   String gradoDepressione;
+  String correlation;
+  double rho;
 
   static Future<SharedPreferences> getSharedPreferencesInstance() async {
     return await SharedPreferences.getInstance();
@@ -94,6 +100,8 @@ class resultpageState extends State<resultpage> {
         faceSad[i - 1] = sharedPrefs.getString("facesad" + i.toString());
         faceDisgust[i - 1] = sharedPrefs.getString("facedisgust" + i.toString());
         faceHappy[i - 1] = sharedPrefs.getString("facehappy" + i.toString());
+        Q[i-1]=sharedPrefs.getDouble("q" + i.toString());
+        F[i-1]=sharedPrefs.getDouble("face" + i.toString());
       }
       punteggio = sharedPrefs.getInt("punteggio");
       inizioTest = sharedPrefs.getString("inizio");
@@ -107,8 +115,47 @@ class resultpageState extends State<resultpage> {
 
       gradoDepressione = getGrado(punteggio);
 
+      print("L'array Q è "+Q.toString());
+      F=FWithoutNull(F);
+      print("L'array F è"+F.toString());
+      print("grado depressione"+gradoDepressione);
 
+      Array arrayQ= Array(Q);
+      Array arrayF= Array(F);
+      rho = spearmanCorrelation(arrayQ, arrayF);
+      print("rho vale "+rho.toString());
+
+      if(rho>=0.0 && rho<0.1)
+        correlation="Dati non correlati";
+      if(rho>=0.1 && rho<0.3)
+        correlation="Dati debolmente correlati, stato emotivo coerente";
+      if(rho>=0.3 && rho<0.5)
+        correlation="Dati correlati moderatamente, stato emotivo coerente";
+      if(rho>=0.5 && rho<1.0)
+        correlation="Dati correlati abbastanza fortemente,stato emotivo coerente";
+      if(rho>=1.0)
+        correlation="Dati correlati fortemente, stato emotivo coerente";
+
+      if(rho>=-1.0 && rho<-0.5)
+        correlation="Dati correlati fortemente, stato emotivo contrastante";
+      if(rho>=-0.5 && rho<-0.3)
+        correlation="Dati correlati abbastanza fortemente, stato emotivo contrastante";
+      if(rho>=-0.3 && rho<-0.1)
+        correlation="Dati correlati moderatamente, stato emotivo contrastante";
+      if(rho>=-0.1 && rho<0.0)
+        correlation="Dati debolmente correlati, stato emotivo contrastante";
+      if(rho<=0.0)
+        correlation="Dati correlati fortemente, stato emotivo contrastante";
     });
+  }
+
+  List<double> FWithoutNull(List<double> F){
+    for(int i=0;i<F.length;i++){
+      if(F[i]==null)
+        F[i]=0.0;
+    }
+
+    return F;
   }
 
   String getGrado(int punteggio){
@@ -133,6 +180,57 @@ class resultpageState extends State<resultpage> {
 
     return strList;
   }
+
+  double spearmanCorrelation(Array x, Array y) {
+    if (x.length != y.length) return null;
+
+    var sortedX = x;
+    sortedX.sort();
+
+    var sortedY = y;
+    sortedY.sort();
+
+    HashMap<double, int> rankMapX = new HashMap();
+    HashMap<double, int> rankMapY = new HashMap();
+
+    for (int i = 0; i < sortedX.length; i++) {
+      rankMapX[sortedX[i]] = i + 1;
+    }
+
+    for (int i = 0; i < sortedY.length; i++) {
+      rankMapY[sortedY[i]] = i + 1;
+    }
+
+    var rankArrayX = Array(List(x.length));
+    var rankArrayY = Array(List(y.length));
+
+    for (int i = 0; i < x.length; i++) {
+      rankArrayX[i] = rankMapX[x[i]].toDouble();
+    }
+
+    for (int i = 0; i < y.length; i++) {
+      rankArrayY[i] = rankMapY[y[i]].toDouble();
+    }
+
+    var rankCovariance = calculateCovariance(rankArrayY, rankArrayY);
+    var spearManCorrelation = rankCovariance /
+        (standardDeviation(rankArrayX) * standardDeviation(rankArrayY));
+
+    return spearManCorrelation;
+  }
+
+  double calculateCovariance(Array x, Array y) {
+    if (x.length != y.length) return null;
+    print("calculateCovariance");
+    var sumOfX = x.reduce(
+            (previousValue, element) => previousValue + (element - mean(x)));
+    var sumOfY = y.reduce(
+            (previousValue, element) => previousValue + (element - mean(y)));
+    var covariance = (sumOfX * sumOfY * 1 / (x.length - 1));
+
+    return covariance;
+  }
+
 
 
   writePDF() {
@@ -251,6 +349,7 @@ class resultpageState extends State<resultpage> {
 
           pw.Header(level: 2, child: pw.Text("Tempo impiegato: " + differenzaTime(inizioTest, DateTime.now().toString()))),
 
+          pw.Header(level: 2, child: pw.Text("Coefficiente di correlazione: " + rho.toStringAsFixed(1)+"\n"+ correlation)),
         ];
       },
     ));

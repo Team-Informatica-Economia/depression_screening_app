@@ -110,13 +110,22 @@ class _quizpageopen extends State<quizpageopen> {
   }
 
   static void saveKVFace(String numeroDomanda, List<Prediction> predictions) async {
-
+    double somma = 0;
     SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
 
     predictions.forEach((element) {
       //print("---------------------------------------------------------------" + element.className + " " + (element.confidence * 100).toStringAsFixed(2) + "%");
       sharedPreferences.setString("face" + element.className + numeroDomanda, (element.confidence * 100).toStringAsFixed(2) + "%");
+
+      if(element.className == "angry" || element.className == "disgust" || element.className == "fear" || element.className == "sad")
+        somma+=element.confidence;
     });
+
+    sharedPreferences.setDouble("face"  + numeroDomanda, somma);
+
+
+    print("Somma è "+somma.toString());
+
   }
 
   static void saveKVPrefNonRispondere(String numeroDomanda) async {

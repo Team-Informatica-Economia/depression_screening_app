@@ -62,12 +62,13 @@ class _quizpageState extends State<quizpage> {
   }
 
   static void saveKV(
-      int numDomanda, String domanda, String risposta, int punteggio, String inizioTest) async {
+      int numDomanda, String domanda, String risposta, int punteggio, String inizioTest, int i) async {
     SharedPreferences sharedPreferences = await getSharedPreferencesInstance();
     sharedPreferences.setString("domanda" + numDomanda.toString(), domanda);
     sharedPreferences.setString("risposta" + numDomanda.toString(), risposta);
     sharedPreferences.setInt("punteggio", punteggio);
     sharedPreferences.setString("inizio", inizioTest);
+    sharedPreferences.setDouble("q"+ numDomanda.toString(), i/3.0);
   }
 
   _getCamera() async {
@@ -117,7 +118,7 @@ class _quizpageState extends State<quizpage> {
     );
 
     saveKV(iDomanda, mydata[0][yDomanda.toString()], mydata[1][yDomanda][let],
-        punteggio, inizioTest.toString());
+        punteggio, inizioTest.toString(),i);
     nextQuestion(let);
   }
 
